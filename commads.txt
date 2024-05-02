@@ -1,0 +1,10 @@
+On local:
+
+docker compose -f docker-compose.local.yml up --build
+docker compose -f docker-compose.local.yml up
+
+docker exec -it club_database_container psql -U club_user -d table_tennis_club
+docker exec -it club_django_wsgi bash
+python3 manage.py makemigrations
+
+docker restart club_django_wsgi

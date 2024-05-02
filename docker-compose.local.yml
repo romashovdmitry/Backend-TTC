@@ -1,0 +1,57 @@
+version: "3.8"
+
+
+services:
+    club_django_wsgi:
+        container_name: club_django_wsgi
+        env_file:
+            - .env
+        build:
+            context: .
+            dockerfile: ./Docker/Django_WSGI/Dockerfile
+        command: > 
+            sh -c "python manage.py makemigrations &&
+                   python manage.py migrate &&
+                   python manage.py create_admin &&
+                   python manage.py runserver 0.0.0.0:8000"
+        ports: 
+            - "8000"
+        volumes:
+            - ./app:/app
+        depends_on:
+            - club_database_container
+        networks:
+            - club-network
+
+    club_database_container:
+        container_name: club_database_container
+        env_file:
+            - .env
+        build:
+            context: .
+            dockerfile: ./Docker/Database/Dockerfile
+        environment:
+            - POSTGRES_DB=${POSTGRES_DB}
+            - POSTGRES_USER=${POSTGRES_USER}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+        ports:
+            - ${POSTGRES_PORT}:${POSTGRES_PORT}
+        networks:
+          - club-network        
+
+    club_nginx:
+        container_name: club_nginx
+        build:
+            context: .
+            dockerfile: ./Docker/Nginx/Dockerfile
+        ports:
+          - "80:80"
+        depends_on:
+            - club_django_wsgi
+        volumes:
+            - .:/app
+        networks:
+          - club-network
+
+networks:
+    club-network:
