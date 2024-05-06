@@ -11,6 +11,7 @@ from drf_yasg import openapi
 
 from main.views import health_check
 
+# Swagger default configuration
 schema_view = get_schema_view(
     openapi.Info(
         title="Table Tennis Club Backend API", default_version="v1", description="API endpoints described here", terms_of_service=""
@@ -20,14 +21,18 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
+    # Swagger urls
     re_path(
         r"^api-docs/swagger(?P<format>\.json|\.yaml)$", schema_view.without_ui(cache_timeout=0), name="schema-json"
     ),
     re_path(r"^api-docs/swagger$", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
     re_path(r"^api-docs/redoc$", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
-
+    # admin url
     path("admin/", admin.site.urls),
+    # for docker health-checker
+    path('/', health_check),
+    # projects urls
     path('api/v1/user/', include("user.urls")),
-    path('/', health_check)
+    path('api/v1/club/', include("club.urls")),
 ]
 

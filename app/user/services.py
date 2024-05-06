@@ -11,6 +11,7 @@ from rest_framework.response import Response
 # JWT imports
 from rest_framework_simplejwt.tokens import RefreshToken
 
+
 load_dotenv()
 
 
@@ -86,26 +87,25 @@ class JWTActions:
             {
                 "cookie_key": "access_token",
                 "cookie_value": str(refresh_token.access_token),
-                "max_age": 60*15,
+                "max_age": int(os.getenv("ACCESS_TOKEN_LIFETIME_IN_SECONDS")),
                 "secure_and_httponly": True,
                 "path": "/"
             },
             {
                 "cookie_key": "refresh_token",
                 "cookie_value": str(refresh_token),
-                "max_age": 60*60*24*7,
+                "max_age": int(os.getenv("REFRESH_TOKEN_LIFETIME_IN_SECONDS")),
                 "secure_and_httponly": True,
                 "path": "api/v1/user/"
             },
             {
                 "cookie_key": "signed_in",
                 "cookie_value": True,
-                "max_age": 60*60*24,
+                "max_age": int(os.getenv("REFRESH_TOKEN_LIFETIME_IN_SECONDS")),
                 "secure_and_httponly": True,
                 "path": "/"
             }
         ]
-
         for obj in response_data:
             self.response.set_cookie(
                 obj["cookie_key"],
@@ -116,5 +116,8 @@ class JWTActions:
                 samesite="None",
                 path=obj["path"]
             )
+        # for work with Swagger on machine or local
+        print(f'refresh_token -> Bearer {refresh_token}')
+        print(f'access_token -> Bearer {refresh_token.access_token}')
 
         return self.response

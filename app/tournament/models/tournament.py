@@ -1,17 +1,23 @@
-# Django imports
-from django.db import models
+# import basemodel and django.db.models
+from main.base_model import models, BaseModel
 
 # import constants
 from tournament.constants import TOURNAMENT_STATUS
 
 
-class Tournament(models.Model):
+class Tournament(BaseModel):
     """
     Tournament model.
     Core model for club, admin.
     We can have club without tournament, but
     tournament must have club and admin.
     """
+
+    class Meta:
+        verbose_name = "Tournament"
+        verbose_name_plural = "Tournaments"
+        db_table = "tournaments"
+
     name = models.CharField(
         max_length=128,
         null=True
@@ -24,7 +30,7 @@ class Tournament(models.Model):
     )
 
     max_players_amount = models.PositiveSmallIntegerField(
-        default=16,
+        default=32,
         verbose_name="Max amount of players",
         help_text=(
             "Max amount of players, that "
@@ -52,6 +58,7 @@ class Tournament(models.Model):
 
     status = models.CharField(
         choices=TOURNAMENT_STATUS,
+        default=0,
         null=True,
         verbose_name="Tournament Status",
         help_text="Created, started, running or finished. "
@@ -62,7 +69,8 @@ class Tournament(models.Model):
         null=True,
         on_delete=models.SET_NULL,
         verbose_name="Club where tournament run",
-        help_text="Club where tournament run"
+        help_text="Club where tournament run",
+        related_name="tournament_club"
     )
 
     tournament_admin = models.ForeignKey(
@@ -70,5 +78,6 @@ class Tournament(models.Model):
         null=True,
         on_delete=models.SET_NULL,
         verbose_name="Tournament Admin",
-        help_text="Tournament Admin"
+        help_text="Tournament Admin",
+        related_name="tournament_admin"
     )

@@ -85,8 +85,10 @@ class User(AbstractUser):
     )
 
     password = models.CharField(
-        verbose_name="User's password",
         max_length=4096,  # so long because of using custom hashing password
+        null=True,
+        blank=True,
+        verbose_name="User's password",
         help_text="User's password"
     )
 
@@ -102,7 +104,9 @@ class User(AbstractUser):
     )
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        last_name = self.last_name if self.last_name else "No Last Name"
+        return f"Email: {self.email}, Last Name: {last_name}"
 
     def __repr__(self):
         return f"email: {self.email}"
+

@@ -11,13 +11,19 @@ from rest_framework.decorators import action
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 
 # import serializers
-from user.serializers import CreateUserSerializer, CreateUpdatePlayerSerializer
+from user.serializers import (
+    CreateUserSerializer,
+    CreateUpdatePlayerSerializer,
+    LoginUserSerializer
+)
+
 
 # Swagger imports
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 # import constants, config data
+from user.models.user import User
 from main.settings import HTTP_HEADERS
 
 # import custom foos, classes
@@ -34,9 +40,10 @@ class UserCreateUpdate(ViewSet):
         """ define serializer for class """
         if self.action == 'create_user':
             return CreateUserSerializer
+        return LoginUserSerializer
 
     @swagger_auto_schema(
-        tags=["Create user"],
+        tags=["User"],
         operation_id="Create new user email and password",
         operation_description="POST request to create new user email, password",
         method="POST",
@@ -59,8 +66,8 @@ class UserCreateUpdate(ViewSet):
             },
             required=["email", "password"],
             example={
-                "email": "developerdmitry@gmail.com",
-                "password": "123HJQnwebz78!!!"
+                "email": "player@mail.com",
+                "password": "123njkQ6**N1q"
             },
         ),
 
@@ -73,6 +80,7 @@ class UserCreateUpdate(ViewSet):
         3. Set JWT-pare on cookies.
         4. Return response with JWT.
         """
+        print('com to reg')
         serializer = self.get_serializer_class()
         serializer = serializer(data=request.data)
 
@@ -105,6 +113,66 @@ class UserCreateUpdate(ViewSet):
 
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
+    @swagger_auto_schema(
+        tags=["User"],
+        operation_id="Login existing user",
+        operation_description="POST request to login existing user",
+        method="POST",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                "email": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description="Email of user"
+                ),
+                "password": openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description=(
+                        "User's password. "
+                        "Must contains digit, uppercase letter, "
+                        "lowercase letter, 7 characters long and "
+                        "not longer 20 characters. "
+                    )
+                )
+            },
+            required=["email", "password"],
+            example={
+                "email": "player@mail.com",
+                "password": "123njkQ6**N1q"
+            },
+        ),
+
+    )
+    @action(detail=False, methods=['post'], url_path="login_user")
+    def login_user(self, request) -> Response:
+        ''' login user '''
+        print('com to log')
+        serializer = self.get_serializer_class()
+        serializer = serializer(data=request.data)
+
+        if serializer.is_valid():
+            validated_data = serializer.validated_data
+            print(f'val dat - . {serializer.validated_data}')
+            user = User.objects.filter(email=serializer.validated_data["email"]).first()
+            print(user)
+            return_response = HttpResponse(
+                status=HTTP_200_OK,
+                headers=HTTP_HEADERS,
+                content=json.dumps(
+                    {
+                        "email": validated_data["email"]
+                    }
+                )
+            )
+            return asyncio.run(
+                JWTActions(
+                        response=return_response,
+                        instance=user
+                    ).set_cookies_on_response()
+            )
+
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
 
 class PlayerCreateUpdate(ViewSet):
     """ class for creating and updating users """
@@ -118,7 +186,7 @@ class PlayerCreateUpdate(ViewSet):
             return CreateUpdatePlayerSerializer
 
     @swagger_auto_schema(
-        tags=["Create player"],
+        tags=["Player"],
         operation_id="Create new player name, additional info about player",
         operation_description=(
             "POST request to create new player name, "

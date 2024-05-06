@@ -1,11 +1,11 @@
-# Django imports
-from django.db import models
+# import basemodel and django.db.models
+from main.base_model import models, BaseModel
 
 # import constants
 from user.constants import GENDER_CHOISE, HAND_CHOISE
 
 
-class Player(models.Model):
+class Player(BaseModel):
     """
     Model for player
     """
@@ -14,7 +14,6 @@ class Player(models.Model):
         verbose_name = "Player"
         verbose_name_plural = "Players"
         db_table = "players"
-        ordering = ['-created']
 
     sex = models.CharField(
         choices=GENDER_CHOISE,
@@ -34,21 +33,11 @@ class Player(models.Model):
         help_text="Rating of player in club rating system"
     )
 
-    created = models.DateTimeField(
-        auto_now_add=True,
-        blank=True,
-        help_text="Created date, time"
-    )
-    updated = models.DateTimeField(
-        auto_now=True,
-        help_text="Update date, time",
-        verbose_name=""
-    )
-
     user = models.ForeignKey(
         "user.user",
         null=True,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name="player_user"
     )
 
     def __str__(self):

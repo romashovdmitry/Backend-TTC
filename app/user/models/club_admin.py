@@ -1,5 +1,9 @@
+# import basemodel and django.db.models
+from main.base_model import models, BaseModel
+
 # Python imports
 import random
+import asyncio
 
 # Django imports
 from typing import Iterable
@@ -8,8 +12,11 @@ from django.db import models
 # import constants
 from user.constants import GENDER_CHOISE, HAND_CHOISE
 
+# import custom foos, classes
+from user.utils import create_random_code
 
-class ClubAdmin(models.Model):
+
+class ClubAdmin(BaseModel):
     """
     Model for admin of Club. It could be just manager
     of Club or owner of club.
@@ -19,30 +26,20 @@ class ClubAdmin(models.Model):
         verbose_name = "Club Admin"
         verbose_name_plural = "Club Admins"
         db_table = "club_admin"
-        ordering = ['-created']
 
-    created = models.DateTimeField(
-        auto_now_add=True,
-        blank=True,
-        help_text="Created date, time"
-    )
-    updated = models.DateTimeField(
-        auto_now=True,
-        verbose_name="Update date, time",
-        help_text="Update date, time"
-    )
-
-    user = models.ForeignKey(
-        "user.user",
-        null=True,
-        on_delete=models.CASCADE
-    )
 
     enter_code = models.CharField(
         max_length=6,
         null=True,
         verbose_name="Code for authorization in club",
         help_text="New club admin have to enter this code to authorize"
+    )
+
+    user = models.ForeignKey(
+        "user.user",
+        null=True,
+        on_delete=models.CASCADE,
+        related_name="club_admin_user"
     )
 
     def __str__(self):
@@ -59,11 +56,10 @@ class ClubAdmin(models.Model):
             f"Last name: {self.user.last_name}"
         )
 
-    def save(self, force_insert: bool = ..., force_update: bool = ..., using: str | None = ..., update_fields: Iterable[str] | None = ...) -> None:
-        random_code = ""
+    def save(self, *args, **kwargs) -> None:
+        """ redefine save method for creating enter_code """
+        # if it's first save, that is create
+        if not self.id:
+            self.enter_code = asyncio.run(create_random_code()) 
 
-        for _ in range(6):
-            random_code += str(random.randint(0, 9))
-        self.enter_code = random_code
-
-        return super().save(force_insert, force_update, using, update_fields)
+        super().save(*args, **kwargs)

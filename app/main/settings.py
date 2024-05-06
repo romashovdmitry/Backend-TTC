@@ -126,8 +126,12 @@ REST_FRAMEWORK = {
 # https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html#settings
 # default values are shown in example at link
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ACCESS_TOKEN_LIFETIME": timedelta(
+        minutes=int(os.getenv("ACCESS_TOKEN_LIFETIME"))
+    ),
+    "REFRESH_TOKEN_LIFETIME": timedelta(
+        days=int(os.getenv("REFRESH_TOKEN_LIFETIME"))
+    ),
     "ROTATE_REFRESH_TOKENS": True,
     "SIGNING_KEY": JWT_SECRET_KEY,
     "AUTH_HEADER_TYPES": ("Bearer",),
@@ -144,7 +148,20 @@ AUTHENTICATION_BACKENDS = [
     "user.authentication.CustomAuthenication"
 ]
 
-HTTP_HEADERS={
+HTTP_HEADERS = {
     "Access-Control-Allow-Origin": "https://localhost",
     "Access-Control-Allow-Credentials": True
+}
+
+SWAGGER_SETTINGS = {
+   'SECURITY_DEFINITIONS': {
+      'Basic': {
+            'type': 'basic'
+      },
+      'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+      }
+   }
 }

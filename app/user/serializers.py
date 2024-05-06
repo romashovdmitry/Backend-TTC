@@ -5,12 +5,10 @@ user's info.
 
 # Python imports
 import re
+import asyncio
 
 # DRF imports
-from rest_framework import serializers
-
-# Django imports
-from django.db.models import Q
+from rest_framework import serializers, exceptions
 
 # import models
 from user.models.user import User
@@ -81,7 +79,45 @@ class CreateUserSerializer(serializers.ModelSerializer):
             )
 
         return email
-    
+
+
+class LoginUserSerializer(CreateUserSerializer):
+    ''' serializer for get objects of Product model'''
+
+    def validate_email(self, email):
+        """
+        Redefine because we don't need check email on
+        exists or not.
+        """
+        return email
+
+    def validate_password(self, password):
+        """
+        Redefine to check is password
+        correct or wrong.
+        """
+        try:
+            super().validate_password(password)
+
+        except exceptions.ValidationError as ex:
+            raise serializers.ValidationError(ex)
+
+        email = self.initial_data.get("email")
+        user = User.objects.filter(email=email).first()
+
+        if user:
+            if asyncio.run(
+                hashing(
+                    password
+                )
+            ) == user.password:
+
+                return password
+
+            raise serializers.ValidationError("Invalid password")
+
+        raise serializers.ValidationError("There is no user with this email or username")
+
 
 class UserNamesSerializer(serializers.ModelSerializer):
     """
