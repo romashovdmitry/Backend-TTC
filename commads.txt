@@ -8,3 +8,30 @@ docker exec -it club_django_wsgi bash
 python3 manage.py makemigrations
 
 docker restart club_django_wsgi
+
+Note for Developer:
+
+
+
+
+PLAYER
+________________
+player@mail.com
+123njkQ6**N1q
+
+
+
+
+CLUB ADMIN
+________________
+club_admin@mail.com
+123njkQ6**N1q
+
+
+
+
+TOURNAMENT USER
+________________
+tournament_user@mail.com
+123njkQ6**N1q
+
