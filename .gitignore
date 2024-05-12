@@ -1,2 +1,13 @@
 # env data
 .env
+
+# mediafiles
+/app/media/logos/*
+/app/media/club_photoes/*
+
+# file for development on local
+__PLAN__.txt
+commands.txt
+
+# etc
+*.pyc

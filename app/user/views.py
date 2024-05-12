@@ -19,8 +19,10 @@ from user.serializers import (
 
 
 # Swagger imports
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
+from drf_spectacular.types import OpenApiTypes
+
+
 
 # import constants, config data
 from user.models.user import User
@@ -42,35 +44,101 @@ class UserCreateUpdate(ViewSet):
             return CreateUserSerializer
         return LoginUserSerializer
 
-    @swagger_auto_schema(
+    @extend_schema(
         tags=["User"],
-        operation_id="Create new user email and password",
-        operation_description="POST request to create new user email, password",
-        method="POST",
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                "email": openapi.Schema(
-                    type=openapi.TYPE_STRING,
-                    description="Email of user"
+        summary="Create new user",
+        description='POST request to create new user',
+        auth=None,
+        operation_id="Create new user",
+        parameters=[
+            OpenApiParameter(
+                name='email',
+                description='Email of the user',
+                required=True,
+                type=str,
+                examples=[
+                    OpenApiExample(
+                        'Email: STRING',
+                        value='club_admin@mail.com'
+                    ),
+                ],
+            ),
+            OpenApiParameter(
+                name='password',
+                type=OpenApiTypes.STR,
+                description=(
+                    "User password "
+                    "must contains digit, uppercase letter, "
+                    "lowercase letter, 7 characters long and "
+                    "not longer 20 characters. "
                 ),
-                "password": openapi.Schema(
-                    type=openapi.TYPE_STRING,
-                    description=(
-                        "User's password. "
-                        "Must contains digit, uppercase letter, "
-                        "lowercase letter, 7 characters long and "
-                        "not longer 20 characters. "
-                    )
-                )
-            },
-            required=["email", "password"],
-            example={
-                "email": "player@mail.com",
-                "password": "123njkQ6**N1q"
-            },
-        ),
-
+                examples=[
+                    OpenApiExample(
+                        'Password: STRING',
+                        value='123njkQ6**N1q'
+                    ),
+                ],
+            ),
+            OpenApiParameter(
+                name='First Name',
+                type=OpenApiTypes.STR,
+                description=(
+                    "First name "
+                ),
+                examples=[
+                    OpenApiExample(
+                        'First Name: STRING',
+                        value='Ivan'
+                    ),
+                ],
+            ),
+            OpenApiParameter(
+                name='Last Name',
+                type=OpenApiTypes.STR,
+                description=(
+                    "Last Name: STRING"
+                ),
+                examples=[
+                    OpenApiExample(
+                        'Last Name',
+                        value='Pizdalov'
+                    ),
+                ],
+            ),
+            OpenApiParameter(
+                name='Birth Date',
+                type=OpenApiTypes.TIME,
+                description=(
+                    "Birth Date: DATE"
+                ),
+                examples=[
+                    OpenApiExample(
+                        'Birth Date',
+                        value='2000-01-01'
+                    ),
+                ],
+            ),
+        ],
+        examples=[
+            OpenApiExample(
+                'Example: succes created user',
+                description=(
+                    "User is a base model for player, "
+                    "club admin, touernament admin"
+                ),
+                value={
+                    "email": "club_admin@mail.com",
+                    "password": "123njkQ6**N1q",
+                    "first_name": "Ivan",
+                    "last_name": "pizdalov",
+                    "birth_date": "2000-01-01"
+                }
+            ),
+        ],
+        # NOTE: можно добавить больше в responses, если будет время
+        responses={
+            201: None,
+        }
     )
     @action(detail=False, methods=['post'], url_path="create_user")
     def create_user(self, request) -> Response:
@@ -80,7 +148,6 @@ class UserCreateUpdate(ViewSet):
         3. Set JWT-pare on cookies.
         4. Return response with JWT.
         """
-        print('com to reg')
         serializer = self.get_serializer_class()
         serializer = serializer(data=request.data)
 
@@ -113,35 +180,58 @@ class UserCreateUpdate(ViewSet):
 
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
-    @swagger_auto_schema(
+    @extend_schema(
         tags=["User"],
+        summary="Login existing user",
+        description='POST request to Login existing user',
+        auth=None,
         operation_id="Login existing user",
-        operation_description="POST request to login existing user",
-        method="POST",
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                "email": openapi.Schema(
-                    type=openapi.TYPE_STRING,
-                    description="Email of user"
+        parameters=[
+            OpenApiParameter(
+                name='email',
+                description='Email of the user',
+                required=True,
+                type=str,
+                examples=[
+                    OpenApiExample(
+                        'email example',
+                        value='club_admin@mail.com'
+                    ),
+                ],
+            ),
+            OpenApiParameter(
+                name='password',
+                type=OpenApiTypes.STR,
+                description=(
+                    "User password "
+                    "must contains digit, uppercase letter, "
+                    "lowercase letter, 7 characters long and "
+                    "not longer 20 characters. "
                 ),
-                "password": openapi.Schema(
-                    type=openapi.TYPE_STRING,
-                    description=(
-                        "User's password. "
-                        "Must contains digit, uppercase letter, "
-                        "lowercase letter, 7 characters long and "
-                        "not longer 20 characters. "
-                    )
-                )
-            },
-            required=["email", "password"],
-            example={
-                "email": "player@mail.com",
-                "password": "123njkQ6**N1q"
-            },
-        ),
-
+                examples=[
+                    OpenApiExample(
+                        'Password example',
+                        value='123njkQ6**N1q'
+                    ),
+                ],
+            ),
+        ],
+        examples=[
+            OpenApiExample(
+                'Example: succes login user',
+                description=(
+                    "User is a base model for player, "
+                    "club admin, touernament admin"
+                ),
+                value={
+                    "email": "club_admin@mail.com",
+                    "password": "123njkQ6**N1q"
+                }
+            ),
+        ],
+        responses={
+            200: None,
+        }
     )
     @action(detail=False, methods=['post'], url_path="login_user")
     def login_user(self, request) -> Response:
@@ -185,62 +275,95 @@ class PlayerCreateUpdate(ViewSet):
         if self.action == 'create_player':
             return CreateUpdatePlayerSerializer
 
-    @swagger_auto_schema(
-        tags=["Player"],
-        operation_id="Create new player name, additional info about player",
-        operation_description=(
-            "POST request to create new player name, "
-            "additional info about player"
-        ),
-        method="POST",
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                "sex": openapi.Schema(
-                    type=openapi.TYPE_STRING,
-                    description="Sex of user. MALE or FEMALE"
-                ),
-                "handedness": openapi.Schema(
-                    type=openapi.TYPE_STRING,
-                    description=(
+    @extend_schema(
+        tags=["User"],
+        summary="Create player instance for existing user",
+        description="POST request to create player instance for existing user",
+        auth=None,
+        operation_id="Create player instance for existing user",
+        parameters=[
+            OpenApiParameter(
+                name="sex",
+                description='Sex of user. MALE or FEMALE',
+                required=True,
+                type=OpenApiTypes.STR,
+                examples=[
+                    OpenApiExample(
+                        'Player sex',
+                        value='FEMALE'
+                    ),
+                ],
+            ),
+            OpenApiParameter(
+                name='handedness',
+                type=OpenApiTypes.STR,
+                description=(
                         "User's handedness. "
-                        "RIGHT_HAND, LEFT_HAND"
+                        "RIGHT_HAND, LEFT_HAND "
                         "or BOTH"
-                    )
                 ),
-                "rating": openapi.Schema(
-                    type=openapi.TYPE_INTEGER,
-                    description=(
-                        "Rating of user. " 
+                examples=[
+                    OpenApiExample(
+                        'Which hand player gona play',
+                        value='BOTH'
+                    ),
+                ],
+            ),
+            OpenApiParameter(
+                name='rating',
+                required=False,
+                type=OpenApiTypes.INT,
+                description=(
+                        "Rating of user in our system. " 
                         "100 by default"
-                    )
                 ),
-                "user": openapi.Schema(
-                    type=openapi.TYPE_OBJECT,
-                    required=["last_name", "first_name"],  # Optional: Specify required properties
-                    properties={
-                        "last_name": openapi.Schema(
-                            type=openapi.TYPE_STRING,
-                            description="User's last name"
-                        ),
-                        "first_name": openapi.Schema(
-                            type=openapi.TYPE_STRING,
-                            description="User's first name"
-                        )
+                examples=[
+                    OpenApiExample(
+                        'User Raing in our system',
+                        value=200
+                    ),
+                ],
+            ),
+            OpenApiParameter(
+                name='user info',
+                required=["first_name", "last_name"],
+                type=OpenApiTypes.OBJECT,
+                description=(
+                        "Rating of user in our system. " 
+                        "100 by default"
+                ),
+                examples=[
+                    OpenApiExample(
+                        'User Oject with first name name and last name',
+                        value={
+                            "last_name": "Ivanov",
+                            "first_name": "Kaktus"
+                        }
+                    ),
+                ],
+            ),
+        ],
+        examples=[
+            OpenApiExample(
+                'Example: succes login user',
+                description=(
+                    "User is a base model for player, "
+                    "club admin, touernament admin"
+                ),
+                value={
+                    "sex": "FEMALE",
+                    "handedness": "BOTH",
+                    "rating": 69,
+                    "user": {
+                        "last_name": "Doe",
+                        "first_name": "John"
                     }
-                )
-            },
-            required=["sex", "user"],
-            example={
-                "sex": "FEMALE",
-                "handedness": "BOTH",
-                "rating": 69,
-                "user": {
-                    "last_name": "Doe",
-                    "first_name": "John"
                 }
-            },
-        ),
+            ),
+        ],
+        responses={
+            200: None,
+        }
     )
     @action(detail=False, methods=['post'], url_path="create_player")
     def create_player(self, request) -> Response:

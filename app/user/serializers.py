@@ -26,6 +26,9 @@ class CreateUserSerializer(serializers.ModelSerializer):
         fields = [
             'email',
             'password',
+            'first_name',
+            'last_name',
+            'birth_date'
         ]
 
     email = serializers.EmailField(
@@ -121,10 +124,11 @@ class LoginUserSerializer(CreateUserSerializer):
 
 class UserNamesSerializer(serializers.ModelSerializer):
     """
-    Serializer for user field  in
+    Serializer for user field in
     create player JSON.
     """
     class Meta:
+        model = User
         fields = [
             "first_name",
             "last_name"
@@ -139,7 +143,7 @@ class UserNamesSerializer(serializers.ModelSerializer):
 
 
 class CreateUpdatePlayerSerializer(serializers.ModelSerializer):
-    """ Serializer for creating playes instance """
+    """ Serializer for creating player instance """
     user = UserNamesSerializer(read_only=True)
 
     class Meta:

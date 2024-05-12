@@ -103,6 +103,12 @@ class User(AbstractUser):
         verbose_name=""
     )
 
+    birth_date = models.DateField(
+        null=True,
+        verbose_name="User's birth date",
+        help_text="User's birth date"
+    )
+
     def __str__(self):
         last_name = self.last_name if self.last_name else "No Last Name"
         return f"Email: {self.email}, Last Name: {last_name}"

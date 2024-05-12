@@ -1,38 +1,33 @@
 # Django imports
 from django.contrib import admin
-from django.urls import path, include, re_path
+from django.urls import path, include
+from django.conf.urls.static import static
 
-# DRF imports
-from rest_framework.permissions import AllowAny
-
-# JWT imports
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
-
-from main.views import health_check
-
-# Swagger default configuration
-schema_view = get_schema_view(
-    openapi.Info(
-        title="Table Tennis Club Backend API", default_version="v1", description="API endpoints described here", terms_of_service=""
-    ),
-    public=True,
-    permission_classes=[AllowAny],
+# Swagger imports
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView
 )
 
+# import config, constants data
+from main.settings import MEDIA_ROOT, MEDIA_URL
+
+# import views, custom foos, classes
+from main.views import health_check
+
+
 urlpatterns = [
-    # Swagger urls
-    re_path(
-        r"^api-docs/swagger(?P<format>\.json|\.yaml)$", schema_view.without_ui(cache_timeout=0), name="schema-json"
-    ),
-    re_path(r"^api-docs/swagger$", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
-    re_path(r"^api-docs/redoc$", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
-    # admin url
-    path("admin/", admin.site.urls),
     # for docker health-checker
     path('/', health_check),
+    # Swagger urls
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='docs'),
+    # admin url
+    path("admin/", admin.site.urls),
     # projects urls
     path('api/v1/user/', include("user.urls")),
     path('api/v1/club/', include("club.urls")),
 ]
 
+urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)

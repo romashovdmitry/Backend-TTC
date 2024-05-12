@@ -1,125 +1,183 @@
-# Python imports
-import json
-import asyncio
-
-# Django imports
-from django.http import HttpResponse
-
 # DRF imports
 from rest_framework.viewsets import ViewSet
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.generics import RetrieveAPIView
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework.decorators import action
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 
 # Swagger imports
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
+from drf_spectacular.utils import (
+    extend_schema,
+    OpenApiParameter,
+    OpenApiExample,
+    OpenApiResponse
+)
+from drf_spectacular.types import OpenApiTypes
 
-from club.serizlizers import ClubCreateUpdateSerializer
+# import models
+from club.models.club import Club
+
+# import constants, config data
+from club.constants import OPENING_HOURS_SWAGGER_EXAMPLE
+
+# import serializers
+from club.serializers import (
+    ClubCreateUpdateSerializer,
+    ShowAllClubsSerializer,
+    ClubGetSerializer
+)
 
 
-class ClubCreateUpdate(ViewSet):
+class ClubActions(ViewSet, RetrieveAPIView):
     """ class for creating and updating clubs """
     parser_classes = (MultiPartParser,)
-    http_method_names = ['post', 'patch']
+    http_method_names = ['post', 'put', 'get']
     lookup_field = 'id'
     permission_classes = [IsAuthenticated]
+    queryset = Club.objects.all()
 
     def get_serializer_class(self):
         """ define serializer for class """
-        if self.action == 'create_club':
+
+        if self.action == 'create_club' or self.action == 'update_club':
             return ClubCreateUpdateSerializer
 
-    @swagger_auto_schema(
+        elif self.action == "list_clubs":
+            return ShowAllClubsSerializer
+
+        elif self.action == "get_club":
+            return ClubGetSerializer
+
+    @extend_schema(
         tags=["Club"],
-        operation_id="Create Club",
-        operation_description="POST request to create new club",
-        method="POST",
-        # NOTE: use manual becase of i didn't find way to use
-        # and manual and request_body parameter. And didn't find
-        # way to add file uploading field by request_body.  
-        # https://stackoverflow.com/questions/63068565/drf-yasg-custom-json-body
-        # https://stackoverflow.com/questions/57382779/how-to-make-swagger-schema-for-file-upload-api-in-django-rest-framework-using-dr
-        # https://github.com/axnsan12/drf-yasg/issues/767
-        # https://github.com/axnsan12/drf-yasg/issues/600
-        manual_parameters=[
-            openapi.Parameter(
-                name="name",
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_STRING,
+        summary="Create new Club",
+        description="POST request to create new club",
+        operation_id="Create new club",
+        parameters=[
+            OpenApiParameter(
+                name="Club Name",
+                description='Official name of the club',
                 required=True,
-                description="Official name of the club"
+                type=OpenApiTypes.STR,
+                examples=[
+                    OpenApiExample(
+                        'Club Name: STRING',
+#                        summary='Email exampls',
+                        value='TT Club'
+                    ),
+                ],
             ),
-            openapi.Parameter(
-                name="logo",
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_FILE,
+# NOTE: закомментировано специально
+#            OpenApiParameter(
+#                name="logo",
+#                description='Club logo',
+#                required=True,
+#                type=OpenApiTypes.BINARY,
+#            ),
+            OpenApiParameter(
+                name="Club State",
+                description='State where club is placed',
                 required=False,
-                description="Club logo in file format"
+                type=OpenApiTypes.STR,
+                examples=[
+                    OpenApiExample(
+                        'Club State: STRING',
+                        value='UAE'
+                    ),
+                ],
             ),
-            openapi.Parameter(
-                name="club_photoes",
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_ARRAY,
-                items=openapi.Schema(
-                    type=openapi.TYPE_FILE
-                ),
+            OpenApiParameter(
+                name="Club City",
+                description='City where club is placed',
                 required=False,
-                description="Club photoes"
+                type=OpenApiTypes.STR,
+                examples=[
+                    OpenApiExample(
+                        'Club City: STRING',
+                        value='Abu Dabi'
+                    ),
+                ],
             ),
-            openapi.Parameter(
-                name="state",
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_STRING,
-                description="State where the club is located"
+            OpenApiParameter(
+                name="Club Address",
+                description='Street, where club is placed',
+                required=False,
+                type=OpenApiTypes.STR,
+                examples=[
+                    OpenApiExample(
+                        'Club Street: STRING',
+                        value='Gagarina st., Houser #7'
+                    ),
+                ],
             ),
-            openapi.Parameter(
-                name="city",
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_STRING,
-                description="City where the club is located"
+            OpenApiParameter(
+                name="Club Phone Number",
+                description='Phone number of club',
+                required=False,
+                type=OpenApiTypes.STR,
+                examples=[
+                    OpenApiExample(
+                        'Club Phone Number: STRING',
+                        value='89992370953'
+                    ),
+                ],
             ),
-            openapi.Parameter(
-                name="address",
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_STRING,
-                description="Street address of the club"
+            OpenApiParameter(
+                name="Opening Hours",
+                description='Days and hours when club is working',
+                required=False,
+                type=OpenApiTypes.OBJECT,
+                examples=[
+                    OpenApiExample(
+                        'Club Opening Hours: JSON(DICT)',
+                        OPENING_HOURS_SWAGGER_EXAMPLE
+                    ),
+                ],
             ),
-            openapi.Parameter(
-                name="phone_number",
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_STRING,
-                description="Phone number of the club"
+            OpenApiParameter(
+                name="About",
+                description='Additional info about club',
+                required=False,
+                type=OpenApiTypes.STR,
+                examples=[
+                    OpenApiExample(
+                        'Club About: STRING',
+                        "Hello, it's me! I like Pen-Pineapple-Apple-Pen"
+                    ),
+                ],
             ),
-            openapi.Parameter(
-                name="opening_hours",
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_STRING,
-                description="Days and hours when the club is open"
+            OpenApiParameter(
+                name="Social Link",
+                description='Link to club social network page',
+                required=False,
+                type=OpenApiTypes.STR,
+                examples=[
+                    OpenApiExample(
+                        'Club Social Link: STRING',
+                        'https://vk.com'
+                    ),
+                ],
             ),
-            openapi.Parameter(
-                name="about",
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_STRING,
-                description="Additional information about the club"
+            OpenApiParameter(
+                name="Website Link",
+                description='Link to club site, any info in Ethernet',
+                required=False,
+                type=OpenApiTypes.STR,
+                examples=[
+                    OpenApiExample(
+                        'Club Website Link: STRING',
+                        "https://welovecocks.com"
+                    ),
+                ],
             ),
-            openapi.Parameter(
-                name="social_link",
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_STRING,
-                format=openapi.FORMAT_URI,
-                description="Link to the club's social network page"
-            ),
-            openapi.Parameter(
-                name="link",
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_STRING,
-                format=openapi.FORMAT_URI,
-                description="Link to the club's website"
-            )
         ],
+        # NOTE: можно добавить responses, если будет время
+        # пример для 401 ответ уже есть в этом файле
+        responses={
+            200: None,
+        }
     )
     @action(
         detail=False,
@@ -136,126 +194,203 @@ class ClubCreateUpdate(ViewSet):
         serializer = serializer(data=request.data)
 
         if serializer.is_valid():
-            validated_data = serializer.validated_data
-            instance = serializer.save()
-            # go to hash password
-            instance.save()
-            return Response(
-                status=HTTP_201_CREATED                
+            instance = serializer.create(
+                validated_data=serializer.validated_data,
+                user=request.user
             )
-
+            instance.save()
+            return Response(status=HTTP_201_CREATED)
         else:
-
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
-    @swagger_auto_schema(
+    @extend_schema(
         tags=["Club"],
-        operation_id="Update Club",
-        operation_description="Patch request to update existing club",
-        method="PATCH",
-        # NOTE: use manual becase of i didn't find way to use
-        # and manual and request_body parameter. And didn't find
-        # way to add file uploading field by request_body.  
-        # https://stackoverflow.com/questions/63068565/drf-yasg-custom-json-body
-        # https://stackoverflow.com/questions/57382779/how-to-make-swagger-schema-for-file-upload-api-in-django-rest-framework-using-dr
-        # https://github.com/axnsan12/drf-yasg/issues/767
-        # https://github.com/axnsan12/drf-yasg/issues/600
-        manual_parameters=[
-            openapi.Parameter(
-                name="name",
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_STRING,
+        summary="Update existing Club",
+        description="PUT request to update existing club",
+        # provide Authentication class that deviates from the views default
+        operation_id="Update existing club",
+        parameters=[
+            OpenApiParameter(
+                name="Club Name",
+                description='Official name of the club',
+                required=True,
+                type=OpenApiTypes.STR,
+                examples=[
+                    OpenApiExample(
+                        'Club Name: STRING',
+                        value='TT Club'
+                    ),
+                ],
+            ),
+            OpenApiParameter(
+                name="Club State",
+                description='State where club is placed',
                 required=False,
-                description="Official name of the club"
+                type=OpenApiTypes.STR,
+                examples=[
+                    OpenApiExample(
+                        'Club State: STRING',
+                        value='UAE'
+                    ),
+                ],
             ),
-            openapi.Parameter(
-                name="Logo",
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_FILE,
+            OpenApiParameter(
+                name="Club City",
+                description='City where club is placed',
                 required=False,
-                description="Club logo in file format"
+                type=OpenApiTypes.STR,
+                examples=[
+                    OpenApiExample(
+                        'Club City: STRING',
+                        value='Abu Dabi'
+                    ),
+                ],
             ),
-            openapi.Parameter(
-                name="club_photoes",
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_ARRAY,
-                items=openapi.Schema(
-                    type=openapi.TYPE_FILE
-                ),
+            OpenApiParameter(
+                name="Club Address",
+                description='Street, where club is placed',
                 required=False,
-                description="Club photoes"
+                type=OpenApiTypes.STR,
+                examples=[
+                    OpenApiExample(
+                        'Club Street: STRING',
+                        value='Gagarina st., Houser #7'
+                    ),
+                ],
             ),
-            openapi.Parameter(
-                name="state",
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_STRING,
-                description="State where the club is located"
+            OpenApiParameter(
+                name="Club Phone Number",
+                description='Phone number of club',
+                required=False,
+                type=OpenApiTypes.STR,
+                examples=[
+                    OpenApiExample(
+                        'Club Phone Number: STRING',
+                        value='89992370953'
+                    ),
+                ],
             ),
-            openapi.Parameter(
-                name="city",
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_STRING,
-                description="City where the club is located"
+            OpenApiParameter(
+                name="Opening Hours",
+                description='Days and hours when club is working',
+                required=False,
+                type=OpenApiTypes.OBJECT,
+                examples=[
+                    OpenApiExample(
+                        'Club Opening Hours: JSON(DICT)',
+                        OPENING_HOURS_SWAGGER_EXAMPLE
+                    ),
+                ],
             ),
-            openapi.Parameter(
-                name="address",
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_STRING,
-                description="Street address of the club"
+            OpenApiParameter(
+                name="About",
+                description='Additional info about club',
+                required=False,
+                type=OpenApiTypes.STR,
+                examples=[
+                    OpenApiExample(
+                        'Club About: STRING',
+                        "Hello, it's me! I like Pen-Pineapple-Apple-Pen"
+                    ),
+                ],
             ),
-            openapi.Parameter(
-                name="phone_number",
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_STRING,
-                description="Phone number of the club"
+            OpenApiParameter(
+                name="Social Link",
+                description='Link to club social network page',
+                required=False,
+                type=OpenApiTypes.STR,
+                examples=[
+                    OpenApiExample(
+                        'Club Social Link: STRING',
+                        'https://vk.com'
+                    ),
+                ],
             ),
-            openapi.Parameter(
-                name="opening_hours",
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_STRING,
-                description="Days and hours when the club is open"
+            OpenApiParameter(
+                name="Website Link",
+                description='Link to club site, any info in Ethernet',
+                required=False,
+                type=OpenApiTypes.STR,
+                examples=[
+                    OpenApiExample(
+                        'Club Website Link: STRING',
+                        "https://welovecocks.com"
+                    ),
+                ],
             ),
-            openapi.Parameter(
-                name="about",
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_STRING,
-                description="Additional information about the club"
-            ),
-            openapi.Parameter(
-                name="social_link",
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_STRING,
-                format=openapi.FORMAT_URI,
-                description="Link to the club's social network page"
-            ),
-            openapi.Parameter(
-                name="link",
-                in_=openapi.IN_FORM,
-                type=openapi.TYPE_STRING,
-                format=openapi.FORMAT_URI,
-                description="Link to the club's website"
-            )
         ],
+        responses={
+            200: None,
+        }
     )
     @action(
-        detail=False,
-        methods=['patch'],
-        url_path="update_club"
+        detail=True,
+        methods=['put'],
+        url_path="update_club",
+        parser_classes=(MultiPartParser,)
     )
-    def update_club(self, request) -> Response:
+    def update_club(self, request, id=None) -> Response:
+        instance = self.get_object()
         serializer = self.get_serializer_class()
-        serializer = serializer(data=request.data)
+        serializer = serializer(instance=instance, data=request.data)
 
-        if serializer.is_valid():
-            validated_data = serializer.validated_data
-            instance = serializer.save()
-            # go to hash password
-            instance.save()
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
             return Response(
-                status=HTTP_201_CREATED                
+                status=HTTP_200_OK                
             )
 
         else:
 
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
+    @extend_schema(
+        tags=["Club"],
+        methods=["GET"],
+        summary="Get all existing Clubs",
+        description="GET request to get all existing clubs by ID",
+        operation_id="Get all existing clubs"
+    )
+    @action(detail=False, methods=['get'], url_path="list_clubs")
+    def list_clubs(self, request) -> Response:
+        user = request.user
+        queryset = Club.objects.filter(admin_club__user=user).all()
+        serializer = self.get_serializer_class()
+        serializer = serializer(queryset, many=True)
+        serializer = serializer.data
+
+        return Response(status=200, data=serializer)
+
+    @extend_schema(
+        tags=["Club"],
+        methods=["GET"],
+        summary="Get existing Club",
+        description="GET request to get existing club by ID",
+        operation_id="Get existing club by ID",
+        responses={
+            201: OpenApiResponse(response=ClubGetSerializer,
+                                 description='Existing Club Object in response'),
+            401: OpenApiResponse(
+                response={
+                    "detail": "No auth credentials"
+                },
+                description='No auth credentials.',
+                examples=[
+                    OpenApiExample(
+                        "No auth credentials",
+                        value={
+                            "detail": "Authentication credentials were not provided."
+                        }
+                    )
+                ]
+            ),
+        },
+    )
+    @action(detail=True, methods=['get'], url_path='get_club')
+    def get_club(self, request, pk=None):
+        club = Club.objects.filter(
+            id=pk
+        ).first()
+        serializer = self.get_serializer_class()
+        serializer = serializer(club)
+        return Response(serializer.data)

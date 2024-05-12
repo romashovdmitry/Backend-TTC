@@ -22,12 +22,18 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # my apps 👇
+    # beatiful admin panel
     "adminlte3",
+    # DRF
     "adrf",  # https://github.com/em1208/adrf
+    # processing CORS errors
     "corsheaders",
-    "drf_yasg",
-    "rest_framework_simplejwt",
+    # Swagger
+    "drf_spectacular",
+    "drf_spectacular_sidecar",
+    # JWT
+ъ    "rest_framework_simplejwt",
+    # my apps
     "main",
     "user",
     "club",
@@ -42,7 +48,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    # my middlewares 👇
+    # my middlewares
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
 ]
@@ -111,13 +117,23 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = 'user.User'
 
 REST_FRAMEWORK = {
+    # swagger drf-spectacular
+    'DEFAULT_SCHEMA_CLASS': 
+        'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_RENDERERS': [
+        'drf_spectacular.renderers.SpectacularRenderer',
+        'rest_framework.renderers.JSONRenderer',
+    ],
+    # JWT
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    # auth
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
         'rest_framework.permissions.IsAuthenticated'
     ),
+    # throttling
     'DEFAULT_THROTTLE_RATES': {
         'user': '1000/day'
     }
@@ -153,15 +169,19 @@ HTTP_HEADERS = {
     "Access-Control-Allow-Credentials": True
 }
 
-SWAGGER_SETTINGS = {
-   'SECURITY_DEFINITIONS': {
-      'Basic': {
-            'type': 'basic'
-      },
-      'Bearer': {
-            'type': 'apiKey',
-            'name': 'Authorization',
-            'in': 'header'
-      }
-   }
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Your Project API',
+    'DESCRIPTION': 'Your project description',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SWAGGER_UI_DIST': 'SIDECAR',  # shorthand to use the sidecar instead
+    'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
+    'REDOC_DIST': 'SIDECAR',
+    # https://stackoverflow.com/a/67522312/24040439
+    'COMPONENT_SPLIT_REQUEST': True,
+
 }
+
+
+MEDIA_URL = os.getenv("MEDIA_URL")
+MEDIA_ROOT = os.path.join(BASE_DIR, os.getenv("MEDIA_ROOT"))

@@ -1,8 +1,34 @@
+# Python imports
+import re
+import os
+from PIL import Image
+from django.core.exceptions import ValidationError
+
 # import basemodel and django.db.models
 from main.base_model import models, BaseModel
 
 # FIXME: не сработала ссылка вида "user.club_admin"
 from user.models.club_admin import ClubAdmin
+
+# import custom foos, classes
+from club.services import image_file_extension_validator
+
+# import constants, config data
+from main.settings import MEDIA_ROOT
+
+
+# FIXME: улучгить аннотирование
+def define_logo_path(instance, filename):
+    """
+    define club logo path
+    """
+    try:
+        return "logos/" + instance.name.replace(" ", "_") + "_logo." + filename.split(".")[-1]
+
+    except Exception as ex:
+        # FIXME: здесь логгирование должно быть
+        print(ex)
+        return filename
 
 
 class Club(BaseModel):
@@ -24,16 +50,15 @@ class Club(BaseModel):
         help_text="Official name of club"
     )
 
-    logo = models.BinaryField(
+    logo = models.ImageField(
+        upload_to=define_logo_path,
         null=True,
         verbose_name="Club Logo",
-        help_text="Club logo"
+        help_text="Club logo",
+        validators=[image_file_extension_validator]
     )
 
-    club_photoes = models.JSONField(
-        null=True
-    )
-
+    # NOTE: можно ограничить, скачав необходимую библиотеку
     state = models.CharField(
         max_length=64,
         null=True,
@@ -94,3 +119,15 @@ class Club(BaseModel):
         on_delete=models.SET_NULL,
         related_name="admin_club"
     )
+
+    def save(self, *args, **kwargs):
+        """
+        redefine method for removing image,
+        if it's updating.
+        """
+        if self.logo:
+            club = Club.objects.get(pk=self.pk)
+            current_image_path = MEDIA_ROOT + '/' + str(club.logo)
+            os.remove(current_image_path)        
+        super(Club, self).save(*args, **kwargs)
+        
