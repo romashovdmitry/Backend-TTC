@@ -32,7 +32,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "drf_spectacular_sidecar",
     # JWT
-ъ    "rest_framework_simplejwt",
+    "rest_framework_simplejwt",
     # my apps
     "main",
     "user",
