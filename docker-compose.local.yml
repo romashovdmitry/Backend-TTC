@@ -23,6 +23,21 @@ services:
         networks:
             - club-network
 
+    club_telegram_bot:
+        container_name: club_telegram_bot
+        env_file:
+            - .env
+        build:
+            context: .
+            dockerfile: ./Docker/Django_WSGI/Dockerfile
+        command: sh -c "python manage.py bot_setup"
+        depends_on:
+            - club_django_wsgi
+        volumes:
+            - ./app:/app
+        networks:
+            - club-network
+
     club_database_container:
         container_name: club_database_container
         env_file:
@@ -52,6 +67,7 @@ services:
             - .:/app
         networks:
           - club-network
+
 
 networks:
     club-network:

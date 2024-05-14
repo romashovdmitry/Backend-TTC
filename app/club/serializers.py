@@ -22,7 +22,7 @@ class ClubPhotoSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = ClubPhoto
-        fields = "__all__"
+        fields = ["photo"]
 
 
 class ClubCreateUpdateSerializer(serializers.ModelSerializer):
@@ -59,18 +59,23 @@ class ClubCreateUpdateSerializer(serializers.ModelSerializer):
         redefine save method for creating club_admin
         and club photoes
         """
+        print(1)
         photoes = self.initial_data.get('photo')
+        print(2)
+        print(validated_data)
         club = Club.objects.create(**validated_data)
-
+        print(3)
         if photoes:
-
+            print(4)
             for photo_data in photoes:
                 photo = ClubPhoto.objects.create(club=club, photo=photo_data)
                 photo.save()
-
+                print(5)
+        print(6)
         club_admin = ClubAdmin.objects.create(
             user=user
         )
+        print(7)
         club.admin_club = club_admin
         club.save()
 

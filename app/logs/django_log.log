@@ -1,0 +1,516 @@
+2024-05-13 05:58:09,954 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 05:58:09,954 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 06:13:02,472 INFO django.utils.autoreload [autoreload.py:266] /app/main/settings.py changed, reloading.
+2024-05-13 06:13:02,472 INFO django.utils.autoreload [autoreload.py:266] /app/main/settings.py changed, reloading.
+2024-05-13 06:22:27,278 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 06:22:27,278 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 06:49:17,763 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 06:49:17,763 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 06:50:12,309 INFO django.utils.autoreload [autoreload.py:266] /app/main/settings.py changed, reloading.
+2024-05-13 06:50:12,309 INFO django.utils.autoreload [autoreload.py:266] /app/main/settings.py changed, reloading.
+2024-05-13 06:50:25,905 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 06:50:25,905 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 06:54:31,176 INFO django.utils.autoreload [autoreload.py:266] /app/main/settings.py changed, reloading.
+2024-05-13 06:54:31,176 INFO django.utils.autoreload [autoreload.py:266] /app/main/settings.py changed, reloading.
+2024-05-13 08:34:17,560 INFO aiogram.dispatcher [dispatcher.py:527] Start polling
+2024-05-13 08:34:22,745 INFO aiogram.dispatcher [dispatcher.py:341] Run polling for bot @TSOLLER_TTC_ERRORS_BOT id=6771425717 - 'TSOLLER_TTC_ERRORS'
+2024-05-13 08:40:43,444 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 08:40:43,444 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 08:58:10,869 INFO aiogram.dispatcher [dispatcher.py:527] Start polling
+2024-05-13 08:58:11,392 INFO aiogram.dispatcher [dispatcher.py:341] Run polling for bot @TSOLLER_TTC_ERRORS_BOT id=6771425717 - 'TSOLLER_TTC_ERRORS'
+2024-05-13 08:58:54,978 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 08:58:54,978 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 09:14:08,617 INFO aiogram.dispatcher [dispatcher.py:527] Start polling
+2024-05-13 09:14:09,637 INFO aiogram.dispatcher [dispatcher.py:341] Run polling for bot @TSOLLER_TTC_ERRORS_BOT id=6771425717 - 'TSOLLER_TTC_ERRORS'
+2024-05-13 09:14:52,280 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 09:14:52,280 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 09:17:04,107 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 09:17:04,107 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 09:17:20,933 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 09:17:20,933 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 09:18:46,356 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 09:18:46,356 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 09:19:44,036 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 09:19:44,036 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:11:55,331 INFO aiogram.dispatcher [dispatcher.py:527] Start polling
+2024-05-13 12:11:55,890 INFO aiogram.dispatcher [dispatcher.py:341] Run polling for bot @TSOLLER_TTC_ERRORS_BOT id=6771425717 - 'TSOLLER_TTC_ERRORS'
+2024-05-13 12:12:48,170 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:12:48,170 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:12:51,054 INFO aiogram.event [dispatcher.py:172] Update id=874672921 is not handled. Duration 0 ms by bot id=6771425717
+2024-05-13 12:13:03,983 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 12:13:03,983 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 12:13:04,227 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui.css HTTP/1.0" 200 152071
+2024-05-13 12:13:04,230 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-standalone-preset.js HTTP/1.0" 200 230304
+2024-05-13 12:13:04,227 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui.css HTTP/1.0" 200 152071
+2024-05-13 12:13:04,230 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-standalone-preset.js HTTP/1.0" 200 230304
+2024-05-13 12:13:04,275 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-bundle.js HTTP/1.0" 200 1427395
+2024-05-13 12:13:04,275 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-bundle.js HTTP/1.0" 200 1427395
+2024-05-13 12:13:05,374 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/favicon-32x32.png HTTP/1.0" 200 628
+2024-05-13 12:13:05,374 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/favicon-32x32.png HTTP/1.0" 200 628
+2024-05-13 12:13:05,660 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 50896
+2024-05-13 12:13:05,660 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 50896
+2024-05-13 12:13:15,116 INFO django.server [basehttp.py:212] "POST /api/v1/user/login_user/?email=club_admin%40mail.com&password=123njkQ6%2A%2AN1q HTTP/1.0" 200 32
+2024-05-13 12:13:15,116 INFO django.server [basehttp.py:212] "POST /api/v1/user/login_user/?email=club_admin%40mail.com&password=123njkQ6%2A%2AN1q HTTP/1.0" 200 32
+2024-05-13 12:13:47,643 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 12:13:47,643 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 12:14:08,886 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:14:08,886 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:14:13,120 ERROR telegram_bot.send_error [send_error.py:22] hello!
+2024-05-13 12:14:13,276 INFO django.server [basehttp.py:212] "POST /api/v1/user/login_user/?email=club_admin%40mail.com&password=123njkQ6%2A%2AN1q HTTP/1.0" 200 32
+2024-05-13 12:14:13,276 INFO django.server [basehttp.py:212] "POST /api/v1/user/login_user/?email=club_admin%40mail.com&password=123njkQ6%2A%2AN1q HTTP/1.0" 200 32
+2024-05-13 12:14:39,132 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 12:14:39,132 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 12:14:51,013 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:14:51,013 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:15:20,141 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 12:15:20,141 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 12:15:29,770 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:15:29,770 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:15:40,074 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 12:15:40,074 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 12:16:07,160 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:16:07,160 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:16:40,035 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 12:16:40,035 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 12:17:44,172 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:17:44,172 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:22:33,480 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 12:22:33,480 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 12:22:44,803 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:22:44,803 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:24:09,403 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 12:24:09,403 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 12:24:15,386 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:24:15,386 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:24:25,067 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 12:24:25,067 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 12:24:32,902 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:24:32,902 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:24:42,629 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 12:24:42,629 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 12:24:49,795 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:24:49,795 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:24:54,407 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 12:24:54,407 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 12:25:02,104 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:25:02,104 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:25:15,804 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 12:25:15,804 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 12:25:24,931 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:25:24,931 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:25:39,369 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 12:25:39,369 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 12:25:46,669 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:25:46,669 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:27:37,383 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 12:27:37,383 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 12:27:42,403 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:27:42,403 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:28:15,332 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 12:28:15,332 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 12:28:21,909 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:28:21,909 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:46:59,443 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 12:46:59,443 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 12:47:04,963 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:47:04,963 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:49:31,093 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 12:49:31,093 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 12:49:36,390 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:49:36,390 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:49:50,571 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 12:49:50,571 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 12:49:55,827 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:49:55,827 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:50:33,147 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 12:50:33,147 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 12:50:38,861 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:50:38,861 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:52:55,313 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 12:52:55,313 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 12:53:00,753 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 12:53:00,753 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:00:30,722 INFO django.utils.autoreload [autoreload.py:266] /app/user/models/user.py changed, reloading.
+2024-05-13 13:00:30,722 INFO django.utils.autoreload [autoreload.py:266] /app/user/models/user.py changed, reloading.
+2024-05-13 13:00:36,233 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:00:36,233 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:22:41,216 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:22:41,216 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:22:44,879 INFO django.utils.autoreload [autoreload.py:266] /app/club/models/club.py changed, reloading.
+2024-05-13 13:22:44,879 INFO django.utils.autoreload [autoreload.py:266] /app/club/models/club.py changed, reloading.
+2024-05-13 13:22:52,840 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:22:52,840 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:24:03,180 INFO django.utils.autoreload [autoreload.py:266] /app/club/models/club.py changed, reloading.
+2024-05-13 13:24:03,180 INFO django.utils.autoreload [autoreload.py:266] /app/club/models/club.py changed, reloading.
+2024-05-13 13:24:12,287 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:24:12,287 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:25:54,910 INFO django.utils.autoreload [autoreload.py:266] /app/club/models/club.py changed, reloading.
+2024-05-13 13:25:54,910 INFO django.utils.autoreload [autoreload.py:266] /app/club/models/club.py changed, reloading.
+2024-05-13 13:26:04,779 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:26:04,779 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:26:09,694 INFO django.utils.autoreload [autoreload.py:266] /app/main/utils.py changed, reloading.
+2024-05-13 13:26:09,694 INFO django.utils.autoreload [autoreload.py:266] /app/main/utils.py changed, reloading.
+2024-05-13 13:26:18,287 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:26:18,287 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:27:22,288 INFO django.utils.autoreload [autoreload.py:266] /app/main/utils.py changed, reloading.
+2024-05-13 13:27:22,288 INFO django.utils.autoreload [autoreload.py:266] /app/main/utils.py changed, reloading.
+2024-05-13 13:27:31,522 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:27:31,522 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:29:21,816 INFO django.utils.autoreload [autoreload.py:266] /app/main/utils.py changed, reloading.
+2024-05-13 13:29:21,816 INFO django.utils.autoreload [autoreload.py:266] /app/main/utils.py changed, reloading.
+2024-05-13 13:29:31,671 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:29:31,671 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:29:40,541 INFO django.utils.autoreload [autoreload.py:266] /app/main/utils.py changed, reloading.
+2024-05-13 13:29:40,541 INFO django.utils.autoreload [autoreload.py:266] /app/main/utils.py changed, reloading.
+2024-05-13 13:29:49,334 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:29:49,334 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:30:34,019 INFO django.utils.autoreload [autoreload.py:266] /app/main/utils.py changed, reloading.
+2024-05-13 13:30:34,019 INFO django.utils.autoreload [autoreload.py:266] /app/main/utils.py changed, reloading.
+2024-05-13 13:30:42,932 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:30:42,932 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:30:46,700 INFO django.utils.autoreload [autoreload.py:266] /app/main/utils.py changed, reloading.
+2024-05-13 13:30:46,700 INFO django.utils.autoreload [autoreload.py:266] /app/main/utils.py changed, reloading.
+2024-05-13 13:30:54,922 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:30:54,922 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:31:07,583 INFO django.utils.autoreload [autoreload.py:266] /app/main/utils.py changed, reloading.
+2024-05-13 13:31:07,583 INFO django.utils.autoreload [autoreload.py:266] /app/main/utils.py changed, reloading.
+2024-05-13 13:31:16,619 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:31:16,619 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:32:09,332 INFO django.utils.autoreload [autoreload.py:266] /app/main/utils.py changed, reloading.
+2024-05-13 13:32:09,332 INFO django.utils.autoreload [autoreload.py:266] /app/main/utils.py changed, reloading.
+2024-05-13 13:32:17,608 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:32:17,608 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:32:21,281 INFO django.utils.autoreload [autoreload.py:266] /app/club/models/club.py changed, reloading.
+2024-05-13 13:32:21,281 INFO django.utils.autoreload [autoreload.py:266] /app/club/models/club.py changed, reloading.
+2024-05-13 13:32:32,861 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:32:32,861 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:34:13,880 INFO django.utils.autoreload [autoreload.py:266] /app/user/models/user.py changed, reloading.
+2024-05-13 13:34:13,880 INFO django.utils.autoreload [autoreload.py:266] /app/user/models/user.py changed, reloading.
+2024-05-13 13:34:23,075 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:34:23,075 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:34:24,879 INFO django.utils.autoreload [autoreload.py:266] /app/user/models/user.py changed, reloading.
+2024-05-13 13:34:24,879 INFO django.utils.autoreload [autoreload.py:266] /app/user/models/user.py changed, reloading.
+2024-05-13 13:34:34,019 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:34:34,019 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:36:37,938 INFO django.utils.autoreload [autoreload.py:266] /app/main/utils.py changed, reloading.
+2024-05-13 13:36:37,938 INFO django.utils.autoreload [autoreload.py:266] /app/main/utils.py changed, reloading.
+2024-05-13 13:36:48,462 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:36:48,462 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:37:35,249 INFO django.utils.autoreload [autoreload.py:266] /app/user/models/user.py changed, reloading.
+2024-05-13 13:37:35,249 INFO django.utils.autoreload [autoreload.py:266] /app/user/models/user.py changed, reloading.
+2024-05-13 13:37:44,792 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:37:44,792 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:39:20,753 INFO django.utils.autoreload [autoreload.py:266] /app/user/models/user.py changed, reloading.
+2024-05-13 13:39:20,753 INFO django.utils.autoreload [autoreload.py:266] /app/user/models/user.py changed, reloading.
+2024-05-13 13:39:31,221 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:39:31,221 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:39:38,445 INFO django.utils.autoreload [autoreload.py:266] /app/user/models/user.py changed, reloading.
+2024-05-13 13:39:38,445 INFO django.utils.autoreload [autoreload.py:266] /app/user/models/user.py changed, reloading.
+2024-05-13 13:39:47,857 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:39:47,857 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:41:35,804 INFO django.utils.autoreload [autoreload.py:266] /app/user/models/player.py changed, reloading.
+2024-05-13 13:41:35,804 INFO django.utils.autoreload [autoreload.py:266] /app/user/models/player.py changed, reloading.
+2024-05-13 13:41:45,657 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 13:41:45,657 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 14:45:29,871 INFO aiogram.dispatcher [dispatcher.py:527] Start polling
+2024-05-13 14:45:30,424 INFO aiogram.dispatcher [dispatcher.py:341] Run polling for bot @TSOLLER_TTC_ERRORS_BOT id=6771425717 - 'TSOLLER_TTC_ERRORS'
+2024-05-13 15:03:39,682 INFO aiogram.dispatcher [dispatcher.py:527] Start polling
+2024-05-13 15:03:40,596 INFO aiogram.dispatcher [dispatcher.py:341] Run polling for bot @TSOLLER_TTC_ERRORS_BOT id=6771425717 - 'TSOLLER_TTC_ERRORS'
+2024-05-13 15:04:40,976 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:04:40,976 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:04:49,806 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:04:49,806 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:04:50,282 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui.css HTTP/1.0" 200 152071
+2024-05-13 15:04:50,282 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui.css HTTP/1.0" 200 152071
+2024-05-13 15:04:50,302 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-standalone-preset.js HTTP/1.0" 200 230304
+2024-05-13 15:04:50,302 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-standalone-preset.js HTTP/1.0" 200 230304
+2024-05-13 15:04:50,512 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-bundle.js HTTP/1.0" 200 1427395
+2024-05-13 15:04:50,512 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-bundle.js HTTP/1.0" 200 1427395
+2024-05-13 15:04:52,780 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/favicon-32x32.png HTTP/1.0" 200 628
+2024-05-13 15:04:52,780 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/favicon-32x32.png HTTP/1.0" 200 628
+2024-05-13 15:04:53,906 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 50896
+2024-05-13 15:04:53,906 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 50896
+2024-05-13 15:05:19,647 INFO django.server [basehttp.py:212] "POST /api/v1/user/?Birth%20Date=2000-01-01&First%20Name=Ivan&Last%20Name=Pizdalov&email=club_admin%40mail.com&password=123njkQ6%2A%2AN1q HTTP/1.0" 201 32
+2024-05-13 15:05:19,647 INFO django.server [basehttp.py:212] "POST /api/v1/user/?Birth%20Date=2000-01-01&First%20Name=Ivan&Last%20Name=Pizdalov&email=club_admin%40mail.com&password=123njkQ6%2A%2AN1q HTTP/1.0" 201 32
+2024-05-13 15:05:41,698 INFO django.server [basehttp.py:212] "GET /api/v1/club/ HTTP/1.0" 200 2
+2024-05-13 15:05:41,698 INFO django.server [basehttp.py:212] "GET /api/v1/club/ HTTP/1.0" 200 2
+2024-05-13 15:13:44,469 INFO django.utils.autoreload [autoreload.py:266] /app/user/serializers.py changed, reloading.
+2024-05-13 15:13:44,469 INFO django.utils.autoreload [autoreload.py:266] /app/user/serializers.py changed, reloading.
+2024-05-13 15:13:51,086 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:13:51,086 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:13:56,562 INFO django.utils.autoreload [autoreload.py:266] /app/user/serializers.py changed, reloading.
+2024-05-13 15:13:56,562 INFO django.utils.autoreload [autoreload.py:266] /app/user/serializers.py changed, reloading.
+2024-05-13 15:14:01,384 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:14:01,384 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:14:09,307 INFO django.utils.autoreload [autoreload.py:266] /app/user/serializers.py changed, reloading.
+2024-05-13 15:14:09,307 INFO django.utils.autoreload [autoreload.py:266] /app/user/serializers.py changed, reloading.
+2024-05-13 15:14:16,906 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:14:16,906 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:14:55,854 INFO django.utils.autoreload [autoreload.py:266] /app/user/serializers.py changed, reloading.
+2024-05-13 15:14:55,854 INFO django.utils.autoreload [autoreload.py:266] /app/user/serializers.py changed, reloading.
+2024-05-13 15:15:00,882 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:15:00,882 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:15:06,209 INFO django.utils.autoreload [autoreload.py:266] /app/user/serializers.py changed, reloading.
+2024-05-13 15:15:06,209 INFO django.utils.autoreload [autoreload.py:266] /app/user/serializers.py changed, reloading.
+2024-05-13 15:15:11,950 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:15:11,950 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:15:13,503 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:15:13,503 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:15:13,581 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-standalone-preset.js HTTP/1.0" 304 0
+2024-05-13 15:15:13,581 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui.css HTTP/1.0" 304 0
+2024-05-13 15:15:13,581 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-bundle.js HTTP/1.0" 304 0
+2024-05-13 15:15:13,581 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-standalone-preset.js HTTP/1.0" 304 0
+2024-05-13 15:15:13,581 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui.css HTTP/1.0" 304 0
+2024-05-13 15:15:13,581 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-bundle.js HTTP/1.0" 304 0
+2024-05-13 15:15:14,047 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/favicon-32x32.png HTTP/1.0" 304 0
+2024-05-13 15:15:14,047 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/favicon-32x32.png HTTP/1.0" 304 0
+2024-05-13 15:15:14,222 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 50800
+2024-05-13 15:15:14,222 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 50800
+2024-05-13 15:18:12,201 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:18:12,201 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:18:17,683 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:18:17,683 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:18:19,695 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:18:19,695 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:18:19,758 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-bundle.js HTTP/1.0" 304 0
+2024-05-13 15:18:19,759 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui.css HTTP/1.0" 304 0
+2024-05-13 15:18:19,762 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-standalone-preset.js HTTP/1.0" 304 0
+2024-05-13 15:18:19,758 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-bundle.js HTTP/1.0" 304 0
+2024-05-13 15:18:19,759 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui.css HTTP/1.0" 304 0
+2024-05-13 15:18:19,762 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-standalone-preset.js HTTP/1.0" 304 0
+2024-05-13 15:18:19,924 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/favicon-32x32.png HTTP/1.0" 304 0
+2024-05-13 15:18:19,924 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/favicon-32x32.png HTTP/1.0" 304 0
+2024-05-13 15:18:20,102 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 48604
+2024-05-13 15:18:20,102 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 48604
+2024-05-13 15:18:56,922 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 15:18:56,922 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 15:19:02,790 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:19:02,790 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:19:24,254 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:19:24,254 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:19:29,669 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:19:29,669 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:19:31,262 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:19:31,262 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:19:31,705 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 51191
+2024-05-13 15:19:31,705 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 51191
+2024-05-13 15:20:04,770 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:20:04,770 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:20:10,795 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:20:10,795 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:20:24,903 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 15:20:24,903 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 15:20:31,438 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:20:31,438 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:20:57,523 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:20:57,523 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:21:03,883 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:21:03,883 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:21:05,616 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:21:05,616 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:21:06,149 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 48604
+2024-05-13 15:21:06,149 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 48604
+2024-05-13 15:21:55,180 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:21:55,180 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:22:00,559 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:22:00,559 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:22:02,079 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:22:02,079 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:22:02,132 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui.css HTTP/1.0" 304 0
+2024-05-13 15:22:02,132 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui.css HTTP/1.0" 304 0
+2024-05-13 15:22:02,149 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-bundle.js HTTP/1.0" 304 0
+2024-05-13 15:22:02,149 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-standalone-preset.js HTTP/1.0" 304 0
+2024-05-13 15:22:02,149 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-bundle.js HTTP/1.0" 304 0
+2024-05-13 15:22:02,149 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-standalone-preset.js HTTP/1.0" 304 0
+2024-05-13 15:22:02,460 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/favicon-32x32.png HTTP/1.0" 304 0
+2024-05-13 15:22:02,460 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/favicon-32x32.png HTTP/1.0" 304 0
+2024-05-13 15:22:02,595 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 48937
+2024-05-13 15:22:02,595 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 48937
+2024-05-13 15:22:36,598 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:22:36,598 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:22:41,848 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:22:41,848 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:22:44,690 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:22:44,690 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:22:45,154 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 48939
+2024-05-13 15:22:45,154 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 48939
+2024-05-13 15:23:49,508 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:23:49,508 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:23:55,225 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:23:55,225 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:24:00,629 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:24:00,629 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:24:00,954 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 49242
+2024-05-13 15:24:00,954 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 49242
+2024-05-13 15:24:38,754 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:24:38,754 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:24:45,200 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:24:45,200 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:24:47,545 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:24:47,545 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:24:47,886 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 46779
+2024-05-13 15:24:47,886 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 46779
+2024-05-13 15:26:50,757 INFO django.utils.autoreload [autoreload.py:266] /app/user/serializers.py changed, reloading.
+2024-05-13 15:26:50,757 INFO django.utils.autoreload [autoreload.py:266] /app/user/serializers.py changed, reloading.
+2024-05-13 15:26:55,811 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:26:55,811 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:26:58,859 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:26:58,859 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:26:58,919 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-standalone-preset.js HTTP/1.0" 304 0
+2024-05-13 15:26:58,919 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui.css HTTP/1.0" 304 0
+2024-05-13 15:26:58,919 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-bundle.js HTTP/1.0" 304 0
+2024-05-13 15:26:58,919 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-standalone-preset.js HTTP/1.0" 304 0
+2024-05-13 15:26:58,919 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui.css HTTP/1.0" 304 0
+2024-05-13 15:26:58,919 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-bundle.js HTTP/1.0" 304 0
+2024-05-13 15:26:59,176 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/favicon-32x32.png HTTP/1.0" 304 0
+2024-05-13 15:26:59,176 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/favicon-32x32.png HTTP/1.0" 304 0
+2024-05-13 15:26:59,434 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 46932
+2024-05-13 15:26:59,434 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 46932
+2024-05-13 15:27:25,185 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:27:25,185 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:27:33,451 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:27:33,451 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:27:37,932 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:27:37,932 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:27:38,524 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 49092
+2024-05-13 15:27:38,524 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 49092
+2024-05-13 15:28:19,684 INFO django.utils.autoreload [autoreload.py:266] /app/user/serializers.py changed, reloading.
+2024-05-13 15:28:19,684 INFO django.utils.autoreload [autoreload.py:266] /app/user/serializers.py changed, reloading.
+2024-05-13 15:28:24,684 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:28:24,684 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:28:26,633 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:28:26,633 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:28:26,914 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 49027
+2024-05-13 15:28:26,914 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 49027
+2024-05-13 15:28:44,915 INFO django.utils.autoreload [autoreload.py:266] /app/user/serializers.py changed, reloading.
+2024-05-13 15:28:44,915 INFO django.utils.autoreload [autoreload.py:266] /app/user/serializers.py changed, reloading.
+2024-05-13 15:28:51,306 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:28:51,306 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:35:10,520 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 15:35:10,520 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 15:35:16,502 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:35:16,502 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:35:50,621 INFO django.utils.autoreload [autoreload.py:266] /app/user/serializers.py changed, reloading.
+2024-05-13 15:35:50,621 INFO django.utils.autoreload [autoreload.py:266] /app/user/serializers.py changed, reloading.
+2024-05-13 15:35:57,905 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:35:57,905 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:36:15,716 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:36:15,716 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:36:15,790 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui.css HTTP/1.0" 304 0
+2024-05-13 15:36:15,791 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-bundle.js HTTP/1.0" 304 0
+2024-05-13 15:36:15,790 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui.css HTTP/1.0" 304 0
+2024-05-13 15:36:15,791 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-bundle.js HTTP/1.0" 304 0
+2024-05-13 15:36:15,812 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-standalone-preset.js HTTP/1.0" 304 0
+2024-05-13 15:36:15,812 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-standalone-preset.js HTTP/1.0" 304 0
+2024-05-13 15:36:16,174 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/favicon-32x32.png HTTP/1.0" 304 0
+2024-05-13 15:36:16,174 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/favicon-32x32.png HTTP/1.0" 304 0
+2024-05-13 15:36:16,447 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 51660
+2024-05-13 15:36:16,447 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 51660
+2024-05-13 15:36:31,395 INFO django.utils.autoreload [autoreload.py:266] /app/user/serializers.py changed, reloading.
+2024-05-13 15:36:31,395 INFO django.utils.autoreload [autoreload.py:266] /app/user/serializers.py changed, reloading.
+2024-05-13 15:36:41,610 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:36:41,610 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:36:43,694 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:36:43,694 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:36:44,437 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 49092
+2024-05-13 15:36:44,437 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 49092
+2024-05-13 15:38:35,974 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:38:35,974 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:38:41,775 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:38:41,775 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:38:45,710 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:38:45,710 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:38:46,086 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 48759
+2024-05-13 15:38:46,086 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 48759
+2024-05-13 15:41:16,482 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:41:16,482 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:41:21,428 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:41:21,428 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:42:59,762 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:42:59,762 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:43:05,392 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:43:05,392 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:46:59,058 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:46:59,058 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:47:05,506 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:47:05,506 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:47:05,583 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui.css HTTP/1.0" 304 0
+2024-05-13 15:47:05,584 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-standalone-preset.js HTTP/1.0" 304 0
+2024-05-13 15:47:05,584 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-bundle.js HTTP/1.0" 304 0
+2024-05-13 15:47:05,583 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui.css HTTP/1.0" 304 0
+2024-05-13 15:47:05,584 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-standalone-preset.js HTTP/1.0" 304 0
+2024-05-13 15:47:05,584 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-bundle.js HTTP/1.0" 304 0
+2024-05-13 15:47:05,925 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/favicon-32x32.png HTTP/1.0" 304 0
+2024-05-13 15:47:05,925 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/favicon-32x32.png HTTP/1.0" 304 0
+2024-05-13 15:47:06,132 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 48759
+2024-05-13 15:47:06,132 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 48759
+2024-05-13 15:47:40,272 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:47:40,272 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 15:47:47,868 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:47:47,868 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 15:47:52,907 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:47:52,907 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 15:47:53,239 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 46932
+2024-05-13 15:47:53,239 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 46932
+2024-05-13 16:21:25,786 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 16:21:25,786 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 16:21:25,852 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-standalone-preset.js HTTP/1.0" 304 0
+2024-05-13 16:21:25,852 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui.css HTTP/1.0" 304 0
+2024-05-13 16:21:25,853 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-bundle.js HTTP/1.0" 304 0
+2024-05-13 16:21:25,852 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-standalone-preset.js HTTP/1.0" 304 0
+2024-05-13 16:21:25,852 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui.css HTTP/1.0" 304 0
+2024-05-13 16:21:25,853 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-bundle.js HTTP/1.0" 304 0
+2024-05-13 16:21:26,176 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/favicon-32x32.png HTTP/1.0" 304 0
+2024-05-13 16:21:26,176 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/favicon-32x32.png HTTP/1.0" 304 0
+2024-05-13 16:21:26,244 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 46932
+2024-05-13 16:21:26,244 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 46932
+2024-05-13 16:24:22,130 INFO django.utils.autoreload [autoreload.py:266] /app/club/serializers.py changed, reloading.
+2024-05-13 16:24:22,130 INFO django.utils.autoreload [autoreload.py:266] /app/club/serializers.py changed, reloading.
+2024-05-13 16:24:28,168 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 16:24:28,168 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 16:24:31,087 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 16:24:31,087 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 16:24:31,684 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 46761
+2024-05-13 16:24:31,684 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 46761
+2024-05-13 16:27:27,892 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 16:27:27,892 INFO django.utils.autoreload [autoreload.py:266] /app/club/views.py changed, reloading.
+2024-05-13 16:27:33,290 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 16:27:33,290 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 16:29:01,926 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 16:29:01,926 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 16:29:07,326 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 16:29:07,326 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 16:29:21,173 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 16:29:21,173 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 16:29:21,590 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 48926
+2024-05-13 16:29:21,590 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 48926
+2024-05-13 16:30:41,135 INFO django.utils.autoreload [autoreload.py:266] /app/user/serializers.py changed, reloading.
+2024-05-13 16:30:41,135 INFO django.utils.autoreload [autoreload.py:266] /app/user/serializers.py changed, reloading.
+2024-05-13 16:30:46,353 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 16:30:46,353 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 16:30:56,322 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 16:30:56,322 INFO django.server [basehttp.py:212] "GET /api/docs/ HTTP/1.0" 200 4633
+2024-05-13 16:30:56,407 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-standalone-preset.js HTTP/1.0" 304 0
+2024-05-13 16:30:56,407 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-bundle.js HTTP/1.0" 304 0
+2024-05-13 16:30:56,408 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui.css HTTP/1.0" 304 0
+2024-05-13 16:30:56,407 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-standalone-preset.js HTTP/1.0" 304 0
+2024-05-13 16:30:56,407 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui-bundle.js HTTP/1.0" 304 0
+2024-05-13 16:30:56,408 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/swagger-ui.css HTTP/1.0" 304 0
+2024-05-13 16:30:56,694 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/favicon-32x32.png HTTP/1.0" 304 0
+2024-05-13 16:30:56,694 INFO django.server [basehttp.py:212] "GET /static/drf_spectacular_sidecar/swagger-ui-dist/favicon-32x32.png HTTP/1.0" 304 0
+2024-05-13 16:30:56,727 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 48861
+2024-05-13 16:30:56,727 INFO django.server [basehttp.py:212] "GET /api/schema/ HTTP/1.0" 200 48861
+2024-05-13 16:36:47,154 INFO django.utils.autoreload [autoreload.py:266] /app/main/settings.py changed, reloading.
+2024-05-13 16:36:47,154 INFO django.utils.autoreload [autoreload.py:266] /app/main/settings.py changed, reloading.
+2024-05-13 16:36:51,879 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 16:36:51,879 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 16:36:54,979 INFO django.utils.autoreload [autoreload.py:266] /app/main/settings.py changed, reloading.
+2024-05-13 16:36:54,979 INFO django.utils.autoreload [autoreload.py:266] /app/main/settings.py changed, reloading.
+2024-05-13 16:36:59,784 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 16:36:59,784 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 16:37:54,035 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 16:37:54,035 INFO django.utils.autoreload [autoreload.py:266] /app/user/views.py changed, reloading.
+2024-05-13 16:38:00,148 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 16:38:00,148 INFO django.utils.autoreload [autoreload.py:668] Watching for file changes with StatReloader
+2024-05-13 16:45:10,826 INFO django.utils.autoreload [autoreload.py:266] /app/main/settings.py changed, reloading.
+2024-05-13 16:45:10,826 INFO django.utils.autoreload [autoreload.py:266] /app/main/settings.py changed, reloading.

@@ -1,9 +1,12 @@
+# Python imports
+import asyncio
+
 # DRF imports
 from rest_framework.viewsets import ViewSet
 from rest_framework.generics import RetrieveAPIView
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.parsers import MultiPartParser, JSONParser
+from rest_framework.parsers import MultiPartParser
 from rest_framework.decorators import action
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 
@@ -28,6 +31,9 @@ from club.serializers import (
     ShowAllClubsSerializer,
     ClubGetSerializer
 )
+
+# import custom foos, classes, etc
+from telegram_bot.send_error import telegram_log_errors
 
 
 class ClubActions(ViewSet, RetrieveAPIView):
@@ -64,18 +70,10 @@ class ClubActions(ViewSet, RetrieveAPIView):
                 examples=[
                     OpenApiExample(
                         'Club Name: STRING',
-#                        summary='Email exampls',
                         value='TT Club'
                     ),
                 ],
             ),
-# NOTE: закомментировано специально
-#            OpenApiParameter(
-#                name="logo",
-#                description='Club logo',
-#                required=True,
-#                type=OpenApiTypes.BINARY,
-#            ),
             OpenApiParameter(
                 name="Club State",
                 description='State where club is placed',
@@ -190,18 +188,34 @@ class ClubActions(ViewSet, RetrieveAPIView):
         1. Creating new Club instance.
         2. Create new Admin Club instance, linked to user.
         """
-        serializer = self.get_serializer_class()
-        serializer = serializer(data=request.data)
+        try:
+            print('come 0')
+            serializer = self.get_serializer_class()
+            print('come 1')
+            serializer = serializer(data=request.data)
+            print('come 2')
+            if serializer.is_valid(raise_exception=True):
+                print('come 3') 
+                serializer.create(
+                    validated_data=serializer.validated_data,
+                    user=request.user
+                )
+                print('come 4') 
+                return Response(status=HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
-        if serializer.is_valid():
-            instance = serializer.create(
-                validated_data=serializer.validated_data,
-                user=request.user
+        except Exception as ex:
+            asyncio.run(
+                telegram_log_errors(
+                    f"[ClubActions][create_club] {ex}"
+                )
             )
-            instance.save()
-            return Response(status=HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+            
+            return Response(
+                ex,
+                status=HTTP_400_BAD_REQUEST
+            )
 
     @extend_schema(
         tags=["Club"],
@@ -330,19 +344,32 @@ class ClubActions(ViewSet, RetrieveAPIView):
         parser_classes=(MultiPartParser,)
     )
     def update_club(self, request, id=None) -> Response:
-        instance = self.get_object()
-        serializer = self.get_serializer_class()
-        serializer = serializer(instance=instance, data=request.data)
+        try:
+            instance = self.get_object()
+            serializer = self.get_serializer_class()
+            serializer = serializer(instance=instance, data=request.data)
 
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(
-                status=HTTP_200_OK                
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(
+                    status=HTTP_200_OK                
+                )
+
+            else:
+
+                return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+        
+        except Exception as ex:
+            asyncio.run(
+                telegram_log_errors(
+                    f"[ClubActions][update_club] {ex}"
+                )
             )
-
-        else:
-
-            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+        
+            return Response(
+                ex,
+                HTTP_400_BAD_REQUEST
+            )
 
     @extend_schema(
         tags=["Club"],
@@ -353,13 +380,26 @@ class ClubActions(ViewSet, RetrieveAPIView):
     )
     @action(detail=False, methods=['get'], url_path="list_clubs")
     def list_clubs(self, request) -> Response:
-        user = request.user
-        queryset = Club.objects.filter(admin_club__user=user).all()
-        serializer = self.get_serializer_class()
-        serializer = serializer(queryset, many=True)
-        serializer = serializer.data
+        try:
+            user = request.user
+            queryset = Club.objects.filter(admin_club__user=user).all()
+            serializer = self.get_serializer_class()
+            serializer = serializer(queryset, many=True)
+            serializer = serializer.data
 
-        return Response(status=200, data=serializer)
+            return Response(status=200, data=serializer)
+
+        except Exception as ex:
+            asyncio.run(
+                telegram_log_errors(
+                    f"[ClubActions][list_clubs] {ex}"
+                )
+            )
+            
+            return Response(
+                ex,
+                status=HTTP_400_BAD_REQUEST,
+            )
 
     @extend_schema(
         tags=["Club"],
@@ -388,9 +428,23 @@ class ClubActions(ViewSet, RetrieveAPIView):
     )
     @action(detail=True, methods=['get'], url_path='get_club')
     def get_club(self, request, pk=None):
-        club = Club.objects.filter(
-            id=pk
-        ).first()
-        serializer = self.get_serializer_class()
-        serializer = serializer(club)
-        return Response(serializer.data)
+        try:
+            club = Club.objects.filter(
+                id=pk
+            ).first()
+            serializer = self.get_serializer_class()
+            serializer = serializer(club)
+
+            return Response(serializer.data)
+
+        except Exception as ex:
+            asyncio.run(
+                telegram_log_errors(
+                    f"[ClubActions][get_club] {ex}"
+                )
+            )
+            
+            return Response(
+                ex,
+                status=HTTP_400_BAD_REQUEST,
+            )

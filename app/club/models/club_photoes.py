@@ -6,7 +6,7 @@ from typing import Iterable
 from main.base_model import BaseModel, models
 
 # import custom foos, classes
-from club.services import image_file_extension_validator
+from main.utils import image_file_extension_validator
 
 from main.settings import MEDIA_ROOT
 

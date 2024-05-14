@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from django.http import HttpResponse
 from rest_framework.decorators import action
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
+from rest_framework.parsers import MultiPartParser
 
 # import serializers
 from user.serializers import (
@@ -16,12 +17,12 @@ from user.serializers import (
     CreateUpdatePlayerSerializer,
     LoginUserSerializer
 )
+from user.swagger_serializer import SwaggerCreatePlayerSerializer
 
 
 # Swagger imports
-from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample, PolymorphicProxySerializer
 from drf_spectacular.types import OpenApiTypes
-
 
 
 # import constants, config data
@@ -30,6 +31,7 @@ from main.settings import HTTP_HEADERS
 
 # import custom foos, classes
 from user.services import hashing, JWTActions
+from telegram_bot.send_error import telegram_log_errors
 
 
 class UserCreateUpdate(ViewSet):
@@ -148,37 +150,49 @@ class UserCreateUpdate(ViewSet):
         3. Set JWT-pare on cookies.
         4. Return response with JWT.
         """
-        serializer = self.get_serializer_class()
-        serializer = serializer(data=request.data)
+        try:
+            serializer = self.get_serializer_class()
+            serializer = serializer(data=request.data)
 
-        if serializer.is_valid():
-            validated_data = serializer.validated_data
-            instance = serializer.save()
-            # go to hash password
-            instance.password = asyncio.run(hashing(
-                validated_data['password'],
-            ))
-            instance.save()
-            return_response = HttpResponse(
-                status=HTTP_201_CREATED,
-                headers=HTTP_HEADERS,
-                content=json.dumps(
-                    {
-                        "email": validated_data["email"]
-                    }
+            if serializer.is_valid(raise_exception=True):
+                validated_data = serializer.validated_data
+                instance = serializer.save()
+                # go to hash password
+                instance.password = asyncio.run(hashing(
+                    validated_data['password'],
+                ))
+                instance.save()
+                return_response = HttpResponse(
+                    status=HTTP_201_CREATED,
+                    headers=HTTP_HEADERS,
+                    content=json.dumps(
+                        {
+                            "email": validated_data["email"]
+                        }
+                    )
+                )
+
+                return asyncio.run(
+                    JWTActions(
+                        response=return_response,
+                        instance=instance                
+                    ).set_cookies_on_response()
+                )
+
+            else:
+
+                return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+        except Exception as ex:
+            asyncio.run(
+                telegram_log_errors(
+                    f'[UserCreateUpdate][create_user] {ex}'
                 )
             )
-
-            return asyncio.run(
-                JWTActions(
-                    response=return_response,
-                    instance=instance                
-                ).set_cookies_on_response()
+            return Response(
+                ex,
+                status=HTTP_400_BAD_REQUEST,
             )
-
-        else:
-
-            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
     @extend_schema(
         tags=["User"],
@@ -236,51 +250,129 @@ class UserCreateUpdate(ViewSet):
     @action(detail=False, methods=['post'], url_path="login_user")
     def login_user(self, request) -> Response:
         ''' login user '''
-        print('com to log')
-        serializer = self.get_serializer_class()
-        serializer = serializer(data=request.data)
+        try:
+            serializer = self.get_serializer_class()
+            serializer = serializer(data=request.data)
 
-        if serializer.is_valid():
-            validated_data = serializer.validated_data
-            print(f'val dat - . {serializer.validated_data}')
-            user = User.objects.filter(email=serializer.validated_data["email"]).first()
-            print(user)
-            return_response = HttpResponse(
-                status=HTTP_200_OK,
-                headers=HTTP_HEADERS,
-                content=json.dumps(
-                    {
-                        "email": validated_data["email"]
-                    }
+            if serializer.is_valid(raise_exception=True):
+                validated_data = serializer.validated_data
+                user = User.objects.filter(email=serializer.validated_data["email"]).first()
+                return_response = HttpResponse(
+                    status=HTTP_200_OK,
+                    headers=HTTP_HEADERS,
+                    content=json.dumps(
+                        {
+                            "email": validated_data["email"]
+                        }
+                    )
+                )
+                return asyncio.run(
+                    JWTActions(
+                            response=return_response,
+                            instance=user
+                        ).set_cookies_on_response()
+                )
+
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+        except Exception as ex:
+            asyncio.run(
+                telegram_log_errors(
+                    f'[UserCreateUpdate][login_user] {ex}'
                 )
             )
-            return asyncio.run(
-                JWTActions(
-                        response=return_response,
-                        instance=user
-                    ).set_cookies_on_response()
+            return Response(
+                ex,
+                status=HTTP_400_BAD_REQUEST,
             )
 
-        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
+list_users_schema = extend_schema(
+    parameters=[
+        OpenApiParameter(
+            name="username",
+            description=(
+                "Searches for the value in this query parameter returning "
+                "all the users that have this value as substring. Ignores lowercase and uppercase."
+            ),
+            type=str
+        )
+    ]
+)
 
 class PlayerCreateUpdate(ViewSet):
     """ class for creating and updating users """
     http_method_names = ['post', 'update']
     lookup_field = 'id'
     permission_classes = [IsAuthenticated]
+    parser_classes = (MultiPartParser, )
 
     def get_serializer_class(self):
         """ define serializer for class """
         if self.action == 'create_player':
             return CreateUpdatePlayerSerializer
+# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE2MjYyODYwLCJpYXQiOjE3MTU2NjI4NjAsImp0aSI6IjM3MDgzMDcxOWVkNDRkOGFiOTE3ZGM0Y2I5ODgyMDk3IiwidXNlcl9pZCI6Mn0.DYIgMoTUqqG6Hej00Lcyh37D3A5ng3VMe0bsVbz7MNQ
 
     @extend_schema(
         tags=["User"],
         summary="Create player instance for existing user",
         description="POST request to create player instance for existing user",
-        auth=None,
         operation_id="Create player instance for existing user",
+        request=SwaggerCreatePlayerSerializer,
+        responses={
+            200: None,
+        },
+    )
+    @action(
+        detail=False,
+        methods=['post'],
+        url_path="create_player",
+        parser_classes=(MultiPartParser,)
+    )
+    def create_player(self, request) -> Response:
+        """ creating new player """
+        print("PIZDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        print(request.data)
+        try:
+            serializer = self.get_serializer_class()
+            serializer = serializer(data=request.data)
+#            print(serializer.data)
+            if serializer.is_valid(raise_exception=True):
+                print(f'serializer.validated_data -> {serializer.validated_data}')
+                print(type(request.user))
+                validated_data = serializer.validated_data
+                instance = serializer.create(
+                    validated_data=validated_data,
+                    user=request.user
+                )
+
+                return Response(
+                    status=HTTP_201_CREATED,
+                    data={
+                        "playest": validated_data
+                    }
+                )
+
+            else:
+
+                return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+        
+        except Exception as ex:
+            asyncio.run(
+                telegram_log_errors(
+                    f'[UserCreateUpdate][create_player] {ex}'
+                )
+            )
+            return Response(
+                data=(
+                    f'Not valid JSON. Error text: {ex}'
+                ),
+                status=HTTP_400_BAD_REQUEST
+            )
+
+
+"""
+
         parameters=[
             OpenApiParameter(
                 name="sex",
@@ -319,81 +411,32 @@ class PlayerCreateUpdate(ViewSet):
                 ),
                 examples=[
                     OpenApiExample(
-                        'User Raing in our system',
+                        'User rating in our system',
                         value=200
                     ),
                 ],
             ),
             OpenApiParameter(
-                name='user info',
-                required=["first_name", "last_name"],
-                type=OpenApiTypes.OBJECT,
-                description=(
-                        "Rating of user in our system. " 
-                        "100 by default"
-                ),
-                examples=[
-                    OpenApiExample(
-                        'User Oject with first name name and last name',
-                        value={
-                            "last_name": "Ivanov",
-                            "first_name": "Kaktus"
-                        }
-                    ),
-                ],
+                name="user",
+                type=OpenApiTypes.BINARY,
+                description="User information",
             ),
+#            OpenApiParameter(
+#                name='user info',
+#                required=["first_name", "last_name"],
+#                type=OpenApiTypes.OBJECT,
+#                description=(
+#                        "Rating of user in our system. " 
+#                        "100 by default"
+#                ),
+#                examples=[
+#                    OpenApiExample(
+#                        'User Oject with first name name and last name',
+#                        value={
+#                            "photo": 
+#                        }
+#                    ),
+#                ],
+#            ),
         ],
-        examples=[
-            OpenApiExample(
-                'Example: succes login user',
-                description=(
-                    "User is a base model for player, "
-                    "club admin, touernament admin"
-                ),
-                value={
-                    "sex": "FEMALE",
-                    "handedness": "BOTH",
-                    "rating": 69,
-                    "user": {
-                        "last_name": "Doe",
-                        "first_name": "John"
-                    }
-                }
-            ),
-        ],
-        responses={
-            200: None,
-        }
-    )
-    @action(detail=False, methods=['post'], url_path="create_player")
-    def create_player(self, request) -> Response:
-        """ creating new player """
-        try:
-            serializer = self.get_serializer_class()
-            print(request.data)
-            serializer = serializer(data=request.data)
-
-            if serializer.is_valid(raise_exception=True):
-                validated_data = serializer.validated_data
-                instance = serializer.save()
-                instance.save()
-
-                return Response(
-                    status=HTTP_201_CREATED,
-                    data={
-                        "playest": validated_data
-                    }
-                )
-
-            else:
-
-                return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
-        
-        except Exception as ex:
-
-            return Response(
-                data=(
-                    f'Not valid JSON. Error text: {ex}'
-                ),
-                status=HTTP_400_BAD_REQUEST
-            )
+"""

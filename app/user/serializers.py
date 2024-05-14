@@ -10,6 +10,9 @@ import asyncio
 # DRF imports
 from rest_framework import serializers, exceptions
 
+# Swagger imports
+from drf_spectacular.utils import extend_schema_serializer
+
 # import models
 from user.models.user import User
 from user.models.player import Player
@@ -142,9 +145,23 @@ class UserNamesSerializer(serializers.ModelSerializer):
     )
 
 
+class UserPhotoSerializer(serializers.ModelSerializer):
+    """
+    Serializer-helper for photo serialization in
+    creating new player.
+    """
+    class Meta:
+        model = User
+        fields = ("photo",)
+
+    photo = serializers.ImageField()
+
+
+# FIXME: это можно сделать, уверен, через два сериалайзера
+# вместо переопределения метода create
 class CreateUpdatePlayerSerializer(serializers.ModelSerializer):
     """ Serializer for creating player instance """
-    user = UserNamesSerializer(read_only=True)
+    # https://www.django-rest-framework.org/api-guide/relations/#nested-relationships
 
     class Meta:
         model = Player
@@ -152,7 +169,22 @@ class CreateUpdatePlayerSerializer(serializers.ModelSerializer):
             'sex',
             'handedness',
             'rating',
-            'user'
+            'photo'
         ]
 
-    rating = serializers.IntegerField()
+    photo = serializers.ImageField()
+
+    def create(self, validated_data: dict, user: User):
+        print('go 0')
+        print(validated_data)
+        print(type(validated_data))
+        photo = validated_data.pop("photo")
+        player = Player.objects.create(**validated_data)
+        print('go 1')
+        if photo:
+            print('go 2')
+            user.photo = photo
+            print('go 3')
+            user.save()
+            print('go 4')
+        return player

@@ -17,6 +17,18 @@ from user.constants import PASSWORD_IS_REQUIRED, EMAIL_IS_REQUIRED
 
 # import custom foos, classes
 from user.services import hashing
+from main.utils import (
+    define_image_file_path,
+    image_file_extension_validator
+)
+
+
+def define_user_photo_path(instance, filename):
+    return define_image_file_path(
+        instance=instance,
+        filename=filename,
+        directory="user_photoes/"
+    )
 
 
 class CustomUserManager(BaseUserManager):
@@ -107,6 +119,14 @@ class User(AbstractUser):
         null=True,
         verbose_name="User's birth date",
         help_text="User's birth date"
+    )
+
+    photo = models.ImageField(
+        upload_to=define_user_photo_path,
+        null=True,
+        verbose_name="User Photo",
+        help_text="User Photo",
+        validators=[image_file_extension_validator]
     )
 
     def __str__(self):

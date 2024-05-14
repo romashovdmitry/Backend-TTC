@@ -14,12 +14,14 @@ python-dotenv==1.0.0
 drf-spectacular==0.27.2
 drf-spectacular-sidecar
 
-
 # customize admin-panel
 django-adminlte-3==0.1.6
 
 # CORS
 django-cors-headers==4.3.1
+
+# Telegram Bot
+aiogram==3.6.0
 
 # for images in Admin panel
 Pillow==10.1.0

@@ -3,6 +3,10 @@ from pathlib import Path
 import os
 from datetime import timedelta
 
+# Telegram imports
+from aiogram import Bot
+from aiogram.enums import ParseMode
+
 SECRET_KEY = os.getenv("SECRET_KEY") or "secret"
 JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY") or ""
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,7 +41,8 @@ INSTALLED_APPS = [
     "main",
     "user",
     "club",
-    "tournament"
+    "tournament",
+    "telegram_bot"
 ]
 
 MIDDLEWARE = [
@@ -178,10 +183,50 @@ SPECTACULAR_SETTINGS = {
     'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
     'REDOC_DIST': 'SIDECAR',
     # https://stackoverflow.com/a/67522312/24040439
-    'COMPONENT_SPLIT_REQUEST': True,
+    # https://drf-spectacular.readthedocs.io/en/latest/faq.html#filefield-imagefield-is-not-handled-properly-in-the-schema
+    "COMPONENT_SPLIT_REQUEST": True
 
 }
 
 
 MEDIA_URL = os.getenv("MEDIA_URL")
 MEDIA_ROOT = os.path.join(BASE_DIR, os.getenv("MEDIA_ROOT"))
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "console": {"format": "%(asctime)s %(levelname) -4s %(name) -2s [%(pathname)s:%(lineno)d] %(message)s"},
+        "file": {"format": "%(asctime)s %(levelname) -4s %(name) -2s [%(filename)s:%(lineno)d] %(message)s"},
+    },
+    "handlers": {
+        "console": {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+            "formatter": "console",
+        },
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.handlers.RotatingFileHandler",
+            "formatter": "file",
+            "filename": f"{BASE_DIR}/logs/django_log.log",
+            "backupCount": 10,  # only 10 log files
+            "maxBytes": 5242880,  # 5*1024*1024 bytes (5MB)
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console", "file"],
+            "level": "INFO",
+        },
+    },
+    "root": {
+        "handlers": ["console", "file"],
+        "level": "INFO",
+    },
+}
+
+bot = Bot(
+    os.getenv("TELEGRAM_BOT_TOKEN"),
+    parse_mode=ParseMode.HTML
+)

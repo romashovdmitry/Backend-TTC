@@ -11,10 +11,13 @@ from main.base_model import models, BaseModel
 from user.models.club_admin import ClubAdmin
 
 # import custom foos, classes
-from club.services import image_file_extension_validator
+from main.utils import image_file_extension_validator
 
 # import constants, config data
 from main.settings import MEDIA_ROOT
+
+# import custom foos, classes
+from main.utils import define_image_file_path
 
 
 # FIXME: улучгить аннотирование
@@ -26,9 +29,17 @@ def define_logo_path(instance, filename):
         return "logos/" + instance.name.replace(" ", "_") + "_logo." + filename.split(".")[-1]
 
     except Exception as ex:
-        # FIXME: здесь логгирование должно быть
+    # FIXME: здесь логгирование должно быть
         print(ex)
-        return filename
+    return filename
+
+"""
+    return define_image_file_path(
+        instance=instance,
+        filename=filename,
+        directory="logos/"
+    )
+"""
 
 
 class Club(BaseModel):

@@ -33,6 +33,24 @@ class Player(BaseModel):
         help_text="Rating of player in club rating system"
     )
 
+    blade = models.CharField(
+        max_length=256,
+        null=True,
+        help_text="Player's Blade"
+    )
+
+    rubber_forehand = models.CharField(
+        max_length=256,
+        null=True,
+        help_text="Player's Ruber Forehand"
+    )
+
+    rubber_backhand = models.CharField(
+        max_length=256,
+        null=True,
+        help_text="Player's Ruber Backhand"
+    )
+
     user = models.ForeignKey(
         "user.user",
         null=True,
