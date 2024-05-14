@@ -15,7 +15,8 @@ logger = logging.getLogger(__name__)
 def define_image_file_path(
         filename: str,
         directory: str,
-        instance: Model
+        object_type: str,
+        instance_indicator: str
 ):
     """
     Define path for uploaded to API image.
@@ -32,20 +33,7 @@ def define_image_file_path(
             
     """
     try:
-        print(000000000)
-        print(directory)
-        print(11111)
-        print(instance)
-        print(22222)
-        print(filename)
-        print(333333) 
-        print(instance.id)
-        print(4444444)
-        print(filename.split(".")[-1])
-        print(55555555)
-        print(directory + str(instance.id) + "_user_photo." + filename.split(".")[-1])
-        print(6666666)        
-        return directory + instance.id + "_user_photo." + filename.split(".")[-1]
+        return directory + instance_indicator + object_type + filename.split(".")[-1]
 
     except Exception as ex:
         # FIXME: здесь логгирование должно быть

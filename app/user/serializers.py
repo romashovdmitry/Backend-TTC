@@ -175,16 +175,11 @@ class CreateUpdatePlayerSerializer(serializers.ModelSerializer):
     photo = serializers.ImageField()
 
     def create(self, validated_data: dict, user: User):
-        print('go 0')
-        print(validated_data)
-        print(type(validated_data))
         photo = validated_data.pop("photo")
         player = Player.objects.create(**validated_data)
-        print('go 1')
+
         if photo:
-            print('go 2')
             user.photo = photo
-            print('go 3')
             user.save()
-            print('go 4')
+
         return player

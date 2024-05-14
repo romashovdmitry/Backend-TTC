@@ -331,15 +331,11 @@ class PlayerCreateUpdate(ViewSet):
     )
     def create_player(self, request) -> Response:
         """ creating new player """
-        print("PIZDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-        print(request.data)
         try:
             serializer = self.get_serializer_class()
             serializer = serializer(data=request.data)
-#            print(serializer.data)
+
             if serializer.is_valid(raise_exception=True):
-                print(f'serializer.validated_data -> {serializer.validated_data}')
-                print(type(request.user))
                 validated_data = serializer.validated_data
                 instance = serializer.create(
                     validated_data=validated_data,

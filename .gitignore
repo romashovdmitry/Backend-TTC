@@ -4,10 +4,14 @@
 # mediafiles
 /app/media/logos/*
 /app/media/club_photoes/*
+/app/media/user_photoes/*
 
 # file for development on local
 __PLAN__.txt
 commands.txt
+
+# logs
+/app/logs/*
 
 # etc
 *.pyc

@@ -38,11 +38,6 @@ async def delete_old_logo(sender: BaseModel, instance: Club, **kwargs):
         if diff.getbbox():
             os.remove(current_image_path)
 
-        else:
-            print('image are same ')
-
     except Exception as ex:
         os.remove(current_image_path)
-        print("DONE")
-        print(ex)
 """

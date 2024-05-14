@@ -189,18 +189,14 @@ class ClubActions(ViewSet, RetrieveAPIView):
         2. Create new Admin Club instance, linked to user.
         """
         try:
-            print('come 0')
             serializer = self.get_serializer_class()
-            print('come 1')
             serializer = serializer(data=request.data)
-            print('come 2')
+
             if serializer.is_valid(raise_exception=True):
-                print('come 3') 
                 serializer.create(
                     validated_data=serializer.validated_data,
                     user=request.user
                 )
-                print('come 4') 
                 return Response(status=HTTP_201_CREATED)
             else:
                 return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
@@ -208,12 +204,11 @@ class ClubActions(ViewSet, RetrieveAPIView):
         except Exception as ex:
             asyncio.run(
                 telegram_log_errors(
-                    f"[ClubActions][create_club] {ex}"
+                    f"[ClubActions][create_club] {str(ex)}"
                 )
             )
-            
             return Response(
-                ex,
+                data=str(ex),
                 status=HTTP_400_BAD_REQUEST
             )
 
@@ -362,13 +357,13 @@ class ClubActions(ViewSet, RetrieveAPIView):
         except Exception as ex:
             asyncio.run(
                 telegram_log_errors(
-                    f"[ClubActions][update_club] {ex}"
+                    f"[ClubActions][update_club] {str(ex)}"
                 )
             )
         
             return Response(
-                ex,
-                HTTP_400_BAD_REQUEST
+                data=str(ex),
+                status=HTTP_400_BAD_REQUEST
             )
 
     @extend_schema(
@@ -392,12 +387,12 @@ class ClubActions(ViewSet, RetrieveAPIView):
         except Exception as ex:
             asyncio.run(
                 telegram_log_errors(
-                    f"[ClubActions][list_clubs] {ex}"
+                    f"[ClubActions][list_clubs] {str(ex)}"
                 )
             )
             
             return Response(
-                ex,
+                data=str(ex),
                 status=HTTP_400_BAD_REQUEST,
             )
 
@@ -440,11 +435,11 @@ class ClubActions(ViewSet, RetrieveAPIView):
         except Exception as ex:
             asyncio.run(
                 telegram_log_errors(
-                    f"[ClubActions][get_club] {ex}"
+                    f"[ClubActions][get_club] {str(ex)}"
                 )
             )
             
             return Response(
-                ex,
+                data=str(ex),
                 status=HTTP_400_BAD_REQUEST,
             )

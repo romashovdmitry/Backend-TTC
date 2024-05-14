@@ -59,25 +59,16 @@ class ClubCreateUpdateSerializer(serializers.ModelSerializer):
         redefine save method for creating club_admin
         and club photoes
         """
-        print(1)
         photoes = self.initial_data.get('photo')
-        print(2)
-        print(validated_data)
-        club = Club.objects.create(**validated_data)
-        print(3)
-        if photoes:
-            print(4)
-            for photo_data in photoes:
-                photo = ClubPhoto.objects.create(club=club, photo=photo_data)
-                photo.save()
-                print(5)
-        print(6)
-        club_admin = ClubAdmin.objects.create(
+        validated_data["admin_club"] = ClubAdmin.objects.create(
             user=user
         )
-        print(7)
-        club.admin_club = club_admin
-        club.save()
+        club = Club.objects.create(**validated_data)
+
+        if photoes:
+
+            for photo_data in photoes:
+                ClubPhoto.objects.create(club=club, photo=photo_data)
 
         return club
     

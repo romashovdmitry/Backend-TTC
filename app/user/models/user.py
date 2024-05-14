@@ -24,9 +24,11 @@ from main.utils import (
 
 
 def define_user_photo_path(instance, filename):
+
     return define_image_file_path(
-        instance=instance,
+        instance_indicator=str(instance.id),
         filename=filename,
+        object_type="_user_photo.",
         directory="user_photoes/"
     )
 

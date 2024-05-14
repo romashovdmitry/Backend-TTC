@@ -25,21 +25,12 @@ def define_logo_path(instance, filename):
     """
     define club logo path
     """
-    try:
-        return "logos/" + instance.name.replace(" ", "_") + "_logo." + filename.split(".")[-1]
-
-    except Exception as ex:
-    # FIXME: здесь логгирование должно быть
-        print(ex)
-    return filename
-
-"""
     return define_image_file_path(
-        instance=instance,
+        instance_indicator=instance.name,
         filename=filename,
+        object_type="_logo.",
         directory="logos/"
     )
-"""
 
 
 class Club(BaseModel):
@@ -136,9 +127,10 @@ class Club(BaseModel):
         redefine method for removing image,
         if it's updating.
         """
-        if self.logo:
+        if self.logo and self.pk:
             club = Club.objects.get(pk=self.pk)
             current_image_path = MEDIA_ROOT + '/' + str(club.logo)
-            os.remove(current_image_path)        
+            os.remove(current_image_path)
+        
         super(Club, self).save(*args, **kwargs)
         

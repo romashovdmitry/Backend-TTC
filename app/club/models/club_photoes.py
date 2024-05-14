@@ -66,7 +66,6 @@ class ClubPhoto(BaseModel):
                 "." +
                 (str(self.photo).split(".")[-1]).replace(" ", "_")
             )
-
             os.rename(
                 MEDIA_ROOT + "/" + str(self.photo),
                 MEDIA_ROOT + "/" + club_photo_directory + club_name
@@ -74,7 +73,7 @@ class ClubPhoto(BaseModel):
             self.photo = club_photo_directory + club_name
         except Exception as ex:
             # FIXME: здесь логгирование должно быть
-            print(ex)
+            print(f'ERRORERS -> {ex}')
 
         finally:
             return super().save()

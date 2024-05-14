@@ -19,7 +19,7 @@ async def main() -> None:
     """
     Ф-ция запускает работу бота.
     """
-    print('go')
+    print('bot go')
     await dp.start_polling(bot)
 
 
