@@ -1,6 +1,7 @@
 # Python imports
 from pathlib import Path
 import os
+import sys
 from datetime import timedelta
 
 # Telegram imports
@@ -230,3 +231,10 @@ bot = Bot(
     os.getenv("TELEGRAM_BOT_TOKEN"),
     parse_mode=ParseMode.HTML
 )
+
+
+if 'test' in sys.argv:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'mydatabase'
+    }

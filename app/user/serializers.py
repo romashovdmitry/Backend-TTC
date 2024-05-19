@@ -9,6 +9,7 @@ import asyncio
 
 # DRF imports
 from rest_framework import serializers, exceptions
+from rest_framework.exceptions import ValidationError
 
 # Swagger imports
 from drf_spectacular.utils import extend_schema_serializer
@@ -33,6 +34,8 @@ class CreateUserSerializer(serializers.ModelSerializer):
             'last_name',
             'birth_date'
         ]
+        # https://stackoverflow.com/a/66790239/24040439
+        extra_kwargs = {i:{'required': True, "allow_null": False} for i in fields}
 
     email = serializers.EmailField(
         trim_whitespace=True,
@@ -43,6 +46,28 @@ class CreateUserSerializer(serializers.ModelSerializer):
         trim_whitespace=True,
         label='Password'
     )
+
+    def validate_first_name(self, first_name_string: str) -> str | serializers.ValidationError:
+        """
+        Validate length of first_name string
+        """
+        if len(first_name_string) < 3:
+            raise serializers.ValidationError(
+                "First Name must contains at least 2 alphabets",
+                code="fist_name_too_short"
+            )
+        return first_name_string
+    
+    def validate_last_name(self, last_name_string: str) -> str | serializers.ValidationError:
+        """
+        Validate length of last_name string        
+        """
+        if len(last_name_string) < 3:
+            raise serializers.ValidationError(
+                "Last Name must contains at least 2 alphabets",
+                code="last_name_too_short"
+            )
+        return last_name_string            
 
     def validate_password(self, password):
         ''' validate password '''
@@ -157,29 +182,47 @@ class UserPhotoSerializer(serializers.ModelSerializer):
     photo = serializers.ImageField()
 
 
-# FIXME: это можно сделать, уверен, через два сериалайзера
-# вместо переопределения метода create
-class CreateUpdatePlayerSerializer(serializers.ModelSerializer):
+class UpdatePlayerSerializer(serializers.ModelSerializer):
     """ Serializer for creating player instance """
     # https://www.django-rest-framework.org/api-guide/relations/#nested-relationships
 
     class Meta:
         model = Player
-        fields = [
-            'sex',
-            'handedness',
-            'rating',
-            'photo'
-        ]
+        fields = "__all__"
 
-    photo = serializers.ImageField()
+    photo = serializers.ImageField(required=False)
+
+
+# FIXME: это можно сделать, уверен, через два сериалайзера
+# вместо переопределения метода create
+class CreatePlayerSerializer(UpdatePlayerSerializer):
+    """ Serializer for creating player instance """
+    # https://www.django-rest-framework.org/api-guide/relations/#nested-relationships
+
+    photo = serializers.ImageField(required=True)
 
     def create(self, validated_data: dict, user: User):
         photo = validated_data.pop("photo")
-        player = Player.objects.create(**validated_data)
+        validated_data["user_id"] = user.id
 
-        if photo:
-            user.photo = photo
-            user.save()
+        # if player does not exists
+        if Player.objects.filter(
+            user=self.initial_data["user"]
+        ).first() is None:
+            player = Player.objects.create(**validated_data)
 
-        return player
+            if photo:
+                user.photo = photo
+                user.save()
+
+            return player
+    
+        raise ValidationError("Player already created!")
+
+    
+
+class GetPlayerInfoSerializer(serializers.ModelSerializer):
+    """ serializer for returning info aout Playser by user.id """
+    class Meta:
+        model = Player
+        fields = "__all__"

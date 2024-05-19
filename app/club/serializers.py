@@ -25,16 +25,17 @@ class ClubPhotoSerializer(serializers.ModelSerializer):
         fields = ["photo"]
 
 
-class ClubCreateUpdateSerializer(serializers.ModelSerializer):
-    """ serailizer for creating new Club object """
-    photo = ClubPhotoSerializer(many=True, required=False)
-
+class ClubUpdateSerializer(serializers.ModelSerializer):
+    """
+    serializer for update club info:
+        - without photo field
+        - without overriding create method
+    """
     class Meta:
         model = Club
-        fields = "__all__"
+#        fields = "__all__"
+        exclude = ["admin_club"]
 
-    # NOTE: можнz заменить на такую конструкциию
-    # logo = serializers.ImageField(required=False, validators=[FileExtensionValidator(allowed_extensions=allowed_extensions)])
     def validate_logo(self, object):
         """
         check correct format of image file or not
@@ -54,12 +55,28 @@ class ClubCreateUpdateSerializer(serializers.ModelSerializer):
                 "Image field is required. "
             )            
 
+
+class ClubCreateSerializer(ClubUpdateSerializer):
+    """
+    serailizer for creating new Club object: inherited
+    from ClubUpdateSerializer with ovverriding:
+        - serializing club photo fields
+        - create method
+    """
+    photo = ClubPhotoSerializer(many=True, required=False)
+
+
+    # NOTE: можнz заменить на такую конструкциию
+    # logo = serializers.ImageField(required=False, validators=[FileExtensionValidator(allowed_extensions=allowed_extensions)])
+
+
     def create(self, validated_data, user: User) -> Club:
         """
         redefine save method for creating club_admin
         and club photoes
         """
-        photoes = self.initial_data.get('photo')
+        photoes = self.initial_data.getlist('photo')
+        validated_data = self.validated_data
         validated_data["admin_club"] = ClubAdmin.objects.create(
             user=user
         )
@@ -96,3 +113,5 @@ class ClubGetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Club
         fields = "__all__"
+
+

@@ -4,6 +4,9 @@ from main.base_model import models, BaseModel
 # import constants
 from tournament.constants import TOURNAMENT_STATUS
 
+# FIXME: это можно без импорта сделать
+from club.models.club import Club
+
 
 class Tournament(BaseModel):
     """
@@ -58,6 +61,7 @@ class Tournament(BaseModel):
 
     status = models.CharField(
         choices=TOURNAMENT_STATUS,
+        max_length=16,
         default=0,
         null=True,
         verbose_name="Tournament Status",
@@ -65,7 +69,8 @@ class Tournament(BaseModel):
     )
 
     club = models.ForeignKey(
-        "club.club",
+        # FIXME: можно без импорта сделать
+        Club,
         null=True,
         on_delete=models.SET_NULL,
         verbose_name="Club where tournament run",

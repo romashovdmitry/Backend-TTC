@@ -60,13 +60,20 @@ class CustomUserManager(BaseUserManager):
 
     def create_superuser(self, password=None, **kwargs):
         """ custom creating superuser """
+        birth_date = str(os.getenv("SUPER_BIRTH_DATE"))
+        birth_date = datetime.strptime(birth_date, "%y-%m-%d")
+        print(f'birth_date -> {birth_date}')
+        print(f'type(birth_date) -> {type(birth_date)}')
         password = os.getenv("SUPER_PASSWORD")
         kwargs.setdefault("email", os.getenv("SUPER_EMAIL"))
         kwargs.setdefault("is_staff", True)
         kwargs.setdefault("is_superuser", True)
         kwargs.setdefault("is_active", True)
-        return self.create_user(password, **kwargs)
+        kwargs.setdefault("first_name", os.getenv("SUPER_FIRST_NAME"))
+        kwargs.setdefault("last_name", os.getenv("SUPER_LAST_NAME"))
+        kwargs.setdefault("birth_date", birth_date)
 
+        return self.create_user(password, **kwargs)
 
 class User(AbstractUser):
     '''
@@ -118,7 +125,7 @@ class User(AbstractUser):
     )
 
     birth_date = models.DateField(
-        null=True,
+        null=False,
         verbose_name="User's birth date",
         help_text="User's birth date"
     )

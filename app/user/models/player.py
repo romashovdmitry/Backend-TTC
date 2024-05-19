@@ -17,12 +17,14 @@ class Player(BaseModel):
 
     sex = models.CharField(
         choices=GENDER_CHOISE,
-        null=True,
+        max_length=16,
+        null=False,
         help_text="Choise of player's sex"
     )
 
     handedness = models.CharField(
         choices=HAND_CHOISE,
+        max_length=16,
         null=True,
         help_text="By which hand player prefer to play, or both"
     )

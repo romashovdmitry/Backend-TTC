@@ -4,6 +4,7 @@ import asyncio
 
 # DRF imports
 from rest_framework.viewsets import ViewSet
+from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from django.http import HttpResponse
@@ -14,16 +15,19 @@ from rest_framework.parsers import MultiPartParser
 # import serializers
 from user.serializers import (
     CreateUserSerializer,
-    CreateUpdatePlayerSerializer,
-    LoginUserSerializer
+    CreatePlayerSerializer,
+    UpdatePlayerSerializer,
+    LoginUserSerializer,
+    GetPlayerInfoSerializer
 )
-from user.swagger_serializer import SwaggerCreatePlayerSerializer
-
+from user.swagger_serializer import SwaggerCreatePlayerSerializer, SwaggerUpdatePlayerSerializer
 
 # Swagger imports
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample, PolymorphicProxySerializer
 from drf_spectacular.types import OpenApiTypes
 
+# import models
+from user.models.player import Player
 
 # import constants, config data
 from user.models.user import User
@@ -132,8 +136,8 @@ class UserCreateUpdate(ViewSet):
                     "email": "club_admin@mail.com",
                     "password": "123njkQ6**N1q",
                     "first_name": "Ivan",
-                    "last_name": "pizdalov",
-                    "birth_date": "2000-01-01"
+                    "last_name": "Pizdalov",
+                    "birth_date": "1994-05-26"
                 }
             ),
         ],
@@ -167,7 +171,7 @@ class UserCreateUpdate(ViewSet):
                     headers=HTTP_HEADERS,
                     content=json.dumps(
                         {
-                            "email": validated_data["email"]
+                            "user_id": instance.id
                         }
                     )
                 )
@@ -186,11 +190,11 @@ class UserCreateUpdate(ViewSet):
         except Exception as ex:
             asyncio.run(
                 telegram_log_errors(
-                    f'[UserCreateUpdate][create_user] {ex}'
+                    f'[UserCreateUpdate][create_user] {str(ex)}'
                 )
             )
             return Response(
-                ex,
+                str(ex),
                 status=HTTP_400_BAD_REQUEST,
             )
 
@@ -287,34 +291,28 @@ class UserCreateUpdate(ViewSet):
             )
 
 
-list_users_schema = extend_schema(
-    parameters=[
-        OpenApiParameter(
-            name="username",
-            description=(
-                "Searches for the value in this query parameter returning "
-                "all the users that have this value as substring. Ignores lowercase and uppercase."
-            ),
-            type=str
-        )
-    ]
-)
-
-class PlayerCreateUpdate(ViewSet):
+class PlayerGetCreateUpdate(ViewSet, RetrieveAPIView):
     """ class for creating and updating users """
-    http_method_names = ['post', 'update']
+    http_method_names = ['post', 'put', 'get']
     lookup_field = 'id'
     permission_classes = [IsAuthenticated]
     parser_classes = (MultiPartParser, )
+    queryset = Player.objects.all()
 
     def get_serializer_class(self):
         """ define serializer for class """
         if self.action == 'create_player':
-            return CreateUpdatePlayerSerializer
-# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE2MjYyODYwLCJpYXQiOjE3MTU2NjI4NjAsImp0aSI6IjM3MDgzMDcxOWVkNDRkOGFiOTE3ZGM0Y2I5ODgyMDk3IiwidXNlcl9pZCI6Mn0.DYIgMoTUqqG6Hej00Lcyh37D3A5ng3VMe0bsVbz7MNQ
+
+            return CreatePlayerSerializer
+
+        elif self.action == "update_player":
+
+            return UpdatePlayerSerializer
+
+        return GetPlayerInfoSerializer
 
     @extend_schema(
-        tags=["User"],
+        tags=["Player"],
         summary="Create player instance for existing user",
         description="POST request to create player instance for existing user",
         operation_id="Create player instance for existing user",
@@ -325,7 +323,7 @@ class PlayerCreateUpdate(ViewSet):
     )
     @action(
         detail=False,
-        methods=['post'],
+        methods=['put'],
         url_path="create_player",
         parser_classes=(MultiPartParser,)
     )
@@ -333,6 +331,7 @@ class PlayerCreateUpdate(ViewSet):
         """ creating new player """
         try:
             serializer = self.get_serializer_class()
+            request.data["user"] = request.user
             serializer = serializer(data=request.data)
 
             if serializer.is_valid(raise_exception=True):
@@ -343,10 +342,7 @@ class PlayerCreateUpdate(ViewSet):
                 )
 
                 return Response(
-                    status=HTTP_201_CREATED,
-                    data={
-                        "playest": validated_data
-                    }
+                    status=HTTP_201_CREATED
                 )
 
             else:
@@ -366,73 +362,95 @@ class PlayerCreateUpdate(ViewSet):
                 status=HTTP_400_BAD_REQUEST
             )
 
+    @extend_schema(
+        tags=["Player"],
+        methods=["PUT"],
+        summary="Update existing player info",
+        description="PUT request to update player info",
+        operation_id="Update player info",
+        request=SwaggerUpdatePlayerSerializer,
+        responses={
+            200: None,
+        },
+    )
+    @action(
+        detail=True,
+        methods=['put'],
+        url_path="update_player",
+        parser_classes=(MultiPartParser,)
+    )
+    def update_player(self, request) -> Response:
+        """ updating player info """
+        try:
+            instance = Player.objects.filter(user=request.user).first()
 
-"""
+            if instance:
+                serializer = self.get_serializer_class()
+                request.data["user"] = request.user
+                serializer = serializer(instance=instance, data=request.data)
 
-        parameters=[
-            OpenApiParameter(
-                name="sex",
-                description='Sex of user. MALE or FEMALE',
-                required=True,
-                type=OpenApiTypes.STR,
-                examples=[
-                    OpenApiExample(
-                        'Player sex',
-                        value='FEMALE'
-                    ),
-                ],
-            ),
-            OpenApiParameter(
-                name='handedness',
-                type=OpenApiTypes.STR,
-                description=(
-                        "User's handedness. "
-                        "RIGHT_HAND, LEFT_HAND "
-                        "or BOTH"
-                ),
-                examples=[
-                    OpenApiExample(
-                        'Which hand player gona play',
-                        value='BOTH'
-                    ),
-                ],
-            ),
-            OpenApiParameter(
-                name='rating',
-                required=False,
-                type=OpenApiTypes.INT,
-                description=(
-                        "Rating of user in our system. " 
-                        "100 by default"
-                ),
-                examples=[
-                    OpenApiExample(
-                        'User rating in our system',
-                        value=200
-                    ),
-                ],
-            ),
-            OpenApiParameter(
-                name="user",
-                type=OpenApiTypes.BINARY,
-                description="User information",
-            ),
-#            OpenApiParameter(
-#                name='user info',
-#                required=["first_name", "last_name"],
-#                type=OpenApiTypes.OBJECT,
-#                description=(
-#                        "Rating of user in our system. " 
-#                        "100 by default"
-#                ),
-#                examples=[
-#                    OpenApiExample(
-#                        'User Oject with first name name and last name',
-#                        value={
-#                            "photo": 
-#                        }
-#                    ),
-#                ],
-#            ),
-        ],
-"""
+                if serializer.is_valid(raise_exception=True):
+                    serializer.save()
+
+                    return Response(
+                        status=HTTP_200_OK                
+                    )
+            
+                else:
+
+                    return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+            else:
+                return Response(HTTP_400_BAD_REQUEST)
+
+        except Exception as ex:
+            asyncio.run(
+                telegram_log_errors(
+                    f"[ClubActions][update_club] {str(ex)}"
+                )
+            )
+        
+            return Response(
+                data=str(ex),
+                status=HTTP_400_BAD_REQUEST
+            )
+        
+    @extend_schema(
+        tags=["Player"],
+        methods=["GET"],
+        summary="Get info about Player",
+        description="GET request to getplayer info",
+        operation_id="Get player info",
+        request=None,
+        responses={
+            200: None,
+        },
+    )
+    @action(
+        detail=True,
+        methods=['get'],
+        url_path="get_player",
+        parser_classes=(MultiPartParser,)
+    )
+    def get_player(self, request) -> Response:
+        """ return info about certain player """
+        try:
+            player = Player.objects.get(
+                user=request.user
+            )
+            serialiser = self.get_serializer_class()
+            serialiser = serialiser(player)
+
+            return Response(serialiser.data)
+
+        except Exception as ex:
+            asyncio.run(
+                telegram_log_errors(
+                    f"[ClubActions][get_player] {str(ex)}"
+                )
+            )
+        
+            return Response(
+                data=str(ex),
+                status=HTTP_400_BAD_REQUEST
+            )

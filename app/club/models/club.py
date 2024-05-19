@@ -20,7 +20,7 @@ from main.settings import MEDIA_ROOT
 from main.utils import define_image_file_path
 
 
-# FIXME: улучгить аннотирование
+# FIXME: улучшить аннотирование
 def define_logo_path(instance, filename):
     """
     define club logo path
@@ -46,10 +46,12 @@ class Club(BaseModel):
         verbose_name_plural = "Clubs"
 
     name = models.CharField(
+        unique=True,
         max_length=128,
         null=True,
         verbose_name="Club Name",
-        help_text="Official name of club"
+        help_text="Official name of club",
+        error_messages={'unique': "This club name already exists. Please choose another name."},  
     )
 
     logo = models.ImageField(
@@ -86,6 +88,7 @@ class Club(BaseModel):
     # package https://github.com/daviddrysdale/python-phonenumbers
     # but now i don't see strong reason for that
     phone_number = models.CharField(
+        max_length=32,
         null=True,
         verbose_name="Phone number",
         help_text="Phone number of club"

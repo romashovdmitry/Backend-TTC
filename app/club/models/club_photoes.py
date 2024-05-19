@@ -1,5 +1,6 @@
 # Python imports
 import os
+import asyncio
 
 # import basemodel and django.db.models
 from typing import Iterable
@@ -8,20 +9,24 @@ from main.base_model import BaseModel, models
 # import custom foos, classes
 from main.utils import image_file_extension_validator
 
+# import constants, config data
 from main.settings import MEDIA_ROOT
+
+# import custom foos, classes
+from main.utils import define_image_file_path
+from telegram_bot.send_error import telegram_log_errors
 
 # FIXME: улучшить аннотирование
 def define_club_photo_path(instance, filename):
     """
     define club logo path
     """
-    try:
-        return "club_photoes/" + filename.replace(" ", "_")
-
-    except Exception as ex:
-        # FIXME: здесь логгирование должно быть
-        print(ex)
-        return filename
+    return define_image_file_path(
+        instance_indicator=instance.club.name,
+        filename=filename,
+        object_type="_club_photo.",
+        directory="club_photoes/"
+    )
 
 
 class ClubPhoto(BaseModel):
@@ -51,30 +56,15 @@ class ClubPhoto(BaseModel):
         on_delete=models.CASCADE
     )
 
-    def save(self, force_insert: bool = ..., force_update: bool = ..., using: str | None = ..., update_fields: Iterable[str] | None = ...) -> None:
-        # change name of file
-        # we can't do that before, because
-        # need to know club name and model object
-        # isn't created before this step
+    def delete(self) -> tuple[int, dict[str, int]]:
         try:
-            club_photo_directory = 'club_photoes/'
-            club_name = (
-                "club_pk_" +
-                str(self.club.pk) +
-                "_photo_pk_" +
-                str(self.pk) +
-                "." +
-                (str(self.photo).split(".")[-1]).replace(" ", "_")
-            )
-            os.rename(
-                MEDIA_ROOT + "/" + str(self.photo),
-                MEDIA_ROOT + "/" + club_photo_directory + club_name
-            )
-            self.photo = club_photo_directory + club_name
-        except Exception as ex:
-            # FIXME: здесь логгирование должно быть
-            print(f'ERRORERS -> {ex}')
+            os.remove(MEDIA_ROOT + "/" + str(self.photo))
 
-        finally:
-            return super().save()
-        
+        except Exception as ex:
+            asyncio.run(
+                telegram_log_errors(
+                    f"[ClubPhoto Model][delete] {str(ex)}"
+                )
+            )
+
+        return super(ClubPhoto, self).delete()
