@@ -1,0 +1,50 @@
+// for debugging on local VS Code
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "makemigrations",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}\\app\\manage.py",
+            "args": [
+              "makemigrations"
+            ],
+            "request": "launch",
+            "program": "${workspaceFolder}\\app\\manage.py",
+            "django": true,
+        },
+        {
+            "name": "migrate",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}\\app\\manage.py",
+            "args": [
+              "migrate"
+            ],
+            "request": "launch",
+            "program": "${workspaceFolder}\\app\\manage.py",
+            "django": true,
+        },
+        {
+            "name": "MY DJANGO RUN",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}\\app\\manage.py",
+            "args": [
+              "runserver"
+            ],
+            "django": true,
+        }
+    ],
+    "compounds": [
+        {
+          "name": "RUN ALL MAFAKA SHIT",
+          "configurations": [
+            "makemigrations",
+            "migrate",
+            "MY DJANGO RUN"
+          ],
+        }
+    ]
+}

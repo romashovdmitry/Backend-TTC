@@ -6,7 +6,7 @@ from typing import Iterable
 from main.base_model import models, BaseModel
 
 # import constants
-from user.constants import GENDER_CHOISE, HAND_CHOISE
+from user.constants import GenderChoise
 
 # import custom foos, classes
 from user.utils import create_random_code
@@ -58,12 +58,12 @@ class TournamentAdmin(BaseModel):
         return (
             f"ID: {self.id}, "
             f"First name: {self.user.first_name}, "
-            f"Last name: {self.user.last_name}"
+            f"Last name: {self.user.second_name}"
         )
 
     def __repr__(self):
         return (
             f"ID: {self.id}, "
             f"First name: {self.user.first_name}, "
-            f"Last name: {self.user.last_name}"
+            f"Last name: {self.user.second_name}"
         )

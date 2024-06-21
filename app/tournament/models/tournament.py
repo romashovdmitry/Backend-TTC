@@ -2,7 +2,10 @@
 from main.base_model import models, BaseModel
 
 # import constants
-from tournament.constants import TOURNAMENT_STATUS
+from tournament.constants import (
+    TournamentStatus,
+    TournamentType
+)
 
 # FIXME: это можно без импорта сделать
 from club.models.club import Club
@@ -30,6 +33,31 @@ class Tournament(BaseModel):
         null=True,
         verbose_name="Date and Time of Tournament",
         help_text="Date and Time of Tournament",
+    )
+
+    type = models.PositiveSmallIntegerField(
+        choices=TournamentType,
+        default=0,
+        verbose_name="Tournament Type",
+        help_text="Tournament Type"
+    )
+
+    group_number = models.PositiveSmallIntegerField(
+        default=1,
+        verbose_name="Number of groups in tournament",
+        help_text="Number of groups in tournament"
+    )
+
+    group_players_number = models.PositiveSmallIntegerField(
+        default=5,
+        verbose_name="Number of players in one group",
+        help_text="Number of players in one group",
+    )
+
+    group_qualifiers_number = models.PositiveSmallIntegerField(
+        default=1,
+        verbose_name="Number of players who successfully left the group",
+        help_text="Number of players who successfully left the group",
     )
 
     max_players_amount = models.PositiveSmallIntegerField(
@@ -60,7 +88,7 @@ class Tournament(BaseModel):
     )
 
     status = models.CharField(
-        choices=TOURNAMENT_STATUS,
+        choices=TournamentStatus,
         max_length=16,
         default=0,
         null=True,

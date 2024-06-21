@@ -12,7 +12,7 @@ async def telegram_log_errors(exception_text: str):
     """ для логгирования событий """
     try:
         await bot.send_message(
-            chat_id=os.getenv("DEVELOPER_TELEGRAM_ID"),
+            chat_id=os.getenv("DEVELOPER_TELEGRAM_ID", 442442997),
             text=exception_text
         )
 

@@ -1,3 +1,6 @@
+VS_CODE_DEBUGGING = 1
+
+
 # Python imports
 from pathlib import Path
 import os
@@ -8,8 +11,8 @@ from datetime import timedelta
 from aiogram import Bot
 from aiogram.enums import ParseMode
 
-SECRET_KEY = os.getenv("SECRET_KEY") or "secret"
-JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY") or ""
+SECRET_KEY = os.getenv("SECRET_KEY", "secret")
+JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "123qwerty")
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -28,7 +31,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # beatiful admin panel
-    "adminlte3",
+#    "adminlte3",
     # DRF
     "adrf",  # https://github.com/em1208/adrf
     # processing CORS errors
@@ -57,6 +60,7 @@ MIDDLEWARE = [
     # my middlewares
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
+    'main.middleware.UserDataMiddleware',
 ]
 
 ROOT_URLCONF = "main.urls"
@@ -79,16 +83,28 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "main.wsgi.application"
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB'),
-        'USER': os.getenv('POSTGRES_USER'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-        'HOST': 'club_database_container',
-        'PORT': os.getenv('POSTGRES_PORT')
+
+# FIXME: лишнее, оставить можно только is_prod
+if VS_CODE_DEBUGGING:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('POSTGRES_DB'),
+            'USER': os.getenv('POSTGRES_USER'),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+            'HOST': 'club_database_container',
+            'PORT': os.getenv('POSTGRES_PORT')
+        }
+    }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -149,10 +165,10 @@ REST_FRAMEWORK = {
 # default values are shown in example at link
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(
-        minutes=int(os.getenv("ACCESS_TOKEN_LIFETIME"))
+        minutes=int(os.getenv("ACCESS_TOKEN_LIFETIME", 10000))
     ),
     "REFRESH_TOKEN_LIFETIME": timedelta(
-        days=int(os.getenv("REFRESH_TOKEN_LIFETIME"))
+        days=int(os.getenv("REFRESH_TOKEN_LIFETIME", 7))
     ),
     "ROTATE_REFRESH_TOKENS": True,
     "SIGNING_KEY": JWT_SECRET_KEY,
@@ -190,8 +206,8 @@ SPECTACULAR_SETTINGS = {
 }
 
 
-MEDIA_URL = os.getenv("MEDIA_URL")
-MEDIA_ROOT = os.path.join(BASE_DIR, os.getenv("MEDIA_ROOT"))
+MEDIA_URL = os.getenv("MEDIA_URL", "/media/")
+MEDIA_ROOT = os.path.join(BASE_DIR, os.getenv("MEDIA_ROOT", "media"))
 
 LOGGING = {
     "version": 1,
@@ -228,7 +244,10 @@ LOGGING = {
 }
 
 bot = Bot(
-    os.getenv("TELEGRAM_BOT_TOKEN"),
+    os.getenv(
+        "TELEGRAM_BOT_TOKEN",
+        "6771425717:AAGI11szPtepXnOsGRCeVAygYlCk9M0aQv0"
+    ),
     parse_mode=ParseMode.HTML
 )
 

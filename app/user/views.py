@@ -15,16 +15,11 @@ from rest_framework.parsers import MultiPartParser
 # import serializers
 from user.serializers import (
     CreateUserSerializer,
-    CreatePlayerSerializer,
     UpdatePlayerSerializer,
     LoginUserSerializer,
-    GetPlayerInfoSerializer
+    GetPlayerInfoSerializer,
+    UpdateCreatePlayerPhotoSerializer
 )
-from user.swagger_serializer import SwaggerCreatePlayerSerializer, SwaggerUpdatePlayerSerializer
-
-# Swagger imports
-from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample, PolymorphicProxySerializer
-from drf_spectacular.types import OpenApiTypes
 
 # import models
 from user.models.player import Player
@@ -32,6 +27,15 @@ from user.models.player import Player
 # import constants, config data
 from user.models.user import User
 from main.settings import HTTP_HEADERS
+
+# import swagger schemas
+from user.swagger_schemas import (
+    swagger_schema_create_user,
+    swagger_schema_login_user,
+    swagger_schema_update_player,
+    swagger_schema_get_player,
+    swagger_schema_create_update_player_photo
+)
 
 # import custom foos, classes
 from user.services import hashing, JWTActions
@@ -50,102 +54,7 @@ class UserCreateUpdate(ViewSet):
             return CreateUserSerializer
         return LoginUserSerializer
 
-    @extend_schema(
-        tags=["User"],
-        summary="Create new user",
-        description='POST request to create new user',
-        auth=None,
-        operation_id="Create new user",
-        parameters=[
-            OpenApiParameter(
-                name='email',
-                description='Email of the user',
-                required=True,
-                type=str,
-                examples=[
-                    OpenApiExample(
-                        'Email: STRING',
-                        value='club_admin@mail.com'
-                    ),
-                ],
-            ),
-            OpenApiParameter(
-                name='password',
-                type=OpenApiTypes.STR,
-                description=(
-                    "User password "
-                    "must contains digit, uppercase letter, "
-                    "lowercase letter, 7 characters long and "
-                    "not longer 20 characters. "
-                ),
-                examples=[
-                    OpenApiExample(
-                        'Password: STRING',
-                        value='123njkQ6**N1q'
-                    ),
-                ],
-            ),
-            OpenApiParameter(
-                name='First Name',
-                type=OpenApiTypes.STR,
-                description=(
-                    "First name "
-                ),
-                examples=[
-                    OpenApiExample(
-                        'First Name: STRING',
-                        value='Ivan'
-                    ),
-                ],
-            ),
-            OpenApiParameter(
-                name='Last Name',
-                type=OpenApiTypes.STR,
-                description=(
-                    "Last Name: STRING"
-                ),
-                examples=[
-                    OpenApiExample(
-                        'Last Name',
-                        value='Pizdalov'
-                    ),
-                ],
-            ),
-            OpenApiParameter(
-                name='Birth Date',
-                type=OpenApiTypes.TIME,
-                description=(
-                    "Birth Date: DATE"
-                ),
-                examples=[
-                    OpenApiExample(
-                        'Birth Date',
-                        value='2000-01-01'
-                    ),
-                ],
-            ),
-        ],
-        examples=[
-            OpenApiExample(
-                'Example: succes created user',
-                description=(
-                    "User is a base model for player, "
-                    "club admin, touernament admin"
-                ),
-                value={
-                    "email": "club_admin@mail.com",
-                    "password": "123njkQ6**N1q",
-                    "first_name": "Ivan",
-                    "last_name": "Pizdalov",
-                    "birth_date": "1994-05-26"
-                }
-            ),
-        ],
-        # NOTE: можно добавить больше в responses, если будет время
-        responses={
-            201: None,
-        }
-    )
+    @swagger_schema_create_user
     @action(detail=False, methods=['post'], url_path="create_user")
     def create_user(self, request) -> Response:
         """
@@ -198,59 +107,7 @@ class UserCreateUpdate(ViewSet):
                 status=HTTP_400_BAD_REQUEST,
             )
 
-    @extend_schema(
-        tags=["User"],
-        summary="Login existing user",
-        description='POST request to Login existing user',
-        auth=None,
-        operation_id="Login existing user",
-        parameters=[
-            OpenApiParameter(
-                name='email',
-                description='Email of the user',
-                required=True,
-                type=str,
-                examples=[
-                    OpenApiExample(
-                        'email example',
-                        value='club_admin@mail.com'
-                    ),
-                ],
-            ),
-            OpenApiParameter(
-                name='password',
-                type=OpenApiTypes.STR,
-                description=(
-                    "User password "
-                    "must contains digit, uppercase letter, "
-                    "lowercase letter, 7 characters long and "
-                    "not longer 20 characters. "
-                ),
-                examples=[
-                    OpenApiExample(
-                        'Password example',
-                        value='123njkQ6**N1q'
-                    ),
-                ],
-            ),
-        ],
-        examples=[
-            OpenApiExample(
-                'Example: succes login user',
-                description=(
-                    "User is a base model for player, "
-                    "club admin, touernament admin"
-                ),
-                value={
-                    "email": "club_admin@mail.com",
-                    "password": "123njkQ6**N1q"
-                }
-            ),
-        ],
-        responses={
-            200: None,
-        }
-    )
+    @swagger_schema_login_user
     @action(detail=False, methods=['post'], url_path="login_user")
     def login_user(self, request) -> Response:
         ''' login user '''
@@ -258,7 +115,7 @@ class UserCreateUpdate(ViewSet):
             serializer = self.get_serializer_class()
             serializer = serializer(data=request.data)
 
-            if serializer.is_valid(raise_exception=True):
+            if serializer.is_valid():
                 validated_data = serializer.validated_data
                 user = User.objects.filter(email=serializer.validated_data["email"]).first()
                 return_response = HttpResponse(
@@ -291,7 +148,7 @@ class UserCreateUpdate(ViewSet):
             )
 
 
-class PlayerGetCreateUpdate(ViewSet, RetrieveAPIView):
+class PlayerGetUpdate(ViewSet, RetrieveAPIView):
     """ class for creating and updating users """
     http_method_names = ['post', 'put', 'get']
     lookup_field = 'id'
@@ -299,51 +156,39 @@ class PlayerGetCreateUpdate(ViewSet, RetrieveAPIView):
     parser_classes = (MultiPartParser, )
     queryset = Player.objects.all()
 
+    serializer_map = {
+        'update_player': UpdatePlayerSerializer,
+        'get_player': GetPlayerInfoSerializer,
+        "create_update_player_photo": UpdateCreatePlayerPhotoSerializer
+    }
+
     def get_serializer_class(self):
         """ define serializer for class """
-        if self.action == 'create_player':
 
-            return CreatePlayerSerializer
+        return self.serializer_map[self.action]
 
-        elif self.action == "update_player":
-
-            return UpdatePlayerSerializer
-
-        return GetPlayerInfoSerializer
-
-    @extend_schema(
-        tags=["Player"],
-        summary="Create player instance for existing user",
-        description="POST request to create player instance for existing user",
-        operation_id="Create player instance for existing user",
-        request=SwaggerCreatePlayerSerializer,
-        responses={
-            200: None,
-        },
-    )
+    @swagger_schema_create_update_player_photo
     @action(
         detail=False,
         methods=['put'],
-        url_path="create_player",
+        url_path="create_update_player_photo",
         parser_classes=(MultiPartParser,)
     )
-    def create_player(self, request) -> Response:
-        """ creating new player """
+    def create_update_player_photo(self, request) -> Response:
+        """ update player photo """
         try:
-            serializer = self.get_serializer_class()
-            request.data["user"] = request.user
-            serializer = serializer(data=request.data)
+            instance = Player.objects.filter(user=request.user).first()
 
-            if serializer.is_valid(raise_exception=True):
-                validated_data = serializer.validated_data
-                instance = serializer.create(
-                    validated_data=validated_data,
-                    user=request.user
-                )
+            if instance:
+                serializer = self.get_serializer_class()
+                serializer = serializer(instance=instance, data=request.data)
 
-                return Response(
-                    status=HTTP_201_CREATED
-                )
+                if serializer.is_valid(raise_exception=True):
+                    serializer.save()
+
+                    return Response(
+                        status=HTTP_200_OK                
+                    )
 
             else:
 
@@ -362,17 +207,7 @@ class PlayerGetCreateUpdate(ViewSet, RetrieveAPIView):
                 status=HTTP_400_BAD_REQUEST
             )
 
-    @extend_schema(
-        tags=["Player"],
-        methods=["PUT"],
-        summary="Update existing player info",
-        description="PUT request to update player info",
-        operation_id="Update player info",
-        request=SwaggerUpdatePlayerSerializer,
-        responses={
-            200: None,
-        },
-    )
+    @swagger_schema_update_player
     @action(
         detail=True,
         methods=['put'],
@@ -386,7 +221,6 @@ class PlayerGetCreateUpdate(ViewSet, RetrieveAPIView):
 
             if instance:
                 serializer = self.get_serializer_class()
-                request.data["user"] = request.user
                 serializer = serializer(instance=instance, data=request.data)
 
                 if serializer.is_valid(raise_exception=True):
@@ -414,18 +248,8 @@ class PlayerGetCreateUpdate(ViewSet, RetrieveAPIView):
                 data=str(ex),
                 status=HTTP_400_BAD_REQUEST
             )
-        
-    @extend_schema(
-        tags=["Player"],
-        methods=["GET"],
-        summary="Get info about Player",
-        description="GET request to getplayer info",
-        operation_id="Get player info",
-        request=None,
-        responses={
-            200: None,
-        },
-    )
+    
+    @swagger_schema_get_player
     @action(
         detail=True,
         methods=['get'],

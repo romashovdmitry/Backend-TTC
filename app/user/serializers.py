@@ -31,7 +31,8 @@ class CreateUserSerializer(serializers.ModelSerializer):
             'email',
             'password',
             'first_name',
-            'last_name',
+            'second_name',
+            "sex",
             'birth_date'
         ]
         # https://stackoverflow.com/a/66790239/24040439
@@ -58,16 +59,16 @@ class CreateUserSerializer(serializers.ModelSerializer):
             )
         return first_name_string
     
-    def validate_last_name(self, last_name_string: str) -> str | serializers.ValidationError:
+    def validate_second_name(self, second_name_string: str) -> str | serializers.ValidationError:
         """
-        Validate length of last_name string        
+        Validate length of second_name string        
         """
-        if len(last_name_string) < 3:
+        if len(second_name_string) < 3:
             raise serializers.ValidationError(
                 "Last Name must contains at least 2 alphabets",
-                code="last_name_too_short"
+                code="second_name_too_short"
             )
-        return last_name_string            
+        return second_name_string            
 
     def validate_password(self, password):
         ''' validate password '''
@@ -115,6 +116,16 @@ class CreateUserSerializer(serializers.ModelSerializer):
 class LoginUserSerializer(CreateUserSerializer):
     ''' serializer for get objects of Product model'''
 
+    class Meta:
+        model = User
+        fields = [
+            'email',
+            'password',
+        ]
+        # https://stackoverflow.com/a/66790239/24040439
+        extra_kwargs = {i:{'required': True, "allow_null": False} for i in fields}
+
+
     def validate_email(self, email):
         """
         Redefine because we don't need check email on
@@ -159,13 +170,13 @@ class UserNamesSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             "first_name",
-            "last_name"
+            "second_name"
         ]
     
     first_name = serializers.CharField(
         trim_whitespace=True
     )
-    last_name = serializers.CharField(
+    second_name = serializers.CharField(
         trim_whitespace=True,
     )
 
@@ -188,9 +199,9 @@ class UpdatePlayerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Player
-        fields = "__all__"
+        exclude = ["photo"]
 
-    photo = serializers.ImageField(required=False)
+#    photo = serializers.ImageField(required=False)
 
 
 # FIXME: это можно сделать, уверен, через два сериалайзера
@@ -199,10 +210,10 @@ class CreatePlayerSerializer(UpdatePlayerSerializer):
     """ Serializer for creating player instance """
     # https://www.django-rest-framework.org/api-guide/relations/#nested-relationships
 
-    photo = serializers.ImageField(required=True)
+#    photo = serializers.ImageField(required=False)
 
     def create(self, validated_data: dict, user: User):
-        photo = validated_data.pop("photo")
+#        photo = validated_data.pop("photo")
         validated_data["user_id"] = user.id
 
         # if player does not exists
@@ -211,15 +222,25 @@ class CreatePlayerSerializer(UpdatePlayerSerializer):
         ).first() is None:
             player = Player.objects.create(**validated_data)
 
-            if photo:
-                user.photo = photo
-                user.save()
+#            if photo:
+#                user.photo = photo
+#                user.save()
 
             return player
     
         raise ValidationError("Player already created!")
 
     
+class UpdateCreatePlayerPhotoSerializer(serializers.ModelSerializer):
+    """ Serializer for creating player instance """
+    # https://www.django-rest-framework.org/api-guide/relations/#nested-relationships
+
+    class Meta:
+        model = Player
+        fields = ["photo"]
+
+    photo = serializers.ImageField(required=False)
+
 
 class GetPlayerInfoSerializer(serializers.ModelSerializer):
     """ serializer for returning info aout Playser by user.id """

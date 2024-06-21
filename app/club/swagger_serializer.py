@@ -19,7 +19,11 @@ def define_swagger_fields_helper() -> list:
     CUSTOM_FIELDS_LIST.remove('clubphoto')
     CUSTOM_FIELDS_LIST.remove('tournament_club')
     CUSTOM_FIELDS_LIST.remove('admin_club')
-    
+    CUSTOM_FIELDS_LIST.remove('is_active')
+    # DELETEME: it's only for tests on local! 
+    # on prod we need photoes
+    CUSTOM_FIELDS_LIST.remove('logo')
+
     return CUSTOM_FIELDS_LIST
 
 #CUSTOM_FIELDS_LIST = [f.name for f in Club._meta.get_fields()]
@@ -37,4 +41,4 @@ class SwaggerCreateUpdateClubSerializer(serializers.ModelSerializer):
 #        photoes_field = serializers.ImageField()
 
 #    sex = serializers.CharField(allow_null=False, allow_blank=False)
-#    handedness = serializers.CharField(allow_null=False, allow_blank=False)
+#    playing_hand = serializers.CharField(allow_null=False, allow_blank=False)

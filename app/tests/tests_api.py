@@ -1,63 +1,53 @@
+from django.test import TestCase
+
+# Create your tests here.
+# Python imports
+from unittest import mock
+
 # Django imports
 from django.urls import reverse
 
 # DRF imports
 from rest_framework import status
-from rest_framework.test import APITestCase
-
-# import models
-from user.models import User
+# https://stackoverflow.com/a/21012054: pytest without DB
+from django.test import SimpleTestCase
 
 # import constants
 from tests.constants import *
 
 
-class UserTestsSetUp(APITestCase):
+class UserTestsSetUp(SimpleTestCase):
 
-    CREATE_USER_URL = reverse('user_actions')
+    MAKE_REQUEST = reverse('create_google_doc')
     CORRECT_DATA = {
-        "email": CORRECT_EMAIL,
-        "username": CORRECT_USERNAME,
-        "password": CORRECT_PASSWORD
+        "name": "textname.txt",
+        "data": "short string with text about love to Python"
     }
 
-    def setUp(self):
-        User.objects.create(
-            email=DEFAULT_EMAIL,
-            username=DEFAULT_USERNAME,
-            password=DEFAULT_PASSWORD
-        )
 
-
-class UserActionsTests(UserTestsSetUp):
+class MakeRequestToApi(UserTestsSetUp):
     """
-    Testing creating, login, delete user's scenarious.
+    Testing request's scenarious.
     """
-
-    def test_create(self):
+#    @mock.patch("google_drive_api.constants.FILE_SIZE_LIMIT", new=0)
+    def test_request(self):
         """
-        check out creating user with non-validate password.
+        Check out request with wrong data.
         """
-        self.assertEqual(
-            True, True
-        )
-
-
-
-"""
-        for SCENARIO in CREATE_USER_SCENARIOUS:
+        for SCENARIO in MAKE_REQUEST_SCENARIOS:
 
             for wrong_data in SCENARIO["wrong_raw"]["data"]:
+
                 data = self.CORRECT_DATA.copy()
                 data[SCENARIO["wrong_raw"]["name"]] = wrong_data
                 response = self.client.post(
-                    self.CREATE_USER_URL,
+                    self.MAKE_REQUEST,
                     data=data,
-                    format="json"
+                    content_type="application/json"
                 )
-                self.assertNotEqual(response.status_code, status.HTTP_201_CREATED)
+                self.assertNotEqual(response.status_code, status.HTTP_200_OK)
                 self.assertEqual(
                     response.json(),
                     SCENARIO["error_json"]
                 )
-"""
+

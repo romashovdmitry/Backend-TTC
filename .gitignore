@@ -8,10 +8,14 @@
 
 # file for development on local
 __PLAN__.txt
-commands.txt
+typical_commands.txt
 
 # logs
 /app/logs/*
+django_log.log
 
 # etc
 *.pyc
+
+# temporary database for local development, debugging
+db.sqlite3

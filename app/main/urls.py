@@ -28,6 +28,7 @@ urlpatterns = [
     # projects urls
     path('api/v1/user/', include("user.urls")),
     path('api/v1/club/', include("club.urls")),
+    path('api/v1/tournament/', include("tournament.urls")),
 ]
 
 urlpatterns += static(MEDIA_URL, document_root=MEDIA_ROOT)

@@ -10,22 +10,26 @@ from user.serializers import UserPhotoSerializer
 from user.models.player import Player
 
 
-class SwaggerCreatePlayerSerializer(UserPhotoSerializer):
+class SwaggerUpdatePlayerSerializer(UserPhotoSerializer):
     """ Serializer for Swagger interface """
 
     class Meta:
         model = Player
         fields = [
-            "photo",
-            "sex",
-            "handedness",
+            "playing_hand",
             "blade",
             "rubber_forehand",
             "rubber_backhand"
         ]
 
 
-class SwaggerUpdatePlayerSerializer(SwaggerCreatePlayerSerializer):
+class SwaggerCreateUpdatePlayerPhotoSerializer(UserPhotoSerializer):
     """ Serializer for Swagger interface """
+
+    class Meta:
+        model = Player
+        fields = [
+            "photo",
+        ]
 
     photo = serializers.ImageField(required=False, allow_null=True)
