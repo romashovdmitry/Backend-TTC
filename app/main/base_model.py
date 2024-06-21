@@ -1,4 +1,5 @@
 # Django imports
+from typing import Any
 from django.db import models
 
 
@@ -34,3 +35,9 @@ class BaseModel(models.Model):
             "deactivate "
         ),
     )
+
+    def delete(self):
+        self.is_active = False
+        self.save()
+
+        return self

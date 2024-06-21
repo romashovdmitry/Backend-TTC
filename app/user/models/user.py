@@ -13,10 +13,30 @@ from django.core.validators import EmailValidator
 from django.core.exceptions import ValidationError
 
 # import constants
-from user.constants import PASSWORD_IS_REQUIRED, EMAIL_IS_REQUIRED
+from user.constants import (
+    PASSWORD_IS_REQUIRED,
+    EMAIL_IS_REQUIRED,
+    GenderChoise
+)
+
+# import models
+from user.models.player import Player
 
 # import custom foos, classes
 from user.services import hashing
+from main.utils import (
+    define_image_file_path
+)
+
+
+def define_user_photo_path(instance, filename):
+
+    return define_image_file_path(
+        instance_indicator=str(instance.id),
+        filename=filename,
+        object_type="_user_photo.",
+        directory="user_photoes/"
+    )
 
 
 class CustomUserManager(BaseUserManager):
@@ -46,11 +66,19 @@ class CustomUserManager(BaseUserManager):
 
     def create_superuser(self, password=None, **kwargs):
         """ custom creating superuser """
+        birth_date = str(os.getenv("SUPER_BIRTH_DATE"))
+        birth_date = datetime.strptime(birth_date, "%Y-%m-%d")
         password = os.getenv("SUPER_PASSWORD")
         kwargs.setdefault("email", os.getenv("SUPER_EMAIL"))
         kwargs.setdefault("is_staff", True)
         kwargs.setdefault("is_superuser", True)
         kwargs.setdefault("is_active", True)
+        kwargs.setdefault("first_name", os.getenv("SUPER_FIRST_NAME"))
+        kwargs.setdefault("second_name", os.getenv("SUPER_SECOND_NAME"))
+        kwargs.setdefault("first_name", os.getenv("SUPER_FIRST_NAME"))
+        kwargs.setdefault("sex", 0)
+        kwargs.setdefault("birth_date", birth_date)
+
         return self.create_user(password, **kwargs)
 
 
@@ -59,13 +87,17 @@ class User(AbstractUser):
     Base model for user. 
     Info about players, club's owners
     are separated in other models.
+
+    User models fields are required fields
+    for registrations. Player's fields e.g.
+    are not required. 
     '''
     objects = CustomUserManager()
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
-    last_login = date_joined = username = None
+    last_login = last_name = date_joined = username = None
 
     class Meta:
         verbose_name = "User"
@@ -103,9 +135,39 @@ class User(AbstractUser):
         verbose_name=""
     )
 
+    birth_date = models.DateField(
+        null=False,
+        verbose_name="User's birth date",
+        help_text="User's birth date"
+    )
+
+    sex = models.CharField(
+        choices=GenderChoise,
+        max_length=16,
+        null=False,
+        help_text="Choise of player's sex"
+    )
+
+    # rename default "last name"
+    second_name = models.CharField(
+        null=False,
+        max_length=128,
+        verbose_name="User's second name",
+        help_text="User's second name"
+    )
+
+    def save(self, *args, **kwargs):
+        """ redefine save method """
+        super().save(*args, **kwargs)
+
+        if not Player.objects.filter(user=self).exists():
+            Player.objects.create(user=self)
+
+        return self
+
     def __str__(self):
-        last_name = self.last_name if self.last_name else "No Last Name"
-        return f"Email: {self.email}, Last Name: {last_name}"
+        second_name = self.second_name if self.second_name else "No Last Name"
+        return f"Email: {self.email}, Last Name: {second_name}"
 
     def __repr__(self):
         return f"email: {self.email}"

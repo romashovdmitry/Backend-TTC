@@ -6,11 +6,7 @@ import random
 import asyncio
 
 # Django imports
-from typing import Iterable
 from django.db import models
-
-# import constants
-from user.constants import GENDER_CHOISE, HAND_CHOISE
 
 # import custom foos, classes
 from user.utils import create_random_code
@@ -46,14 +42,14 @@ class ClubAdmin(BaseModel):
         return (
             f"ID: {self.id}, "
             f"First name: {self.user.first_name}, "
-            f"Last name: {self.user.last_name}"
+            f"Last name: {self.user.second_name}"
         )
 
     def __repr__(self):
         return (
             f"ID: {self.id}, "
             f"First name: {self.user.first_name}, "
-            f"Last name: {self.user.last_name}"
+            f"Last name: {self.user.second_name}"
         )
 
     def save(self, *args, **kwargs) -> None:

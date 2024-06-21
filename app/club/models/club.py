@@ -1,8 +1,36 @@
+# Python imports
+import re
+import os
+from PIL import Image
+from django.core.exceptions import ValidationError
+
 # import basemodel and django.db.models
 from main.base_model import models, BaseModel
 
 # FIXME: не сработала ссылка вида "user.club_admin"
 from user.models.club_admin import ClubAdmin
+
+# import custom foos, classes
+from main.utils import image_file_extension_validator
+
+# import constants, config data
+from main.settings import MEDIA_ROOT
+
+# import custom foos, classes
+from main.utils import define_image_file_path
+
+
+# FIXME: улучшить аннотирование
+def define_logo_path(instance, filename):
+    """
+    define club logo path
+    """
+    return define_image_file_path(
+        instance_indicator=instance.name,
+        filename=filename,
+        object_type="_logo.",
+        directory="logos/"
+    )
 
 
 class Club(BaseModel):
@@ -18,22 +46,23 @@ class Club(BaseModel):
         verbose_name_plural = "Clubs"
 
     name = models.CharField(
+        unique=True,
         max_length=128,
         null=True,
         verbose_name="Club Name",
-        help_text="Official name of club"
+        help_text="Official name of club",
+        error_messages={'unique': "This club name already exists. Please choose another name."},  
     )
 
-    logo = models.BinaryField(
+    logo = models.ImageField(
+        upload_to=define_logo_path,
         null=True,
         verbose_name="Club Logo",
-        help_text="Club logo"
+        help_text="Club logo",
+        validators=[image_file_extension_validator]
     )
 
-    club_photoes = models.JSONField(
-        null=True
-    )
-
+    # NOTE: можно ограничить, скачав необходимую библиотеку
     state = models.CharField(
         max_length=64,
         null=True,
@@ -59,6 +88,7 @@ class Club(BaseModel):
     # package https://github.com/daviddrysdale/python-phonenumbers
     # but now i don't see strong reason for that
     phone_number = models.CharField(
+        max_length=32,
         null=True,
         verbose_name="Phone number",
         help_text="Phone number of club"
@@ -94,3 +124,16 @@ class Club(BaseModel):
         on_delete=models.SET_NULL,
         related_name="admin_club"
     )
+
+    def save(self, *args, **kwargs):
+        """
+        redefine method for removing image,
+        if it's updating.
+        """
+        if self.logo and self.pk:
+            club = Club.objects.get(pk=self.pk)
+            current_image_path = MEDIA_ROOT + '/' + str(club.logo)
+            os.remove(current_image_path)
+        
+        super(Club, self).save(*args, **kwargs)
+        

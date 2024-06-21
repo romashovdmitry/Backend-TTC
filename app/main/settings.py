@@ -1,10 +1,18 @@
+VS_CODE_DEBUGGING = 1
+
+
 # Python imports
 from pathlib import Path
 import os
+import sys
 from datetime import timedelta
 
-SECRET_KEY = os.getenv("SECRET_KEY") or "secret"
-JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY") or ""
+# Telegram imports
+from aiogram import Bot
+from aiogram.enums import ParseMode
+
+SECRET_KEY = os.getenv("SECRET_KEY", "secret")
+JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "123qwerty")
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -22,16 +30,23 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # my apps 👇
-    "adminlte3",
+    # beatiful admin panel
+#    "adminlte3",
+    # DRF
     "adrf",  # https://github.com/em1208/adrf
+    # processing CORS errors
     "corsheaders",
-    "drf_yasg",
+    # Swagger
+    "drf_spectacular",
+    "drf_spectacular_sidecar",
+    # JWT
     "rest_framework_simplejwt",
+    # my apps
     "main",
     "user",
     "club",
-    "tournament"
+    "tournament",
+    "telegram_bot"
 ]
 
 MIDDLEWARE = [
@@ -42,9 +57,10 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    # my middlewares 👇
+    # my middlewares
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
+    'main.middleware.UserDataMiddleware',
 ]
 
 ROOT_URLCONF = "main.urls"
@@ -67,16 +83,28 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "main.wsgi.application"
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB'),
-        'USER': os.getenv('POSTGRES_USER'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-        'HOST': 'club_database_container',
-        'PORT': os.getenv('POSTGRES_PORT')
+
+# FIXME: лишнее, оставить можно только is_prod
+if VS_CODE_DEBUGGING:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('POSTGRES_DB'),
+            'USER': os.getenv('POSTGRES_USER'),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+            'HOST': 'club_database_container',
+            'PORT': os.getenv('POSTGRES_PORT')
+        }
+    }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -111,13 +139,23 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = 'user.User'
 
 REST_FRAMEWORK = {
+    # swagger drf-spectacular
+    'DEFAULT_SCHEMA_CLASS': 
+        'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_RENDERERS': [
+        'drf_spectacular.renderers.SpectacularRenderer',
+        'rest_framework.renderers.JSONRenderer',
+    ],
+    # JWT
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    # auth
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
         'rest_framework.permissions.IsAuthenticated'
     ),
+    # throttling
     'DEFAULT_THROTTLE_RATES': {
         'user': '1000/day'
     }
@@ -127,10 +165,10 @@ REST_FRAMEWORK = {
 # default values are shown in example at link
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(
-        minutes=int(os.getenv("ACCESS_TOKEN_LIFETIME"))
+        minutes=int(os.getenv("ACCESS_TOKEN_LIFETIME", 10000))
     ),
     "REFRESH_TOKEN_LIFETIME": timedelta(
-        days=int(os.getenv("REFRESH_TOKEN_LIFETIME"))
+        days=int(os.getenv("REFRESH_TOKEN_LIFETIME", 7))
     ),
     "ROTATE_REFRESH_TOKENS": True,
     "SIGNING_KEY": JWT_SECRET_KEY,
@@ -153,15 +191,69 @@ HTTP_HEADERS = {
     "Access-Control-Allow-Credentials": True
 }
 
-SWAGGER_SETTINGS = {
-   'SECURITY_DEFINITIONS': {
-      'Basic': {
-            'type': 'basic'
-      },
-      'Bearer': {
-            'type': 'apiKey',
-            'name': 'Authorization',
-            'in': 'header'
-      }
-   }
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Your Project API',
+    'DESCRIPTION': 'Your project description',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SWAGGER_UI_DIST': 'SIDECAR',  # shorthand to use the sidecar instead
+    'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
+    'REDOC_DIST': 'SIDECAR',
+    # https://stackoverflow.com/a/67522312/24040439
+    # https://drf-spectacular.readthedocs.io/en/latest/faq.html#filefield-imagefield-is-not-handled-properly-in-the-schema
+    "COMPONENT_SPLIT_REQUEST": True
+
 }
+
+
+MEDIA_URL = os.getenv("MEDIA_URL", "/media/")
+MEDIA_ROOT = os.path.join(BASE_DIR, os.getenv("MEDIA_ROOT", "media"))
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "console": {"format": "%(asctime)s %(levelname) -4s %(name) -2s [%(pathname)s:%(lineno)d] %(message)s"},
+        "file": {"format": "%(asctime)s %(levelname) -4s %(name) -2s [%(filename)s:%(lineno)d] %(message)s"},
+    },
+    "handlers": {
+        "console": {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+            "formatter": "console",
+        },
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.handlers.RotatingFileHandler",
+            "formatter": "file",
+            "filename": f"{BASE_DIR}/logs/django_log.log",
+            "backupCount": 10,  # only 10 log files
+            "maxBytes": 5242880,  # 5*1024*1024 bytes (5MB)
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console", "file"],
+            "level": "INFO",
+        },
+    },
+    "root": {
+        "handlers": ["console", "file"],
+        "level": "INFO",
+    },
+}
+
+bot = Bot(
+    os.getenv(
+        "TELEGRAM_BOT_TOKEN",
+        "6771425717:AAGI11szPtepXnOsGRCeVAygYlCk9M0aQv0"
+    ),
+    parse_mode=ParseMode.HTML
+)
+
+
+if 'test' in sys.argv:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'mydatabase'
+    }

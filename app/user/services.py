@@ -117,7 +117,7 @@ class JWTActions:
                 path=obj["path"]
             )
         # for work with Swagger on machine or local
-        print(f'refresh_token -> Bearer {refresh_token}')
-        print(f'access_token -> Bearer {refresh_token.access_token}')
+        print(f'refresh_token -> {refresh_token}')
+        print(f'access_token -> {refresh_token.access_token}')
 
         return self.response
