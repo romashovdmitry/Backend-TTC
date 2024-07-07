@@ -1,4 +1,7 @@
-""" Custom Swagger Serializers when usual serializer does'not compare """
+"""
+Custom Swagger Serializers when usual serializer does'not compare .
+Use it when send images to backend from Swagger. 
+"""
 
 # DRF imports
 from rest_framework import serializers
@@ -12,7 +15,7 @@ from club.models.club import Club
 
 def define_swagger_fields_helper() -> list:
     """
-    Create custom list fields for SwaggerCreateUpdateClubSerializer.
+    Create custom list fields for SwaggerCreateUpdateClubPhotoSerializer.
     """
     CUSTOM_FIELDS_LIST = [f.name for f in Club._meta.get_fields()]
     CUSTOM_FIELDS_LIST.append("photo")
@@ -29,7 +32,8 @@ def define_swagger_fields_helper() -> list:
 #CUSTOM_FIELDS_LIST = [f.name for f in Club._meta.get_fields()]
 #CUSTOM_FIELDS_LIST.append("photoes_field")
 
-class SwaggerCreateUpdateClubSerializer(serializers.ModelSerializer):
+
+class SwaggerCreateUpdateClubPhotoSerializer(serializers.ModelSerializer):
     """ Serailizer for Swagger interface """
     # NOTE: instead of "__all__" because of need to add custom field
     class Meta:
@@ -37,8 +41,3 @@ class SwaggerCreateUpdateClubSerializer(serializers.ModelSerializer):
         fields = define_swagger_fields_helper()
 
     photo = serializers.ListField(child=serializers.ImageField())
-
-#        photoes_field = serializers.ImageField()
-
-#    sex = serializers.CharField(allow_null=False, allow_blank=False)
-#    playing_hand = serializers.CharField(allow_null=False, allow_blank=False)

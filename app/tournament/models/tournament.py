@@ -114,3 +114,10 @@ class Tournament(BaseModel):
         help_text="Tournament Admin",
         related_name="tournament_admin"
     )
+
+    player_pyament = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        verbose_name="Participation payment",
+        help_text="Player pay for participation in tournament",
+    )

@@ -6,9 +6,10 @@ class TournamentStatus(models.IntegerChoices):
 
     CREATED = 0, 'CREATED'
     APPROVED = 1, 'APPROVED'
-    STARTED = 2, 'STARTED'
-    RUNING_NOW = 3, 'RUNING_NOW'
-    FINISHED = 4, 'FINISHED'
+    CONFIGURED = 2, 'CONFIGURED'
+    TOURNAMENT_STARTED = 3, 'TOURNAMENT_STARTED'
+    RUNING_NOW = 4, 'RUNING_NOW'
+    FINISHED = 5, 'FINISHED'
 
 
 class TournamentType(models.IntegerChoices):
