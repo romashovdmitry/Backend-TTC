@@ -142,6 +142,9 @@ REST_FRAMEWORK = {
     # swagger drf-spectacular
     'DEFAULT_SCHEMA_CLASS': 
         'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+    ),
     'DEFAULT_RENDERERS': [
         'drf_spectacular.renderers.SpectacularRenderer',
         'rest_framework.renderers.JSONRenderer',
@@ -257,3 +260,8 @@ if 'test' in sys.argv:
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'mydatabase'
     }
+
+
+
+# just tp fix for prod on local. could be deleted, no problem
+LAST_ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIwOTM4MzU0LCJpYXQiOjE3MjAzMzgzNTQsImp0aSI6IjIwNjA2ZTI5NmU5ZDQ1MjBiMTk2NGFhYWI1ZTVkOTM0IiwidXNlcl9pZCI6MX0.oCikS7Rb5-B18db9-wpaP-Hw6K9lwnT87wHlRmtrpD8"

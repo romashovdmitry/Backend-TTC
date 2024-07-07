@@ -11,7 +11,7 @@ from rest_framework.generics import (
 )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.parsers import MultiPartParser
+from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework.decorators import action
 from rest_framework.status import (
     HTTP_200_OK,
@@ -20,7 +20,15 @@ from rest_framework.status import (
     HTTP_401_UNAUTHORIZED
 )
 
-# Swagger imports
+# Swagger schemas import
+from club.swagger_schemas import (
+    swagger_schema_club_get,
+    swagger_schema_create_club,
+    swagger_schema_update_club,
+    swagger_schema_list_clubs,
+    swagger_schema_club_photo_delete,
+    swagger_schema_club_photo_create
+)
 from drf_spectacular.utils import (
     extend_schema,
     extend_schema_view,
@@ -46,7 +54,7 @@ from club.serializers import (
     ClubGetSerializer,
     ClubPhotoSerializer
 )
-from club.swagger_serializer import SwaggerCreateUpdateClubSerializer
+from club.swagger_serializer import SwaggerCreateUpdateClubPhotoSerializer
 
 # import custom foos, classes, etc
 from telegram_bot.send_error import telegram_log_errors
@@ -55,7 +63,7 @@ from club.utils import define_club_of_user
 
 class ClubActions(ViewSet, RetrieveAPIView):
     """ class for creating and updating clubs """
-    parser_classes = (MultiPartParser,)
+    parser_classes = (MultiPartParser, JSONParser)
     http_method_names = ['post', 'put', 'get', 'delete']
     lookup_field = 'id'
     permission_classes = [IsAuthenticated]
@@ -73,30 +81,11 @@ class ClubActions(ViewSet, RetrieveAPIView):
 
         return self.serializer_map[self.action]
 
-    @extend_schema(
-        tags=["Club"],
-        summary="Create new Club",
-        description="POST request to create new club",
-        operation_id="Create new club",
-        request=SwaggerCreateUpdateClubSerializer,
-        examples=[
-            OpenApiExample(
-                'Example: opennings hours',
-                description=(
-                    "Example of structure and format "
-                    "for opening hours field."
-                ),
-                value={
-                    "opening_hours": OPENING_HOURS_SWAGGER_EXAMPLE,
-                }
-            ),
-        ],
-    )
+    @swagger_schema_create_club
     @action(
         detail=False,
         methods=['post'],
         url_path="create_club",
-        parser_classes=(MultiPartParser,)
     )
     def create_club(self, request) -> Response:
         """
@@ -126,127 +115,7 @@ class ClubActions(ViewSet, RetrieveAPIView):
                 data=str(ex),
                 status=HTTP_400_BAD_REQUEST
             )
-
-    @extend_schema(
-        tags=["Club"],
-        summary="Update existing Club",
-        description="PUT request to update existing club",
-        # provide Authentication class that deviates from the views default
-        operation_id="Update existing club",
-        parameters=[
-            OpenApiParameter(
-                name="Club Name",
-                description='Official name of the club',
-                required=True,
-                type=OpenApiTypes.STR,
-                examples=[
-                    OpenApiExample(
-                        'Club Name: STRING',
-                        value='TT Club'
-                    ),
-                ],
-            ),
-            OpenApiParameter(
-                name="Club State",
-                description='State where club is placed',
-                required=False,
-                type=OpenApiTypes.STR,
-                examples=[
-                    OpenApiExample(
-                        'Club State: STRING',
-                        value='UAE'
-                    ),
-                ],
-            ),
-            OpenApiParameter(
-                name="Club City",
-                description='City where club is placed',
-                required=False,
-                type=OpenApiTypes.STR,
-                examples=[
-                    OpenApiExample(
-                        'Club City: STRING',
-                        value='Abu Dabi'
-                    ),
-                ],
-            ),
-            OpenApiParameter(
-                name="Club Address",
-                description='Street, where club is placed',
-                required=False,
-                type=OpenApiTypes.STR,
-                examples=[
-                    OpenApiExample(
-                        'Club Street: STRING',
-                        value='Gagarina st., Houser #7'
-                    ),
-                ],
-            ),
-            OpenApiParameter(
-                name="Club Phone Number",
-                description='Phone number of club',
-                required=False,
-                type=OpenApiTypes.STR,
-                examples=[
-                    OpenApiExample(
-                        'Club Phone Number: STRING',
-                        value='89992370953'
-                    ),
-                ],
-            ),
-            OpenApiParameter(
-                name="Opening Hours",
-                description='Days and hours when club is working',
-                required=False,
-                type=OpenApiTypes.OBJECT,
-                examples=[
-                    OpenApiExample(
-                        'Club Opening Hours: JSON(DICT)',
-                        OPENING_HOURS_SWAGGER_EXAMPLE
-                    ),
-                ],
-            ),
-            OpenApiParameter(
-                name="About",
-                description='Additional info about club',
-                required=False,
-                type=OpenApiTypes.STR,
-                examples=[
-                    OpenApiExample(
-                        'Club About: STRING',
-                        "Hello, it's me! I like Pen-Pineapple-Apple-Pen"
-                    ),
-                ],
-            ),
-            OpenApiParameter(
-                name="Social Link",
-                description='Link to club social network page',
-                required=False,
-                type=OpenApiTypes.STR,
-                examples=[
-                    OpenApiExample(
-                        'Club Social Link: STRING',
-                        'https://vk.com'
-                    ),
-                ],
-            ),
-            OpenApiParameter(
-                name="Website Link",
-                description='Link to club site, any info in Ethernet',
-                required=False,
-                type=OpenApiTypes.STR,
-                examples=[
-                    OpenApiExample(
-                        'Club Website Link: STRING',
-                        "https://welovecocks.com"
-                    ),
-                ],
-            ),
-        ],
-        responses={
-            200: None,
-        }
-    )
+    @swagger_schema_update_club
     @action(
         detail=True,
         methods=['put'],
@@ -281,13 +150,8 @@ class ClubActions(ViewSet, RetrieveAPIView):
                 status=HTTP_400_BAD_REQUEST
             )
 
-    @extend_schema(
-        tags=["Club"],
-        methods=["GET"],
-        summary="Get all existing Clubs",
-        description="GET request to get all existing clubs by ID",
-        operation_id="Get all existing clubs"
-    )
+
+    @swagger_schema_list_clubs
     @action(detail=False, methods=['get'], url_path="list_clubs")
     def list_clubs(self, request) -> Response:
         try:
@@ -311,31 +175,7 @@ class ClubActions(ViewSet, RetrieveAPIView):
                 status=HTTP_400_BAD_REQUEST,
             )
 
-    @extend_schema(
-        tags=["Club"],
-        methods=["GET"],
-        summary="Get existing Club",
-        description="GET request to get existing club by ID",
-        operation_id="Get existing club by ID",
-        responses={
-            201: OpenApiResponse(response=ClubGetSerializer,
-                                 description='Existing Club Object in response'),
-            401: OpenApiResponse(
-                response={
-                    "detail": "No auth credentials"
-                },
-                description='No auth credentials.',
-                examples=[
-                    OpenApiExample(
-                        "No auth credentials",
-                        value={
-                            "detail": "Authentication credentials were not provided."
-                        }
-                    )
-                ]
-            ),
-        },
-    )
+    @swagger_schema_club_get
     @action(detail=True, methods=['get'], url_path='get_club')
     def get_club(self, request, id=None):
         try:
@@ -369,7 +209,11 @@ class ClubActions(ViewSet, RetrieveAPIView):
 )
 # NOTE: can use DestroyModelMixin, but it does
 # not work with Swagger DRF-spectacular
-class ClubPhotosDestroyCreateView(DestroyAPIView, CreateAPIView):
+class ClubPhotosDestroyCreateView(
+    DestroyAPIView,
+    CreateAPIView,
+    ViewSet  # FIXME: HOT FIX to do Swagger UI
+):
     """ class for deleting club photoes """
     lookup_field = 'id' # only for delete method
     permission_classes = [IsAuthenticated]
@@ -385,6 +229,7 @@ class ClubPhotosDestroyCreateView(DestroyAPIView, CreateAPIView):
 
         return Club.objects.all()
 
+    @swagger_schema_club_photo_delete
     def destroy(self, request, *args, **kwargs):
         """ delete existing photo"""
         # if request from owner of clubs' photoes
@@ -399,6 +244,7 @@ class ClubPhotosDestroyCreateView(DestroyAPIView, CreateAPIView):
 
             return Response(status=HTTP_401_UNAUTHORIZED)
 
+    @swagger_schema_club_photo_create
     def create(self, request, *args, **kwargs):
         """ add new photo """
         try:

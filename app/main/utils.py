@@ -2,6 +2,7 @@
 # Python imports
 import logging
 from PIL import Image
+import inspect
 
 # Django imports
 from django.db.models import Model  # because of circular imports
@@ -81,3 +82,10 @@ def image_file_extension_validator(object):
             "Please, redefine filename by the correct way."
             f"Filename: {str(object)}"
         )
+    
+
+# https://stackoverflow.com/a/24628710
+# get name of function, using for logging
+foo_name = lambda: inspect.stack()[1][3]
+# https://stackoverflow.com/a/50095096
+class_and_foo_name = lambda: str(inspect.stack()[1][4]).split()[0][2:].replace("()\\n'", "")

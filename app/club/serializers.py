@@ -34,7 +34,7 @@ class ClubUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Club
 #        fields = "__all__"
-        exclude = ["admin_club"]
+        exclude = ["admin_club", "logo"]
 
     def validate_logo(self, object):
         """
@@ -63,29 +63,18 @@ class ClubCreateSerializer(ClubUpdateSerializer):
         - serializing club photo fields
         - create method
     """
-    photo = ClubPhotoSerializer(many=True, required=False)
-
-
-    # NOTE: можнz заменить на такую конструкциию
-    # logo = serializers.ImageField(required=False, validators=[FileExtensionValidator(allowed_extensions=allowed_extensions)])
-
 
     def create(self, validated_data, user: User) -> Club:
         """
         redefine save method for creating club_admin
         and club photoes
         """
-        photoes = self.initial_data.getlist('photo')
+#        photoes = self.initial_data.getlist('photo')
         validated_data = self.validated_data
         validated_data["admin_club"] = ClubAdmin.objects.create(
             user=user
         )
         club = Club.objects.create(**validated_data)
-
-        if photoes:
-
-            for photo_data in photoes:
-                ClubPhoto.objects.create(club=club, photo=photo_data)
 
         return club
     

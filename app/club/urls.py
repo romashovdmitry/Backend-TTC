@@ -24,9 +24,17 @@ get__update_club = ClubActions.as_view(
     }
 )
 
+# FIXME: HITFIX got Swagger UI
+club_photo_actions = ClubPhotosDestroyCreateView.as_view(
+    {
+        "delete": "destroy",
+        "post": "create"
+    }
+)
+
 
 urlpatterns = [
     path('', club_create_update_get, name="club_actions"),
     path('club/<int:id>/', get__update_club, name="get_club"),
-    path('photo/<int:id>/', ClubPhotosDestroyCreateView.as_view(), name='club_photo_endpoint')
+    path('photo/<int:id>/', club_photo_actions, name='club_photo_endpoint')
 ]
