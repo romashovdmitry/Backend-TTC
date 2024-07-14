@@ -105,7 +105,17 @@ swagger_schema_update_player = extend_schema(
         summary="Update existing player info",
         description="PUT request to update player info",
         operation_id="Update player info",
-        request=SwaggerUpdatePlayerSerializer,
+        request={
+            "application/json": {
+                "example": {
+                    "playing_hand": 1,
+                    "blade": "mazda rx 6",
+                    "rubber_forehand": "lada niva",
+                    "rubber_backhand": "toyota land arbuzer",
+                    "rating": 100
+                }
+            }
+        },
         responses={
             200: None,
         },

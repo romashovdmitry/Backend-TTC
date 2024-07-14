@@ -20,12 +20,20 @@ tournament_admin_actions = TournamentActions.as_view(
         "put": "add_player_to_tournament"
     }
 )
+tournament_groups_admin_actions = TournamentActions.as_view(
+    {
+        # NOTE: PUT, not POST
+        # because we updatin existing tournament
+        "put": "create_groups"
+    }
+)
 
 
 # admin_my - requests that admin is doing to change something
 # in his clubs, tournaments, etc
 urlpatterns = [
     path('', tournament_create___list_all_tournaments, name="tournament_actions"),
-    path('admin_my/<int:club_pk>', tournament_admin_actions, name="tournament_admin_actions"),
-    path('admin_my/add_player/', tournament_admin_actions, name="tournament_admin_actions")    
+    path('admin_my/<int:club_pk>', tournament_admin_actions, name="list_club_tournaments"),
+    path('admin_my/add_player/', tournament_admin_actions, name="admin_add_player"),
+    path('admin_my/create_groups/<int:tournament_pk>', tournament_groups_admin_actions, name="tournament_groups_admin_actions")
 ]

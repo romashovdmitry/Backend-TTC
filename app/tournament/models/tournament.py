@@ -4,7 +4,10 @@ from main.base_model import models, BaseModel
 # import constants
 from tournament.constants import (
     TournamentStatus,
-    TournamentType
+    TournamentType,
+    DEFAULT_GROUP_QUALIFIRES_NUMBER,
+    DEFAULT_MAX_RATING_LIMIT,
+    DEFAULT_MIN_RATING_LIMIT
 )
 
 # FIXME: это можно без импорта сделать
@@ -55,36 +58,9 @@ class Tournament(BaseModel):
     )
 
     group_qualifiers_number = models.PositiveSmallIntegerField(
-        default=1,
+        default=DEFAULT_GROUP_QUALIFIRES_NUMBER,
         verbose_name="Number of players who successfully left the group",
         help_text="Number of players who successfully left the group",
-    )
-
-    max_players_amount = models.PositiveSmallIntegerField(
-        default=32,
-        verbose_name="Max amount of players",
-        help_text=(
-            "Max amount of players, that "
-            "could be registrated of tournament"
-        )
-    )
-
-    min_rating_limit = models.PositiveBigIntegerField(
-        default=100,
-        null=False,
-        verbose_name="Minimal rating value for players",
-        help_text=(
-            "Players riched limit could be registrated."
-        )
-    )
-
-    max_rating_limit = models.PositiveBigIntegerField(
-        default=1000,
-        null=False,
-        verbose_name="Maximal rating value for players",
-        help_text=(
-            "Players riched limit could not be registrated."
-        )
     )
 
     status = models.CharField(
@@ -120,4 +96,23 @@ class Tournament(BaseModel):
         blank=True,
         verbose_name="Participation payment",
         help_text="Player pay for participation in tournament",
+    )
+    # NOTE: now we don't use those fiels, but in
+    # future maybe would
+    min_rating_limit = models.PositiveBigIntegerField(
+        default=DEFAULT_MIN_RATING_LIMIT,
+        null=False,
+        verbose_name="Minimal rating value for players",
+        help_text=(
+            "Players riched limit could be registrated."
+        )
+    )
+    # NOTE: now we don't use those fiels, but in
+    max_rating_limit = models.PositiveBigIntegerField(
+        default=DEFAULT_MAX_RATING_LIMIT,
+        null=False,
+        verbose_name="Maximal rating value for players",
+        help_text=(
+            "Players riched limit could not be registrated."
+        )
     )

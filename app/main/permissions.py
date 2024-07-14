@@ -11,7 +11,7 @@ class IsClubAdmin(IsAuthenticated):
     def has_permission(self, request, view):
 
         try:
-            # Проверяем, является ли текущий пользователь владельцем клуба
+            # NOTE FIXME: это можно улучшить. довольно ублюдски написано
             club_pk = request.data.get('club')
             tournament_pk = request.data.get('tournament')
 
@@ -24,7 +24,12 @@ class IsClubAdmin(IsAuthenticated):
                         club_pk = Tournament.objects.filter(
                             pk=tournament_pk
                         ).first().club.pk
-                        
+
+                    elif view.kwargs.get('tournament_pk'):
+                        club_pk = Tournament.objects.filter(
+                            pk=view.kwargs.get('tournament_pk')
+                        ).first().club.pk
+
                     else:
                         
                         return False
