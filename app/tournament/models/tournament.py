@@ -46,13 +46,13 @@ class Tournament(BaseModel):
     )
 
     group_number = models.PositiveSmallIntegerField(
-        default=1,
+        null=True,
         verbose_name="Number of groups in tournament",
         help_text="Number of groups in tournament"
     )
 
     group_players_number = models.PositiveSmallIntegerField(
-        default=5,
+        null=True,
         verbose_name="Number of players in one group",
         help_text="Number of players in one group",
     )

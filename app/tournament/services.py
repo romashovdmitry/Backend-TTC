@@ -11,7 +11,8 @@ from asgiref.sync import sync_to_async
 
 # import models
 from tournament.models import (
-    TournamentPlayers
+    TournamentPlayers,
+    Tournament
 )
 
 # import constants
@@ -22,13 +23,14 @@ from telegram_bot.send_error import telegram_log_errors
 
 
 async def divide_players_to_groups(
-        group_number: int,
-        group_players_number: int,
         group_qualifiers_number: int,
         tournament_pk: int,
         tournament_players: list[TournamentPlayers],
+        group_number: int | None = None,
+        group_players_number: int | None = None,
 ) -> bool:
     """
+    FIXME: дописать аннотирование. не горит. 
     Foo divide plyers to groups after serialization
         of Put request for dividing.
     
@@ -47,30 +49,61 @@ async def divide_players_to_groups(
             in tournament
     """
     try:
-        return_list_dicts = []
         tournament_players = await sync_to_async(list)(tournament_players)
 
-        if len(tournament_players) % group_players_number > 1 and \
-           group_players_number - (len(tournament_players) % group_players_number) > 1:
+        # Is user chose groups number.
+        # Than we define numbber of group players
+        if group_number:
+
+            group_players_number = len(tournament_players) // group_number
+            
+            if group_players_number == 0:
+                
+                return False
+
+        # If user chose group player number.
+        # Than we define number of groups
+        elif group_players_number:
+
+            group_number = len(tournament_players) // group_players_number
+
+            if group_number == 0:
+
+                return False
+
+        free_players = len(tournament_players) - (group_number * group_players_number)
+
+        if group_players_number <= 2:
+            return False
+
+        if free_players > 1 and \
+           group_players_number - free_players > 1:
 
             return False
-    
-        else:
-            # NOTE: номер группы в колличестве групп
-            player_group = 1
 
-            for player in tournament_players:
+        if free_players > 0:
+            group_number += 1
 
-                player.tournament_group = player_group
-                player.stage = TournamentStage.START
-                await player.asave()
+        await Tournament.objects.filter(
+            pk=tournament_pk
+        ).aupdate(
+            group_players_number=group_players_number
+        )
 
-                if player_group + 1 > group_number:
-                    player_group = 0
+        player_group = 1
 
-                player_group += 1
+        for player in tournament_players:
 
-            return True
+            player.tournament_group = player_group
+            player.stage = TournamentStage.START
+            await player.asave()
+
+            if player_group + 1 > group_number:
+                player_group = 0
+
+            player_group += 1
+
+        return True
 
     except Exception as ex:
         await telegram_log_errors(
