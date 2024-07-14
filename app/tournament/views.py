@@ -20,7 +20,8 @@ from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_RE
 from tournament.serializers import (
     TournamentCreateSerializer,
     TournamentListSerializer,
-    TournamentPlayerAddSerializer
+    TournamentPlayerAddSerializer,
+    TournamentCreateGroupsSerializer
 )
 
 # Swagger Schemas imports
@@ -29,6 +30,7 @@ from tournament.swagger_schemas import (
     swagger_schema_tournament_list,
     swagger_schema_tournament_list,
     swagger_schema_admin_my_tournament_list,
+    swagger_schema_add_player_to_tournament,
     swagger_schema_add_player_to_tournament
 )
 
@@ -42,6 +44,7 @@ from tournament.constants import TournamentStatus
 from main.permissions import IsClubAdmin
 from telegram_bot.send_error import telegram_log_errors
 from main.utils import foo_name, class_and_foo_name
+from tournament.services import divide_players_to_groups
 
 
 class TournamentActions(ViewSet):
@@ -54,11 +57,13 @@ class TournamentActions(ViewSet):
         'create_tournament': TournamentCreateSerializer,
         "list_tournament": TournamentListSerializer,
         "list_my_tournaments": TournamentListSerializer,
-        "add_player_to_tournament": TournamentPlayerAddSerializer
+        "add_player_to_tournament": TournamentPlayerAddSerializer,
+        "create_groups": TournamentCreateGroupsSerializer
     }
 
     permission_map = {
         "create_tournament": [IsClubAdmin],
+        "create_groups": [IsClubAdmin],
         "list_my_tournaments": [IsClubAdmin],
         "list_tournament": [IsAuthenticated]
     }
@@ -78,7 +83,7 @@ class TournamentActions(ViewSet):
 
         return self.serializer_map[self.action]
 
-    def get_queryset(self):
+    def get_queryset(self, **kwargs):
         """ define queryset for class """
 
         if self.action == "list_tournament":
@@ -87,12 +92,19 @@ class TournamentActions(ViewSet):
                     status=TournamentStatus.CONFIGURED
                 ).all()
 
-        if self.action == "list_my_tournaments":
+        # NOTE: пока никак не исполоьзуется.
+        elif self.action == "list_my_tournaments":
 
             return Tournament.objects.filter(
                     club=self.club_pk
                 ).all()
 
+        elif self.action == "create_groups":
+            
+            return Tournament.objects.filter(
+                pk=kwargs["tournament_pk"]
+            ).first()
+            
     @swagger_schema_tournament_create
     @action(
         detail=False,
@@ -210,6 +222,57 @@ class TournamentActions(ViewSet):
                     validated_data=serializer.validated_data,
                 )
                 return Response(status=HTTP_201_CREATED)
+
+            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+        except Exception as ex:
+            asyncio.run(
+                telegram_log_errors(
+                    f"[TournamtneActions][create_tournament] {str(ex)}"
+                )
+            )
+
+            return Response(
+                data=str(ex),
+                status=HTTP_400_BAD_REQUEST
+            )
+    @swagger_schema_add_player_to_tournament
+    @action(
+        detail=False,
+        methods=["put"],
+        url_path="create_groups"
+    )
+    def create_groups(
+            self,
+            request,
+            tournament_pk=None
+    ) -> Response:
+        """
+        Divide players into groups.
+        """
+        try:
+            serializer = self.get_serializer_class()
+            request.data["tournament_pk"] = tournament_pk
+            serializer = serializer(data=request.data)
+    
+            if serializer.is_valid(raise_exception=True):
+                serializer_saved_data = serializer.save()
+                divide_players_to_groups_bool = asyncio.run(
+                    divide_players_to_groups(
+                        **serializer_saved_data
+                    )
+                )
+    
+                if divide_players_to_groups_bool:
+
+                    return Response(status=HTTP_201_CREATED)
+
+                else:
+
+                    return Response(
+                        status=HTTP_400_BAD_REQUEST,
+                        data="There is error"
+                    )
 
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 

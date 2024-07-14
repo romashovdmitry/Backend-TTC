@@ -28,3 +28,6 @@ Pillow==10.1.0
 
 # additional libs
 pytz # don't need version
+
+# async libs
+asgiref==3.8.1

@@ -31,6 +31,7 @@ class Player(BaseModel):
         verbose_name = "Player"
         verbose_name_plural = "Players"
         db_table = "players"
+        ordering = ['-rating']
 
     playing_hand = models.CharField(
         choices=HandChoise,

@@ -78,3 +78,23 @@ swagger_schema_add_player_to_tournament = extend_schema(
             }
         },
     )       
+
+
+swagger_schema_add_player_to_tournament = extend_schema(
+        tags=["Tournament"],
+        # NOTE: PUT, not POST
+        # because we updatin existing tournament
+        methods=["PUT"],
+        summary="Create tournament's groups, divide player to groups",
+        description="PUT request to divide players to groups",
+        operation_id="Divide players to groups",
+        request={
+            "application/json": {
+                "example": {
+                    "group_number": 3,
+                    "group_players_number": 3,
+                    "group_qualifiers_number": 1
+                }
+            }
+        },
+    )       

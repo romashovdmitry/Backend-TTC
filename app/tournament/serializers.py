@@ -1,3 +1,6 @@
+# Python imports
+import asyncio
+
 # DRF imports
 from rest_framework import serializers, exceptions
 from rest_framework.exceptions import ValidationError
@@ -9,6 +12,9 @@ from tournament.models import (
 )
 from club.models.club import Club
 
+# import custom foos, classes
+from telegram_bot.send_error import telegram_log_errors
+from main.utils import class_and_foo_name, foo_name
 
 class TournamentCreateSerializer(serializers.ModelSerializer):
     """ serializer for Tournament model create object """
@@ -37,3 +43,59 @@ class TournamentPlayerAddSerializer(serializers.ModelSerializer):
     class Meta:
         model = TournamentPlayers
         fields = "__all__"
+
+
+class TournamentCreateGroupsSerializer(serializers.ModelSerializer):
+    """ Serializer for POST request that divide players on groups """
+    class Meta:
+        model = Tournament
+        fields = [
+            "group_number",
+            "group_players_number",
+            "group_qualifiers_number"
+        ]        
+
+    def validate(self, attrs):
+        try:
+            attrs = super().validate(attrs)
+            tournament_pk = self.initial_data.get("tournament_pk")
+
+            if tournament_pk:
+                attrs = super().validate(attrs)
+    
+            else:
+                raise ValidationError(
+                    detail="There is no tournament pk in request",
+                    code="no_tournament_pk"
+                )
+    
+            tournament_players = TournamentPlayers.objects.filter(
+                tournament=Tournament.objects.get(
+                    pk=tournament_pk
+                )
+            ).all()
+            attrs['tournament_players'] = tournament_players
+            attrs['tournament_pk'] = tournament_pk
+
+            return attrs
+
+        except Exception as ex:
+            asyncio.run(
+                telegram_log_errors(
+                    f"[{class_and_foo_name()}][{foo_name()}] {str(ex)}"
+                )
+            )
+
+            raise ValidationError(
+                detail="Not validated data. Please, check out that",
+                code="not_validated_data"
+            )
+ 
+    def save(self):
+        return_ = self.validated_data.copy()
+        # FIXME: это велосипед.
+        self.validated_data.pop("tournament_players")
+        self.validated_data.pop("tournament_pk")
+        super().save()
+
+        return return_

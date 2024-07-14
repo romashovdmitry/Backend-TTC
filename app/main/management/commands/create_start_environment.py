@@ -29,15 +29,21 @@ from main.constants import (
 # import custom foos, classes
 from user.services import hashing
 
-# .env libs import
+# .env libs Турнир создан.
 import os
 from dotenv import load_dotenv
 load_dotenv()
 
 
+# NOTE: it has space for upgrades. But it's for local development.
+# so, not very carry about that.
+
 class Command(BaseCommand):
     """ autocreate admin user """
     def handle(self, *args, **options):
+
+        fake_users_list = []
+        fake_players_list = []
 
         for fake_user in DEVELOPMENT_USER_PLAYER_LIST:
             fake_user["user"]["password"] = asyncio.run(
@@ -45,19 +51,35 @@ class Command(BaseCommand):
             )
 
             if not User.objects.filter(email=fake_user["user"]["email"]).exists():
-                user = User.objects.create(
+                fake_user_database_object = User.objects.create(
                     **fake_user["user"]
                 )
-                Player.objects.filter(
-                    user=user
+                fake_users_list.append(fake_user_database_object)
+                player = Player.objects.filter(
+                    user=fake_user_database_object
                 ).update(
                     **fake_user["player"]
                 )
+                
+                fake_players_list.append(
+                    Player.objects.filter(user=fake_user_database_object).first()
+                )
 
             else:
+                fake_user_database_object = User.objects.get(email=fake_user["user"]["email"])
+                fake_users_list.append(
+                    User.objects.filter(email=fake_user["user"]["email"]).first()
+                )
+                fake_players_list.append(
+                    Player.objects.filter(
+                        user=User.objects.filter(
+                            email=fake_user["user"]["email"]
+                        ).first()
+                    ).first()
+                )
                 self.stdout.write(
                     "Уже создан пользователь "
-                    f"{fake_user['user']['second_name']}"
+                    f"{fake_user_database_object.second_name}"
                 )
 
         self.stdout.write("Пользователи созданы.")
@@ -77,8 +99,6 @@ class Command(BaseCommand):
             self.stdout.write("Админ клуба установлен.")
 
         else:
-            print(fake_club_admin)
-            print(type(fake_club_admin))
             fake_club_admin = ClubAdmin.objects.get(
                 user=fake_club_admin
             )
@@ -97,11 +117,8 @@ class Command(BaseCommand):
                 f"Есть уже клуб {DEVELOPMENT_CLUB['name']}"
             )            
 
-        print(type(fake_club_admin))
         fake_club_object.admin_club = fake_club_admin
-        print(fake_club_admin)
         fake_club_object.save()
-        print(fake_club_object)
 
         self.stdout.write("Владелец для клуба установлен. ")
 
@@ -112,11 +129,30 @@ class Command(BaseCommand):
         if not Tournament.objects.filter(
             name=DEVELOPMENT_TOURNAMENT["name"]
         ).exists():
-            Tournament.objects.create(
+            fake_tournament = Tournament.objects.create(
                 **DEVELOPMENT_TOURNAMENT
             )
 
             self.stdout.write("Турнир создан. ")
         
         else:
+            fake_tournament = Tournament.objects.get(
+                name=DEVELOPMENT_TOURNAMENT["name"]
+            )
             self.stdout.write("Турнир уже создан ранее. ")
+
+        for fake_player in fake_players_list:
+        
+            if TournamentPlayers.objects.filter(player=fake_player).exists():
+                self.stdout.write(
+                    f"Игрок {fake_player.user.second_name} уже добавлен на турнир."
+                )
+
+            else:
+                TournamentPlayers.objects.create(
+                    player=fake_player,
+                    tournament=fake_tournament
+                )
+                self.stdout.write(
+                    f"Игрока {fake_player.user.second_name} добавили на турнир"
+                )
