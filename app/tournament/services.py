@@ -23,13 +23,14 @@ from telegram_bot.send_error import telegram_log_errors
 
 
 async def divide_players_to_groups(
-        group_number: int | None,
-        group_players_number: int | None,
         group_qualifiers_number: int,
         tournament_pk: int,
         tournament_players: list[TournamentPlayers],
+        group_number: int | None = None,
+        group_players_number: int | None = None,
 ) -> bool:
     """
+    FIXME: дописать аннотирование. не горит. 
     Foo divide plyers to groups after serialization
         of Put request for dividing.
     
@@ -54,33 +55,36 @@ async def divide_players_to_groups(
         # Than we define numbber of group players
         if group_number:
 
-            count_group_players = len(tournament_players) // group_number
+            group_players_number = len(tournament_players) // group_number
             
-            if count_group_players == 0:
+            if group_players_number == 0:
                 
                 return False
-            free_players_count = len(tournament_players) % group_number
 
         # If user chose group player number.
         # Than we define number of groups
         elif group_players_number:
 
-            count_group_number = len(tournament_players) // group_players_number
-            free_players_count = len(tournament_players) % group_players_number
+            group_number = len(tournament_players) // group_players_number
 
-            if count_group_number == 0:
+            if group_number == 0:
 
                 return False
 
-        if free_players_count > 1 and \
-           count_group_players - free_players_count > 1:
+        free_players = len(tournament_players) - (group_number * group_players_number)
+
+        if free_players > 1 and \
+           group_players_number - free_players > 1:
 
             return False
+
+        if free_players > 0:
+            group_number += 1
 
         await Tournament.objects.filter(
             pk=tournament_pk
         ).aupdate(
-            group_players_numbe=count_group_players
+            group_players_number=group_players_number
         )
 
         player_group = 1
