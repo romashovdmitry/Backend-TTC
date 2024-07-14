@@ -73,6 +73,9 @@ async def divide_players_to_groups(
 
         free_players = len(tournament_players) - (group_number * group_players_number)
 
+        if group_players_number <= 2:
+            return False
+
         if free_players > 1 and \
            group_players_number - free_players > 1:
 
