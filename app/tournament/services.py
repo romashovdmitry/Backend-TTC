@@ -48,13 +48,15 @@ async def divide_players_to_groups(
         tournament_players: players added to participate
             in tournament
     """
+    # FIXME: это 100% можно зарефакторить. 
+    # часть кода писалась во время созвона и HotFix-ы. 
     try:
         tournament_players = await sync_to_async(list)(tournament_players)
 
         # Is user chose groups number.
         # Than we define numbber of group players
         if group_number:
-
+            flag = False
             group_players_number = len(tournament_players) // group_number
             
             if group_players_number == 0:
@@ -64,7 +66,7 @@ async def divide_players_to_groups(
         # If user chose group player number.
         # Than we define number of groups
         elif group_players_number:
-
+            flag = True
             group_number = len(tournament_players) // group_players_number
 
             if group_number == 0:
@@ -73,6 +75,15 @@ async def divide_players_to_groups(
 
         free_players = len(tournament_players) - (group_number * group_players_number)
 
+        if free_players > 0 and not free_players == 1 and flag:
+            group_number += 1
+
+        if free_players <= 2:
+    
+            if flag and not free_players == 1:
+                
+                return False
+
         if group_players_number <= 2:
             return False
 
@@ -80,9 +91,6 @@ async def divide_players_to_groups(
            group_players_number - free_players > 1:
 
             return False
-
-        if free_players > 0:
-            group_number += 1
 
         await Tournament.objects.filter(
             pk=tournament_pk
