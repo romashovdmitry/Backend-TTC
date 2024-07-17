@@ -25,3 +25,10 @@ class TournamentStage(models.IntegerChoices):
 
     START = 0, 'START'
     GROUP_STAGE = 1, 'GROUP_STAGE'
+
+
+class GameStatus(models.IntegerChoices):
+
+    CREATED = 0, 'CREATED'
+    STARTED = 1, 'STARTED'
+    FINISHED = 2, 'FINISHED'

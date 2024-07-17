@@ -44,7 +44,10 @@ from tournament.constants import TournamentStatus
 from main.permissions import IsClubAdmin
 from telegram_bot.send_error import telegram_log_errors
 from main.utils import foo_name, class_and_foo_name
-from tournament.services import divide_players_to_groups
+from tournament.services import (
+    divide_players_to_groups,
+    create_tournament_games
+)
 
 
 class TournamentActions(ViewSet):
@@ -257,14 +260,16 @@ class TournamentActions(ViewSet):
     
             if serializer.is_valid(raise_exception=True):
                 serializer_saved_data = serializer.save()
-                divide_players_to_groups_bool = asyncio.run(
-                    divide_players_to_groups(
-                        **serializer_saved_data
+                divide_players_to_groups_bool, \
+                    serializer_saved_data["group_number"] = asyncio.run(
+                        divide_players_to_groups(
+                            **serializer_saved_data
+                        )
                     )
-                )
     
                 if divide_players_to_groups_bool:
-
+                    create_tournament_games(**serializer_saved_data)
+#                    create_tournament_grid()
                     return Response(status=HTTP_201_CREATED)
 
                 else:
@@ -287,7 +292,8 @@ class TournamentActions(ViewSet):
                 data=str(ex),
                 status=HTTP_400_BAD_REQUEST
             )
-        
+
+
 class Games(ViewSet):
     """ class for creating and updating tournament's games """
     http_method_names = ['post', 'put', 'get', 'delete']
@@ -316,4 +322,3 @@ class Games(ViewSet):
         """ define queryset for class """
 
         return
-    
