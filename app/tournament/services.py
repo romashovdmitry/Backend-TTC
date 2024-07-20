@@ -18,7 +18,11 @@ from tournament.models import (
 )
 
 # import constants
-from tournament.constants import TournamentStage, GameStatus
+from tournament.constants import (
+    TournamentStage,
+    GameStatus,
+    GROUP_ALPHABBET
+)
 
 # import custom foos, classes
 from telegram_bot.send_error import telegram_log_errors
@@ -203,7 +207,8 @@ def create_tournament_games(
                 game = games_stack[game_stack_next_iter]
 
                 # NOTE: только второй игрок может быть None
-                if not game.second_player:
+                if not game.second_player and \
+                   game.first_player.pk not in player_stack:
                     game.order = game_order
                     game.save()
                     player_stack.append(game.first_player.pk)
@@ -226,9 +231,10 @@ def create_tournament_games(
                 if i >= one_time_tables:
                     break
 
-
+'''
 def create_tournament_grid(
         tournament_pk: int,
+        group_number: int,
         **kwargs
 ):
     """
@@ -237,4 +243,12 @@ def create_tournament_grid(
     Parameters:
             tournament_pk: tournament primary key    
     """
-    pass
+    return_dict = {}
+    for group in range(1, group_number+1):
+        group_dict = {}
+        group_players = TournamentPlayers.objects.filter(
+            tournament_group=group
+        ).all()
+        group_dict[""]
+
+        '''

@@ -1,0 +1,33 @@
+
+{
+    "groups": [
+        {
+            "group_id": "1",
+            "group_alpha": "A",
+            "players": [
+                {
+                    "pk": 1,
+                    "grid_id": 1,
+                    "name": "loh pidr"
+                },
+                {
+                    "pk": 2,
+                    "grid_id": 2,
+                    "name": "Pidroviy Les"
+                }
+            ],
+            // кол-во игр (в том чиисле пустых) в рамках группы
+            "group_games": 1,
+            "games": [
+                {
+                    "order": 1,
+                    "grid_ids": [1,2]
+                },
+                {
+                    "order": 2,
+                    "grid_ids": [3,4]
+                }
+            ]
+        }
+    ]
+}
