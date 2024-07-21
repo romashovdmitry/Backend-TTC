@@ -1,5 +1,7 @@
 ## Быстрый старт
 
+
+Скачать проект.
 ```
 git init
 git clone https://github.com/romashovdmitry/Backend-TTC
