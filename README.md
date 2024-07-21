@@ -6,7 +6,7 @@
 git init
 git clone https://github.com/romashovdmitry/Backend-TTC
 ```
-Сделать вииртуальное окружениие
+Сделать вииртуальное окружениие. Можноо без докера запускать. Это легче, быстрее. 
 ```
 python -m venv .myenv
 .\.myenv\Scripts\activate.bat  
