@@ -5,7 +5,16 @@
 ```
 git init
 git clone https://github.com/romashovdmitry/Backend-TTC
+```
+Сделать вииртуальное окружениие
+```
+python -m venv .myenv
+.\.myenv\Scripts\activate.bat  
+pip install -r requirements.txt
+```
 
+Запуститиь миграции, запустить проект.
+```
 python app/manage.py makemigrations
 python app/manage.py migrate
 python app/manage.py runserver
