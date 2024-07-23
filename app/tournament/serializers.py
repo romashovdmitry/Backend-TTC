@@ -68,12 +68,22 @@ class TournamentCreateGroupsSerializer(serializers.ModelSerializer):
                     detail="There is no tournament pk in request",
                     code="no_tournament_pk"
                 )
-    
+
+            group_players_number = attrs.get("group_players_number")
+            group_number = attrs.get("group_number")
+
+            if not group_players_number and not group_number:
+                raise ValidationError(
+                    detail="At least one of group_players_number or group_number must be provided",
+                    code="missing_fields"
+                )
+
             tournament_players = TournamentPlayers.objects.filter(
                 tournament=Tournament.objects.get(
                     pk=tournament_pk
                 )
             ).all()
+
             attrs['tournament_players'] = tournament_players
             attrs['tournament_pk'] = tournament_pk
 

@@ -245,7 +245,7 @@ class TournamentActions(ViewSet):
     def create_groups(
             self,
             request,
-            tournament_pk=None
+            tournament_pk=None,
     ) -> Response:
         """
         Divide players into groups.
@@ -287,3 +287,33 @@ class TournamentActions(ViewSet):
                 data=str(ex),
                 status=HTTP_400_BAD_REQUEST
             )
+        
+class Games(ViewSet):
+    """ class for creating and updating tournament's games """
+    http_method_names = ['post', 'put', 'get', 'delete']
+    permission_classes = [IsClubAdmin, IsAuthenticated]
+
+    serializer_map = {}
+
+    permission_map = {}
+
+    def get_permissions(self):
+        """ Return the permissions based on the action """
+        try:
+
+            return [permission() for permission in self.permission_map[self.action]]
+
+        except KeyError:
+
+            return [permission() for permission in self.permission_classes]
+
+    def get_serializer_class(self):
+        """ define serializer for class """
+
+        return self.serializer_map[self.action]
+
+    def get_queryset(self, **kwargs):
+        """ define queryset for class """
+
+        return
+    
