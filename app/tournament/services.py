@@ -67,46 +67,38 @@ async def divide_players_to_groups(
         # Is user chose groups number.
         # Than we define numbber of group players
         if group_number:
-            flag = False
+            flag = False  # False -> we have amount of groups
             group_players_number = len(tournament_players) // group_number
             
             if group_players_number == 0:
                 
-                return False
+                return False, None
 
         # If user chose group player number.
         # Than we define number of groups
         elif group_players_number:
-            flag = True
+            flag = True  # True -> we have amount of players in one group
             group_number = len(tournament_players) // group_players_number
 
             if group_number == 0:
 
-                return False
+                return False, None
 
         free_players = len(tournament_players) - (group_number * group_players_number)
 
-        if free_players > 0 and not free_players == 1 and flag:
-            group_number += 1
+        if flag and free_players > group_number:
 
-        if free_players <= 2:
-    
-            if flag and not free_players == 1:
-                
-                return False
+            return False, None
 
         if group_players_number <= 2:
-            return False
 
-        if free_players > 1 and \
-           group_players_number - free_players > 1:
-
-            return False
+            return False, None
 
         await Tournament.objects.filter(
             pk=tournament_pk
         ).aupdate(
-            group_players_number=group_players_number
+            group_players_number=group_players_number,
+            group_number=group_number
         )
 
         player_group = 1
@@ -137,7 +129,7 @@ def create_tournament_games(
     tournament_players: list[TournamentPlayers],
     group_number: int,
     **kwargs
-) -> None:
+) -> tuple[bool, dict]:
     """
     Create games for tournament. 
     NOTE: there are other params but we don't use them.
@@ -146,109 +138,161 @@ def create_tournament_games(
         tournament_pk: tournament primary key
         tournament_players: players added to participate
             in tournament
+    Returns:
+        bool: success or not
+        dict: dict where key is number of group and
+            value is list of games inside group
     """
-    for group_order in range(1, group_number + 1):
-        group_players: list[TournamentPlayers] = list(
-            TournamentPlayers.objects.filter(
-                tournament_id=tournament_pk,
-                tournament_group=group_order
-            ).all()
-        )
-        group_players_copy = group_players.copy()
+    try:
+        return_dict = {}
 
-        games_stack: list[Game] = []
-
-        while len(group_players_copy) > 2:
-
-            for group_player in range(1, len(group_players_copy)):
-                games_stack.append(
-                    Game.objects.create(
-                        first_player=group_players_copy[0],
-                        second_player=group_players_copy[group_player],
-                        status=GameStatus.CREATED,
-                        tournament_id=tournament_pk
-                    )
-                )
-            
-            group_players_copy.pop(0)
-
-        games_stack.append(
-            Game.objects.create(
-                    first_player=group_players_copy[0],
-                    second_player=group_players_copy[1],
-                    status=GameStatus.CREATED,
-                    tournament_id=tournament_pk
-                )
+        for group_order in range(1, group_number + 1):
+            return_dict[group_order] = []
+            group_players: list[TournamentPlayers] = list(
+                TournamentPlayers.objects.filter(
+                    tournament_id=tournament_pk,
+                    tournament_group=group_order
+                ).all()
             )
-        # сколько игр может происходит одновременно в
-        # рамках одной группы
-        one_time_tables = (len(group_players) // 2)
+            group_players_copy = group_players.copy()
 
-        if len(group_players) % 2 != 0:
-            for group_player in group_players:
-                games_stack.append(
-                    Game.objects.create(
-                        first_player=group_player,
-                        second_player=None,
+            games_stack: list[Game] = []
+
+            while len(group_players_copy) > 2:
+
+                for group_player in range(1, len(group_players_copy)):
+                    games_stack.append(
+                        Game.objects.create(
+                            first_player=group_players_copy[0],
+                            second_player=group_players_copy[group_player],
+                            status=GameStatus.CREATED,
+                            tournament_id=tournament_pk
+                        )
+                    )
+                
+                group_players_copy.pop(0)
+
+            games_stack.append(
+                Game.objects.create(
+                        first_player=group_players_copy[0],
+                        second_player=group_players_copy[1],
                         status=GameStatus.CREATED,
                         tournament_id=tournament_pk
                     )
                 )
-            # but one would be (player VS None) Game object
-            one_time_tables = (len(group_players) // 2) + 1
+            # сколько игр может происходит одновременно в
+            # рамках одной группы
+            one_time_tables = (len(group_players) // 2)
 
-        # сколько каждый игрок должен сыграть игр
-        # len(group_players)
-        for game_order in range(1, len(group_players)+1):
-            player_stack = []
-            i = 0
-            game_stack_next_iter = 0
-            while game_stack_next_iter != len(games_stack):
-                game = games_stack[game_stack_next_iter]
+            if len(group_players) % 2 != 0:
+                for group_player in group_players:
+                    games_stack.append(
+                        Game.objects.create(
+                            first_player=group_player,
+                            second_player=None,
+                            status=GameStatus.CREATED,
+                            tournament_id=tournament_pk
+                        )
+                    )
+                # but one would be (player VS None) Game object
+                one_time_tables = (len(group_players) // 2) + 1
 
-                # NOTE: только второй игрок может быть None
-                if not game.second_player and \
-                   game.first_player.pk not in player_stack:
-                    game.order = game_order
-                    game.save()
-                    player_stack.append(game.first_player.pk)
-                    games_stack.remove(game)
-                    i += 1
+            # сколько каждый игрок должен сыграть игр
+            # len(group_players)
+            for game_order in range(1, len(group_players)+1):
+                player_stack = []
+                i = 0
+                game_stack_next_iter = 0
+                while game_stack_next_iter != len(games_stack):
+                    game = games_stack[game_stack_next_iter]
 
-                elif game.first_player.pk not in player_stack\
-                        and game.second_player.pk not in player_stack:
+                    # NOTE: только второй игрок может быть None
+                    if not game.second_player and \
+                    game.first_player.pk not in player_stack:
+                        game.order = game_order
+                        game.save()
+                        return_dict[group_order].append(game)
+                        player_stack.append(game.first_player.pk)
+                        games_stack.remove(game)
+                        i += 1
 
-                    player_stack.append(game.first_player.pk)
-                    player_stack.append(game.second_player.pk)
-                    game.order = game_order
-                    game.save()
-                    games_stack.remove(game)
-                    i += 1
+                    elif game.first_player.pk not in player_stack\
+                            and game.second_player.pk not in player_stack:
 
-                else:
-                    game_stack_next_iter += 1
+                        player_stack.append(game.first_player.pk)
+                        player_stack.append(game.second_player.pk)
+                        game.order = game_order
+                        game.save()
+                        return_dict[group_order].append(game)
+                        games_stack.remove(game)
+                        i += 1
 
-                if i >= one_time_tables:
-                    break
+                    else:
+                        game_stack_next_iter += 1
 
-'''
+                    if i >= one_time_tables:
+                        break
+
+        return True, return_dict
+
+
+    except Exception as ex:
+        asyncio.run(
+            telegram_log_errors(
+                f"[create_tournament_games] {str(ex)}"
+            )
+        )
+
+        return False, None
+
+
 def create_tournament_grid(
-        tournament_pk: int,
-        group_number: int,
+        games_dict: dict,
         **kwargs
 ):
     """
     Create tournament grid, that backend send to
         frontend to show to tournament's admin
     Parameters:
-            tournament_pk: tournament primary key    
+            games_dict: dict where key is number of group and
+                value is list of games inside group
     """
-    return_dict = {}
+    return_dict = {"groups": []}
+    group_number = kwargs["group_number"]
+
     for group in range(1, group_number+1):
         group_dict = {}
-        group_players = TournamentPlayers.objects.filter(
+        group_players: TournamentPlayers = TournamentPlayers.objects.filter(
             tournament_group=group
         ).all()
-        group_dict[""]
+        group_dict["group_id"] = group
+        group_dict["group_alpha"] = GROUP_ALPHABBET[group]
 
-        '''
+        grid_id = 0 
+        group_players_list = []
+
+        for group_player in group_players:
+            grid_id += 1
+            group_players_list.append(
+                {
+                    "pk": group_player.player.user.pk,
+                    "grid_id": grid_id,
+                    "name": group_player.player.user.full_name
+                }
+            )
+
+        group_dict["players"] = group_players_list
+        group_dict['group_games'] = []
+
+        for game in games_dict[group]:
+            group_dict['group_games'].append(
+                {
+                    "game_order": game.order,
+                    "first_player_tournament_pk": game.first_player.pk,
+                    "second_player_tournament_pk": game.second_player.pk if game.second_player else None
+                }
+            )
+
+        return_dict["groups"].append(group_dict)
+    
+    return return_dict

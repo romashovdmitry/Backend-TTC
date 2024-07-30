@@ -46,7 +46,8 @@ from telegram_bot.send_error import telegram_log_errors
 from main.utils import foo_name, class_and_foo_name
 from tournament.services import (
     divide_players_to_groups,
-    create_tournament_games
+    create_tournament_games,
+    create_tournament_grid
 )
 
 
@@ -256,6 +257,7 @@ class TournamentActions(ViewSet):
         try:
             serializer = self.get_serializer_class()
             request.data["tournament_pk"] = tournament_pk
+            # NOTE: добавить проверку на наличие уже разбитых игр ???
             serializer = serializer(data=request.data)
     
             if serializer.is_valid(raise_exception=True):
@@ -266,17 +268,33 @@ class TournamentActions(ViewSet):
                             **serializer_saved_data
                         )
                     )
-    
-                if divide_players_to_groups_bool:
-                    create_tournament_games(**serializer_saved_data)
-#                    create_tournament_grid()
-                    return Response(status=HTTP_201_CREATED)
 
+                if divide_players_to_groups_bool:
+                    bool_, games_dict = create_tournament_games(**serializer_saved_data)
+
+                    if bool_:
+                        tournament_grid: dict = create_tournament_grid(
+                            games_dict=games_dict,
+                            **serializer_saved_data
+                        )
+
+                        return Response(
+                            status=HTTP_201_CREATED,
+                            data=tournament_grid
+                        )
+
+                    else:
+
+                        return Response(
+                            status=HTTP_400_BAD_REQUEST,
+                            data="There is and unexpected error"
+                        )
+    
                 else:
 
                     return Response(
                         status=HTTP_400_BAD_REQUEST,
-                        data="There is error"
+                        data="There is and unexpected error"
                     )
 
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)

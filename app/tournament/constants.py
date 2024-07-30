@@ -33,6 +33,7 @@ class GameStatus(models.IntegerChoices):
     STARTED = 1, 'STARTED'
     FINISHED = 2, 'FINISHED'
 
+
 GROUP_ALPHABBET = {
     1: "A",
     2: "B",
