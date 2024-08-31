@@ -58,6 +58,7 @@ class Game(models.Model):
     )
     status = models.PositiveSmallIntegerField(
         choices=GameStatus,
+        default=GameStatus.CREATED,
         null=True,
         verbose_name="Game's status: created, started or finished",
         help_text="Game's status: created, started or finished"        

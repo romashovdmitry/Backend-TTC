@@ -8,9 +8,13 @@ from rest_framework.exceptions import ValidationError
 # import models
 from tournament.models import (
     Tournament,
-    TournamentPlayers
+    TournamentPlayers,
+    Game
 )
 from club.models.club import Club
+
+# import constants
+from tournament.constants import GameStatus
 
 # import custom foos, classes
 from telegram_bot.send_error import telegram_log_errors
@@ -109,3 +113,35 @@ class TournamentCreateGroupsSerializer(serializers.ModelSerializer):
         super().save()
 
         return return_
+    
+
+class GameStartSerializer(serializers.ModelSerializer):
+    """
+    Serializer for data to fix game started.
+    """
+    class Meta:
+        model = Game
+        fields = [
+            "pk",
+            "tournament"
+        ]
+    
+    def save(self: Game, **kwargs: dict):
+        """
+        ovverride save method to define save behavior. 
+        """
+        self.instance.status = GameStatus.STARTED
+
+        return super().save(**kwargs)
+
+
+class GameResultSerializer(GameStartSerializer):
+    """
+    Serializer for data with game's result
+    """
+    class Meta:
+        exclude = [
+            "order",
+            "first_player",
+            "second_player"
+        ]
