@@ -21,7 +21,9 @@ from tournament.serializers import (
     TournamentCreateSerializer,
     TournamentListSerializer,
     TournamentPlayerAddSerializer,
-    TournamentCreateGroupsSerializer
+    TournamentCreateGroupsSerializer,
+    GameStartSerializer,
+    GameResultSerializer
 )
 
 # Swagger Schemas imports
@@ -31,11 +33,14 @@ from tournament.swagger_schemas import (
     swagger_schema_tournament_list,
     swagger_schema_admin_my_tournament_list,
     swagger_schema_add_player_to_tournament,
-    swagger_schema_add_player_to_tournament
+    swagger_schema_add_player_to_tournament,
+    swagger_schema_game_start,
+    swagger_schema_game_result
 )
 
 # import models
-from tournament.models.tournament import Tournament
+from tournament.models import Tournament
+from tournament.models import Game
 
 # import constants
 from tournament.constants import TournamentStatus
@@ -44,7 +49,11 @@ from tournament.constants import TournamentStatus
 from main.permissions import IsClubAdmin
 from telegram_bot.send_error import telegram_log_errors
 from main.utils import foo_name, class_and_foo_name
-from tournament.services import divide_players_to_groups
+from tournament.services import (
+    divide_players_to_groups,
+    create_tournament_games,
+    create_tournament_grid
+)
 
 
 class TournamentActions(ViewSet):
@@ -101,6 +110,7 @@ class TournamentActions(ViewSet):
 
         elif self.action == "create_groups":
             
+            # FIXME NOTE: судя по всему не используется
             return Tournament.objects.filter(
                 pk=kwargs["tournament_pk"]
             ).first()
@@ -253,25 +263,44 @@ class TournamentActions(ViewSet):
         try:
             serializer = self.get_serializer_class()
             request.data["tournament_pk"] = tournament_pk
+            # NOTE: добавить проверку на наличие уже разбитых игр ???
             serializer = serializer(data=request.data)
     
             if serializer.is_valid(raise_exception=True):
                 serializer_saved_data = serializer.save()
-                divide_players_to_groups_bool = asyncio.run(
-                    divide_players_to_groups(
-                        **serializer_saved_data
+                divide_players_to_groups_bool, \
+                    serializer_saved_data["group_number"] = asyncio.run(
+                        divide_players_to_groups(
+                            **serializer_saved_data
+                        )
                     )
-                )
-    
+
                 if divide_players_to_groups_bool:
+                    bool_, games_dict = create_tournament_games(**serializer_saved_data)
 
-                    return Response(status=HTTP_201_CREATED)
+                    if bool_:
+                        tournament_grid: dict = create_tournament_grid(
+                            games_dict=games_dict,
+                            **serializer_saved_data
+                        )
 
+                        return Response(
+                            status=HTTP_201_CREATED,
+                            data=tournament_grid
+                        )
+
+                    else:
+
+                        return Response(
+                            status=HTTP_400_BAD_REQUEST,
+                            data="There is and unexpected error"
+                        )
+    
                 else:
 
                     return Response(
                         status=HTTP_400_BAD_REQUEST,
-                        data="There is error"
+                        data="There is and unexpected error"
                     )
 
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
@@ -287,25 +316,17 @@ class TournamentActions(ViewSet):
                 data=str(ex),
                 status=HTTP_400_BAD_REQUEST
             )
-        
-class Games(ViewSet):
+
+
+class GameActions(ViewSet):
     """ class for creating and updating tournament's games """
     http_method_names = ['post', 'put', 'get', 'delete']
-    permission_classes = [IsClubAdmin, IsAuthenticated]
+    permission_classes = [IsClubAdmin]
 
-    serializer_map = {}
-
-    permission_map = {}
-
-    def get_permissions(self):
-        """ Return the permissions based on the action """
-        try:
-
-            return [permission() for permission in self.permission_map[self.action]]
-
-        except KeyError:
-
-            return [permission() for permission in self.permission_classes]
+    serializer_map = {
+        "game_result": GameResultSerializer,
+        "game_start": GameStartSerializer
+    }
 
     def get_serializer_class(self):
         """ define serializer for class """
@@ -315,5 +336,91 @@ class Games(ViewSet):
     def get_queryset(self, **kwargs):
         """ define queryset for class """
 
-        return
-    
+        if self.action in [
+            "game_start",
+            "game_result"
+        ]:
+        
+            return Game.objects.filter(
+                    pk=kwargs["game_pk"]
+                ).first()
+
+    @swagger_schema_game_start
+    @action(
+        detail=True,
+        methods=["put"],
+        url_path="create_groups"
+    )
+    def game_start(
+            self,
+            request,
+            game_pk=None
+    ):
+            """ To mark the game as started """
+            try:
+                serializer = self.get_serializer_class()
+                queryset = self.get_queryset(game_pk=game_pk)
+                request.data["pk"] = game_pk
+                serializer = serializer(queryset, data=request.data)
+
+                if serializer.is_valid(raise_exception=True):
+                    serializer.save()
+
+                    return Response(status=HTTP_200_OK)
+
+                return Response(
+                    status=HTTP_400_BAD_REQUEST,
+                    data="There is and unexpected error"
+                )
+
+            except Exception as ex:
+                asyncio.run(
+                    telegram_log_errors(
+                        f"[TournamtneActions][create_tournament] {str(ex)}"
+                    )
+                )
+
+                return Response(
+                    data=str(ex),
+                    status=HTTP_400_BAD_REQUEST
+                )
+            
+    @swagger_schema_game_result
+    @action(
+        detail=True,
+        methods=['put'],
+        url_path="game_result"
+    )
+    def game_result(
+        self,
+        request,
+        game_pk=None
+    ):
+        """ To save game result """
+        try:
+            serializer = self.get_serializer_class()
+            queryset = self.get_queryset(game_pk=game_pk)
+            request.data["pk"] = game_pk
+            serializer = serializer(queryset, data=request.data)
+
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+
+                return Response(status=HTTP_200_OK)
+
+            return Response(
+                status=HTTP_400_BAD_REQUEST,
+                data="There is and unexpected error"
+            )
+
+        except Exception as ex:
+            asyncio.run(
+                telegram_log_errors(
+                    f"[TournamtneActions][create_tournament] {str(ex)}"
+                )
+            )
+
+            return Response(
+                data=str(ex),
+                status=HTTP_400_BAD_REQUEST
+            )

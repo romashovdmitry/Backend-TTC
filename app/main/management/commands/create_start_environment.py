@@ -1,6 +1,11 @@
 """ create model objects for work on local to imitate real club's usage """
 # Python imports
 import asyncio
+import random
+from datetime import (
+    date,
+    timedelta
+)
 
 # Django import
 from django.core.management.base import BaseCommand
@@ -9,7 +14,8 @@ from django.core.management.base import BaseCommand
 from user.models import (
     User,
     Player,
-    ClubAdmin
+    ClubAdmin,
+    PlayerRatingHistory
 )
 from club.models import (
     Club
@@ -42,6 +48,7 @@ class Command(BaseCommand):
     """ autocreate admin user """
     def handle(self, *args, **options):
 
+        current_date = date.today()
         fake_users_list = []
         fake_players_list = []
 
@@ -155,4 +162,44 @@ class Command(BaseCommand):
                 )
                 self.stdout.write(
                     f"Игрока {fake_player.user.second_name} добавили на турнир"
+                )
+
+        for fake_player in fake_players_list:
+
+            date_first = current_date - timedelta(
+                days=(
+                    random.randint(4, 35)
+                )
+            )
+            date_second = current_date - timedelta(
+                days=(
+                    random.randint(4, 35)
+                )
+            )
+
+            first_rating = random.randint(50, 700)
+            second_rating = random.randint(50, 700)
+
+            if not PlayerRatingHistory.objects.filter(
+                player=fake_player
+            ).exists():
+                PlayerRatingHistory.objects.create(
+                    created=date_first,
+                    actual_rating=first_rating,
+                    player=fake_player
+                )
+                PlayerRatingHistory.objects.create(
+                    created=date_second,
+                    actual_rating=second_rating,
+                    player=fake_player
+                )
+                self.stdout.write(
+                    f"Игроку {fake_player.user.second_name} "
+                    "создали историю рейтинга"
+                )
+            
+            else:
+                self.stdout.write(
+                    f"Игроку {fake_player.user.second_name} "
+                    "уже создана история рейтинга. "
                 )

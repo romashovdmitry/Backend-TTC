@@ -98,3 +98,34 @@ swagger_schema_add_player_to_tournament = extend_schema(
             }
         },
     )       
+
+
+swagger_schema_game_start = extend_schema(
+        tags=["Tournament"],
+        # NOTE: PUT, not POST
+        # because we updatin existing tournament
+        methods=["PUT"],
+        summary="To mark game as started",
+        description="PUT request to mark game as started",
+        operation_id="To mark game as started",
+    )       
+
+
+swagger_schema_game_result = extend_schema(
+        tags=["Tournament"],
+        # NOTE: PUT, not POST
+        # because we updatin existing tournament
+        methods=["PUT"],
+        summary="To save game's result",
+        description="PUT request to save game's result",
+        operation_id="To save game's result",
+        request={
+            "application/json": {
+                "example": {
+                    "first_player_score": 2,
+                    "second_player_score": 0
+                }
+            }
+   
+        }
+    )       

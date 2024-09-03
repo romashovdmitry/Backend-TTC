@@ -15,8 +15,11 @@ from rest_framework.exceptions import ValidationError
 from drf_spectacular.utils import extend_schema_serializer
 
 # import models
-from user.models.user import User
-from user.models.player import Player
+from user.models import (
+    User,
+    Player,
+    PlayerRatingHistory
+)
 
 # import custom foos
 from user.services import hashing
@@ -247,3 +250,11 @@ class GetPlayerInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
         fields = "__all__"
+
+
+class GetPeriodicalPlayerRating(serializers.ModelSerializer):
+    """ serializer for returing data about updates in player's rating """
+
+    class Meta:
+        model = PlayerRatingHistory
+        exclude = ("player", "id",)

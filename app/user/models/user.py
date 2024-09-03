@@ -156,6 +156,11 @@ class User(AbstractUser):
         help_text="User's second name"
     )
 
+    @property
+    def full_name(self):
+
+        return f'{self.first_name} {self.second_name}'
+
     def save(self, *args, **kwargs):
         """ redefine save method """
         super().save(*args, **kwargs)

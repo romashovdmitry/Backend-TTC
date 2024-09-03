@@ -15,7 +15,7 @@ from user.utils import create_random_code
 class TournamentAdmin(BaseModel):
     """
     Model for admin of Tournament. It could be just manager
-    of Tournament or owner of club. 
+    of Tournament or owner of club.
     """
 
     class Meta:

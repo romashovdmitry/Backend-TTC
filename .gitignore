@@ -1,5 +1,5 @@
 # env data
-.env
+.myenv
 
 # mediafiles
 /app/media/logos/*
@@ -9,6 +9,7 @@
 # file for development on local
 __PLAN__.txt
 typical_commands.txt
+hours.txt
 
 # logs
 /app/logs/*
