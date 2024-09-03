@@ -144,3 +144,15 @@ swagger_schema_create_update_player_photo = extend_schema(
             200: None,
         },
     )
+
+
+swagger_schema_get_periodical_player_rating = extend_schema(
+    tags=["Player"],
+    summary="Get player's rating for certain period. ",
+    description="GET request to retrieve rating of player for certain period",
+    operation_id="Get rating of user for certain period",
+    request=None,
+    responses={
+        200: None,
+    },
+)

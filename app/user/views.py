@@ -18,14 +18,18 @@ from user.serializers import (
     UpdatePlayerSerializer,
     LoginUserSerializer,
     GetPlayerInfoSerializer,
-    UpdateCreatePlayerPhotoSerializer
+    UpdateCreatePlayerPhotoSerializer,
+    GetPeriodicalPlayerRating
 )
 
 # import models
-from user.models.player import Player
+from user.models import (
+    User,
+    Player,
+    PlayerRatingHistory
+)
 
 # import constants, config data
-from user.models.user import User
 from main.settings import HTTP_HEADERS
 
 # import swagger schemas
@@ -34,7 +38,8 @@ from user.swagger_schemas import (
     swagger_schema_login_user,
     swagger_schema_update_player,
     swagger_schema_get_player,
-    swagger_schema_create_update_player_photo
+    swagger_schema_create_update_player_photo,
+    swagger_schema_get_periodical_player_rating
 )
 
 # import custom foos, classes
@@ -159,8 +164,17 @@ class PlayerGetUpdate(ViewSet, RetrieveAPIView):
     serializer_map = {
         'update_player': UpdatePlayerSerializer,
         'get_player': GetPlayerInfoSerializer,
-        "create_update_player_photo": UpdateCreatePlayerPhotoSerializer
+        "create_update_player_photo": UpdateCreatePlayerPhotoSerializer,
+        "get_periodical_player_rating": GetPeriodicalPlayerRating
     }
+
+    def get_queryset(self):
+        """ get queryset """        
+        if self.action == "get_periodical_player_rating":
+        
+            return PlayerRatingHistory.objects.filter(
+                player__user=self.request.user
+            ).all()
 
     def get_serializer_class(self):
         """ define serializer for class """
@@ -271,6 +285,51 @@ class PlayerGetUpdate(ViewSet, RetrieveAPIView):
             asyncio.run(
                 telegram_log_errors(
                     f"[ClubActions][get_player] {str(ex)}"
+                )
+            )
+        
+            return Response(
+                data=str(ex),
+                status=HTTP_400_BAD_REQUEST
+            )
+
+    @swagger_schema_get_periodical_player_rating
+    @action(
+        detail=False,
+        methods=['get'],
+        url_path="get_periodical_player_rating",
+        parser_classes=(MultiPartParser,)
+    )
+    def get_periodical_player_rating(self, request) -> Response:
+        """ return info about player's rating """
+
+        try:
+            queryset = self.get_queryset()
+
+            if queryset:
+                serialiser = self.get_serializer_class()
+                serialised_queryset = serialiser(
+                    queryset,
+                    many=True
+                )
+
+                print(serialised_queryset.data)
+
+                return Response(
+                    status=HTTP_200_OK,
+                    data=serialised_queryset.data
+                )
+
+            return Response(
+                status=HTTP_200_OK,
+                data=None
+            )
+
+        except Exception as ex:
+            asyncio.run(
+                telegram_log_errors(
+                    "[ClubActions][get_periodical_player_rating] "
+                    f"{str(ex)}"
                 )
             )
         
