@@ -2,8 +2,7 @@
 from main.base_model import models, BaseModel
 
 # import constants
-from user.constants import GenderChoise, HandChoise
-
+from user.constants import HandChoise
 
 # import custom foos, classes
 from main.utils import (

@@ -1,3 +1,5 @@
+from user.constants import GeoChoise
+
 # Random test user's data  👇
 DEVELOPMENT_USER_PLAYER_LIST = [
     # Club Admin 👇
@@ -8,7 +10,8 @@ DEVELOPMENT_USER_PLAYER_LIST = [
             "first_name": "Ivan",
             "second_name": "Pizdalov",
             "birth_date": "1994-05-26",
-            "sex": 1
+            "sex": 1,
+            "geo": GeoChoise[0][0],
         },
         "player": {
             "playing_hand": 1,
@@ -26,7 +29,8 @@ DEVELOPMENT_USER_PLAYER_LIST = [
             "first_name": "Alex",
             "second_name": "Smith",
             "birth_date": "1990-02-15",
-            "sex": 1
+            "sex": 1,
+            "geo": GeoChoise[2][0],
         },
         "player": {
             "playing_hand": 2,
@@ -43,7 +47,8 @@ DEVELOPMENT_USER_PLAYER_LIST = [
             "first_name": "Emma",
             "second_name": "Johnson",
             "birth_date": "1988-11-21",
-            "sex": 0
+            "sex": 0,
+            "geo": GeoChoise[1][0],
         },
         "player": {
             "playing_hand": 1,
@@ -60,7 +65,8 @@ DEVELOPMENT_USER_PLAYER_LIST = [
             "first_name": "Michael",
             "second_name": "Williams",
             "birth_date": "1992-06-30",
-            "sex": 1
+            "sex": 1,
+            "geo": GeoChoise[3][0],
         },
         "player": {
             "playing_hand": 2,
@@ -77,7 +83,8 @@ DEVELOPMENT_USER_PLAYER_LIST = [
             "first_name": "Olivia",
             "second_name": "Brown",
             "birth_date": "1995-09-10",
-            "sex": 0
+            "sex": 0,
+            "geo": GeoChoise[0][0],
         },
         "player": {
             "playing_hand": 1,
@@ -94,7 +101,8 @@ DEVELOPMENT_USER_PLAYER_LIST = [
             "first_name": "Daniel",
             "second_name": "Jones",
             "birth_date": "1985-04-19",
-            "sex": 1
+            "sex": 1,
+            "geo": GeoChoise[2][0],
         },
         "player": {
             "playing_hand": 2,
@@ -111,7 +119,8 @@ DEVELOPMENT_USER_PLAYER_LIST = [
             "first_name": "Sophia",
             "second_name": "Garcia",
             "birth_date": "1993-07-25",
-            "sex": 0
+            "sex": 0,
+            "geo": GeoChoise[3][0],
         },
         "player": {
             "playing_hand": 1,
@@ -128,7 +137,8 @@ DEVELOPMENT_USER_PLAYER_LIST = [
             "first_name": "David",
             "second_name": "Martinez",
             "birth_date": "1991-12-14",
-            "sex": 1
+            "sex": 1,
+            "geo": GeoChoise[3][0],
         },
         "player": {
             "playing_hand": 2,
@@ -145,7 +155,8 @@ DEVELOPMENT_USER_PLAYER_LIST = [
             "first_name": "Ava",
             "second_name": "Davis",
             "birth_date": "1989-03-07",
-            "sex": 0
+            "sex": 0,
+            "geo": GeoChoise[3][0],
         },
         "player": {
             "playing_hand": 1,
@@ -162,7 +173,8 @@ DEVELOPMENT_USER_PLAYER_LIST = [
             "first_name": "James",
             "second_name": "Rodriguez",
             "birth_date": "1994-08-22",
-            "sex": 1
+            "sex": 1,
+            "geo": GeoChoise[3][0],
         },
         "player": {
             "playing_hand": 2,
@@ -179,7 +191,8 @@ DEVELOPMENT_USER_PLAYER_LIST = [
             "first_name": "Isabella",
             "second_name": "Lopez",
             "birth_date": "1996-01-05",
-            "sex": 0
+            "sex": 0,
+            "geo": GeoChoise[3][0],
         },
         "player": {
             "playing_hand": 1,

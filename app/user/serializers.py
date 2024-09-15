@@ -21,8 +21,12 @@ from user.models import (
     PlayerRatingHistory
 )
 
+# import constants
+from user.constants import GET_INFO_ABOUT_USER_RETURN_DICT
+
 # import custom foos
 from user.services import hashing
+from user.utils import create_date_for_json_to_frontend
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
@@ -251,6 +255,57 @@ class GetPlayerInfoSerializer(serializers.ModelSerializer):
         model = Player
         fields = "__all__"
 
+    def to_representation(self, instance: Player):
+        """
+        from back to front
+        """
+        try:
+            rating_created_at_list = PlayerRatingHistory.objects.filter(
+                    player=instance
+                ).values_list(
+                    "created",
+                    "actual_rating"
+                )
+
+            GET_INFO_ABOUT_USER_RETURN_DICT["id"] = instance.pk
+
+            GET_INFO_ABOUT_USER_RETURN_DICT["info"]["first_name"] = \
+                instance.user.first_name
+            GET_INFO_ABOUT_USER_RETURN_DICT["info"]["second_name"] = \
+                instance.user.second_name
+            GET_INFO_ABOUT_USER_RETURN_DICT["info"]["email"] = \
+                instance.user.email
+            GET_INFO_ABOUT_USER_RETURN_DICT["info"]["birthday"] = \
+                create_date_for_json_to_frontend(
+                    instance.user.birth_date
+                )
+            GET_INFO_ABOUT_USER_RETURN_DICT["info"]["photo"] = \
+                instance.photo.url if instance.photo else None
+
+            GET_INFO_ABOUT_USER_RETURN_DICT["community"]["geo"] = \
+                instance.user.geo
+            GET_INFO_ABOUT_USER_RETURN_DICT["community"]["playing_hand"] = \
+                instance.playing_hand
+            GET_INFO_ABOUT_USER_RETURN_DICT["community"]["racket"]["blade"] = \
+                instance.blade
+            GET_INFO_ABOUT_USER_RETURN_DICT["community"]["racket"]["rubber_forehand"] = \
+                instance.rubber_forehand
+            GET_INFO_ABOUT_USER_RETURN_DICT["community"]["racket"]["rubber_backhand"] = \
+                instance.rubber_backhand
+
+            GET_INFO_ABOUT_USER_RETURN_DICT["rating"]["dates"] = [
+                create_date_for_json_to_frontend(elem_tuple[0])
+                for elem_tuple in rating_created_at_list
+            ]
+            GET_INFO_ABOUT_USER_RETURN_DICT["rating"]["data"] = [
+                elem_tuple[1] for elem_tuple in rating_created_at_list
+            ]
+
+            return GET_INFO_ABOUT_USER_RETURN_DICT
+
+        except exceptions.ValidationError as ex:
+
+            raise serializers.ValidationError(ex)
 
 class GetPeriodicalPlayerRating(serializers.ModelSerializer):
     """ serializer for returing data about updates in player's rating """

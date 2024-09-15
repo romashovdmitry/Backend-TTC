@@ -16,7 +16,8 @@ from django.core.exceptions import ValidationError
 from user.constants import (
     PASSWORD_IS_REQUIRED,
     EMAIL_IS_REQUIRED,
-    GenderChoise
+    GenderChoise,
+    GeoChoise
 )
 
 # import models
@@ -154,6 +155,13 @@ class User(AbstractUser):
         max_length=128,
         verbose_name="User's second name",
         help_text="User's second name"
+    )
+    geo = models.CharField(
+        choices=GeoChoise,
+        null=True,
+        max_length=128,
+        verbose_name="User's geo",
+        help_text="User can choose 1 from 4 variants"
     )
 
     @property
