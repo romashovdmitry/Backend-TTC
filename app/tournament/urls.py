@@ -38,9 +38,29 @@ game_actions = GameActions.as_view(
 # admin_my - requests that admin is doing to change something
 # in his clubs, tournaments, etc
 urlpatterns = [
-    path('', tournament_create___list_all_tournaments, name="tournament_actions"),
-    path('admin_my/<int:club_pk>', tournament_admin_actions, name="list_club_tournaments"),
-    path('admin_my/add_player/', tournament_admin_actions, name="admin_add_player"),
-    path('admin_my/create_groups/<int:tournament_pk>', tournament_groups_admin_actions, name="tournament_groups_admin_actions"),
-    path('game/game_start/<int:game_pk>', game_actions, name="game_actions")
+    path(
+        '',
+        tournament_create___list_all_tournaments,
+        name="tournament_actions"
+    ),
+    path(
+        'admin_my/<int:club_pk>',
+        tournament_admin_actions,
+        name="list_club_tournaments"
+    ),
+    path(
+        'admin_my/add_player/',
+        tournament_admin_actions,
+        name="admin_add_player"
+    ),
+    path(
+        'admin_my/create_groups/<int:tournament_pk>',
+        tournament_groups_admin_actions,
+        name="tournament_groups_admin_actions"
+    ),
+    path(
+        'game/game_start/<int:game_pk>',
+        game_actions,
+        name="game_actions"
+    )
 ]

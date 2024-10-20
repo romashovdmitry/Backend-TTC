@@ -78,7 +78,10 @@ class TournamentCreateGroupsSerializer(serializers.ModelSerializer):
 
             if not group_players_number and not group_number:
                 raise ValidationError(
-                    detail="At least one of group_players_number or group_number must be provided",
+                    detail=(
+                        "At least one of group_players_number "
+                        "or group_number must be provided"
+                    ),
                     code="missing_fields"
                 )
 

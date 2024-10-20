@@ -85,9 +85,9 @@ swagger_schema_add_player_to_tournament = extend_schema(
         # NOTE: PUT, not POST
         # because we updatin existing tournament
         methods=["PUT"],
-        summary="Create tournament's groups, divide player to groups",
-        description="PUT request to divide players to groups",
-        operation_id="Divide players to groups",
+        summary="Add players to tournament",
+        description="Add players to tournament",
+        operation_id="Add players to tournament",
         request={
             "application/json": {
                 "example": {

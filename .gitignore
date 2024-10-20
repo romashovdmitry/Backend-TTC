@@ -20,3 +20,7 @@ django_log.log
 
 # temporary database for local development, debugging
 db.sqlite3
+
+
+.vscode
+launch.json

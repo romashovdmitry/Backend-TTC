@@ -33,7 +33,6 @@ from tournament.swagger_schemas import (
     swagger_schema_tournament_list,
     swagger_schema_admin_my_tournament_list,
     swagger_schema_add_player_to_tournament,
-    swagger_schema_add_player_to_tournament,
     swagger_schema_game_start,
     swagger_schema_game_result
 )
