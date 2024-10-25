@@ -287,6 +287,7 @@ def create_tournament_grid(
         for game in games_dict[group]:
             group_dict['group_games'].append(
                 {
+                    "game_pk": game.pk,
                     "game_order": game.order,
                     "first_player_tournament_pk": game.first_player.pk,
                     "second_player_tournament_pk": game.second_player.pk if game.second_player else None,

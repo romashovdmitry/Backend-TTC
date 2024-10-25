@@ -8,18 +8,32 @@ services:
             - .env
         build:
             context: .
-            dockerfile: ./Docker/Django_WSGI/Dockerfile
-        command: > 
-            sh -c "python manage.py makemigrations &&
-                   python manage.py migrate &&
-                   python manage.py create_admin &&
-                   python manage.py runserver 0.0.0.0:8000"
+            dockerfile: ./Docker/Django/Dockerfile
+            target: wsgi
         ports: 
             - "8000"
         volumes:
             - ./app:/app
         depends_on:
             - club_database_container
+        networks:
+            - club-network
+        command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py create_admin && python manage.py runserver 0.0.0.0:8000"
+
+    club_django_asgi:
+        container_name: club_django_asgi
+        env_file:
+            - .env
+        build:
+            context: .
+            dockerfile: ./Docker/Django/Dockerfile
+            target: asgi
+        command: ["gunicorn", "main.asgi:application", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8001", "--reload"]
+        volumes:
+            - ./app:/app
+            - ./Docker:/Docker
+        ports: 
+           - "8001"
         networks:
             - club-network
 
@@ -29,10 +43,11 @@ services:
             - .env
         build:
             context: .
-            dockerfile: ./Docker/Django_WSGI/Dockerfile
+            dockerfile: ./Docker/Django/Dockerfile
         command: sh -c "python manage.py bot_setup"
         depends_on:
             - club_django_wsgi
+            - club_django_asgi
         volumes:
             - ./app:/app
         networks:
@@ -63,10 +78,23 @@ services:
           - "80:80"
         depends_on:
             - club_django_wsgi
+            - club_django_asgi
         volumes:
             - .:/app
         networks:
           - club-network
+
+    ttc_redis:
+        container_name: ttc_redis
+        image: redis:7.0-alpine
+        ports:
+            - "6381:6379"
+        restart: always
+        depends_on:
+            - club_django_wsgi
+            - club_django_asgi
+        networks:
+            - club-network
 
 
 networks:

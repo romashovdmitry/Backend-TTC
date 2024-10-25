@@ -39,7 +39,7 @@ def define_image_file_path(
     except Exception as ex:
         # FIXME: здесь логгирование должно быть
         logger.error(
-            f'main.utils.define_image_file_path: {ex}'
+            f'main.utils.define_image_file_path: {str(ex)}'
         )
 
         return filename

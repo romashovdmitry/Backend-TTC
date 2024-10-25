@@ -24,3 +24,5 @@ db.sqlite3
 # myenv
 .myenv
 hours.txt
+.vscode
+launch.json

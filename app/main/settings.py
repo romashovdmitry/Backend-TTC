@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # beatiful admin panel
-#    "adminlte3",
+    # "adminlte3",
     # DRF
     "adrf",  # https://github.com/em1208/adrf
     # processing CORS errors
@@ -82,7 +82,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "main.wsgi.application"
-
+ASGI_APPLICATION = "main.asgi.application"
 
 # FIXME: лишнее, оставить можно только is_prod
 if VS_CODE_DEBUGGING:
@@ -265,3 +265,14 @@ if 'test' in sys.argv:
 
 # just tp fix for prod on local. could be deleted, no problem
 LAST_ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIwOTM4MzU0LCJpYXQiOjE3MjAzMzgzNTQsImp0aSI6IjIwNjA2ZTI5NmU5ZDQ1MjBiMTk2NGFhYWI1ZTVkOTM0IiwidXNlcl9pZCI6MX0.oCikS7Rb5-B18db9-wpaP-Hw6K9lwnT87wHlRmtrpD8"
+
+
+# ASGI
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('ttc_redis', 6379)],
+        },
+    },
+}
