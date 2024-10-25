@@ -1,16 +1,32 @@
-"""
-ASGI config for table_tennis_club project.
-
-It exposes the ASGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/4.1/howto/deployment/asgi/
-"""
-
+'''
+Setup ASGI server. There is wesocket-routing in application object.websocket
+'''
+# Python imports
 import os
 
+# Django imports
+from django.urls import path
+
+# ASGI websocket imports
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.auth import AuthMiddlewareStack
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "main.settings")
+# import cusomt views, classes, consumers
+from tournament.consumers import GameResultConsumer
 
-application = get_asgi_application()
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'main.settings')
+
+websocket_urlpatterns = [
+    path('ws/', GameResultConsumer.as_asgi()),
+]
+
+
+application = ProtocolTypeRouter({
+    "http": get_asgi_application(),
+    "websocket": AuthMiddlewareStack(
+        URLRouter(
+            websocket_urlpatterns
+        )фc
+    ),
+})
