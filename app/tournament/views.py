@@ -34,7 +34,8 @@ from tournament.swagger_schemas import (
     swagger_schema_admin_my_tournament_list,
     swagger_schema_add_player_to_tournament,
     swagger_schema_game_start,
-    swagger_schema_game_result
+    swagger_schema_game_result,
+    swagger_schema_create_groups
 )
 
 # import models
@@ -245,7 +246,7 @@ class TournamentActions(ViewSet):
                 data=str(ex),
                 status=HTTP_400_BAD_REQUEST
             )
-    @swagger_schema_add_player_to_tournament
+    @swagger_schema_create_groups
     @action(
         detail=False,
         methods=["put"],

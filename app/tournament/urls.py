@@ -17,10 +17,17 @@ tournament_create___list_all_tournaments = TournamentActions.as_view(
 
 tournament_admin_actions = TournamentActions.as_view(
     {
-        "get": "list_my_tournaments",
-        "put": "add_player_to_tournament"
+        "get": "list_my_tournaments"
     }
 )
+
+# FIXME: полный отстой. надо hotfix, не до этого сейчас.
+add_player_to_tournament = TournamentActions.as_view(
+    {
+        "put": "add_player_to_tournament"
+    }
+) 
+
 tournament_groups_admin_actions = TournamentActions.as_view(
     {
         # NOTE: PUT, not POST
@@ -50,7 +57,7 @@ urlpatterns = [
     ),
     path(
         'admin_my/add_player/',
-        tournament_admin_actions,
+        add_player_to_tournament,
         name="admin_add_player"
     ),
     path(
