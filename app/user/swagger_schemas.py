@@ -98,28 +98,13 @@ swagger_schema_login_user = extend_schema(
     )
 
 
-
 swagger_schema_update_player = extend_schema(
         tags=["Player"],
         methods=["PUT"],
         summary="Update existing player info",
         description="PUT request to update player info",
         operation_id="Update player info",
-        request={
-            "application/json": {
-                "example": {
-                    "playing_hand": 1,
-                    "blade": "mazda rx 6",
-                    "rubber_forehand": "lada niva",
-                    "rubber_backhand": "toyota land arbuzer",
-                    "rating": 100
-                }
-            }
-        },
-        responses={
-            200: None,
-        },
-    )
+)
 
 swagger_schema_get_player = extend_schema(
         tags=["Player"],
@@ -151,6 +136,18 @@ swagger_schema_get_periodical_player_rating = extend_schema(
     summary="Get player's rating for certain period. ",
     description="GET request to retrieve rating of player for certain period",
     operation_id="Get rating of user for certain period",
+    request=None,
+    responses={
+        200: None,
+    },
+)
+
+
+swagger_schema_get_cities = extend_schema(
+    tags=["Cities"],
+    summary="Get list of cities ",
+    description="GET request to retrieve list of cities",
+    operation_id="Get list of cities",
     request=None,
     responses={
         200: None,

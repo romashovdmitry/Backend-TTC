@@ -22,7 +22,10 @@ from user.models import (
 )
 
 # import constants
-from user.constants import GET_INFO_ABOUT_USER_RETURN_DICT
+from user.constants import (
+    GET_INFO_ABOUT_USER_RETURN_DICT,
+    GenderChoise
+)
 
 # import custom foos
 from user.services import hashing
@@ -281,6 +284,8 @@ class GetPlayerInfoSerializer(serializers.ModelSerializer):
                 )
             GET_INFO_ABOUT_USER_RETURN_DICT["info"]["photo"] = \
                 instance.photo.url if instance.photo else None
+            GET_INFO_ABOUT_USER_RETURN_DICT["info"]["sex"] = \
+                GenderChoise(int(instance.user.sex)).label
 
             GET_INFO_ABOUT_USER_RETURN_DICT["community"]["geo"] = \
                 instance.user.geo
@@ -306,6 +311,7 @@ class GetPlayerInfoSerializer(serializers.ModelSerializer):
         except exceptions.ValidationError as ex:
 
             raise serializers.ValidationError(ex)
+
 
 class GetPeriodicalPlayerRating(serializers.ModelSerializer):
     """ serializer for returing data about updates in player's rating """

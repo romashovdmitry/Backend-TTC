@@ -3,6 +3,7 @@ import json
 import asyncio
 
 # DRF imports
+from rest_framework.views import APIView
 from rest_framework.viewsets import ViewSet
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -10,7 +11,7 @@ from rest_framework.response import Response
 from django.http import HttpResponse
 from rest_framework.decorators import action
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
-from rest_framework.parsers import MultiPartParser
+from rest_framework.parsers import MultiPartParser, JSONParser, FormParser
 
 # import serializers
 from user.serializers import (
@@ -31,6 +32,7 @@ from user.models import (
 
 # import constants, config data
 from main.settings import HTTP_HEADERS
+from user.constants import GeoChoise
 
 # import swagger schemas
 from user.swagger_schemas import (
@@ -39,7 +41,8 @@ from user.swagger_schemas import (
     swagger_schema_update_player,
     swagger_schema_get_player,
     swagger_schema_create_update_player_photo,
-    swagger_schema_get_periodical_player_rating
+    swagger_schema_get_periodical_player_rating,
+    swagger_schema_get_cities
 )
 
 # import custom foos, classes
@@ -226,7 +229,11 @@ class PlayerGetUpdate(ViewSet, RetrieveAPIView):
         detail=True,
         methods=['put'],
         url_path="update_player",
-        parser_classes=(MultiPartParser,)
+        parser_classes=(
+            MultiPartParser,
+            JSONParser,
+            FormParser
+        )
     )
     def update_player(self, request) -> Response:
         """ updating player info """
@@ -246,7 +253,10 @@ class PlayerGetUpdate(ViewSet, RetrieveAPIView):
             
                 else:
 
-                    return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+                    return Response(
+                        serializer.errors,
+                        status=HTTP_400_BAD_REQUEST
+                    )
 
             else:
                 return Response(HTTP_400_BAD_REQUEST)
@@ -329,6 +339,33 @@ class PlayerGetUpdate(ViewSet, RetrieveAPIView):
             asyncio.run(
                 telegram_log_errors(
                     "[ClubActions][get_periodical_player_rating] "
+                    f"{str(ex)}"
+                )
+            )
+        
+            return Response(
+                data=str(ex),
+                status=HTTP_400_BAD_REQUEST
+            )
+        
+
+class GetCities(APIView):
+    """
+    Simple view, that returns
+    list of cities
+    """
+    @swagger_schema_get_cities
+    def get(self, request):
+
+        try:
+            return Response(
+                [{"id": item[0], "name": item[1]} for item in GeoChoise]
+            )
+
+        except Exception as ex:
+            asyncio.run(
+                telegram_log_errors(
+                    "[GetCities] "
                     f"{str(ex)}"
                 )
             )

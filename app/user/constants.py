@@ -30,6 +30,7 @@ GET_INFO_ABOUT_USER_RETURN_DICT = {
     "second_name": None,  # string
     "email": None,  # string
     "birthday": None,  # string
+    "sex": None,  # string
     "avatar": None,  # URL string
   },
   "community": {
@@ -49,7 +50,7 @@ GET_INFO_ABOUT_USER_RETURN_DICT = {
 
 GeoChoise = [
     (1, 'Dubai'),
-    (2, 'Abu-Dhabi'),
+    (2, 'Abu Dhabi'),
     (3, 'Sharjah'),
     (4, 'Other Emirate'),
 ]

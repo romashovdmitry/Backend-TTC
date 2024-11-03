@@ -84,7 +84,7 @@ swagger_schema_create_groups = extend_schema(
         tags=["Tournament"],
         # NOTE: PUT, not POST
         # because we updatin existing tournament
-        methods=["POST"],
+        methods=["PUT"],
         summary="Create tournament groups",
         description="Create tournament groups",
         operation_id="Create tournament groups",

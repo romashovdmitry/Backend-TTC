@@ -4,7 +4,8 @@ from django.urls import path
 # custom DRF classes imports
 from user.views import (
     UserCreateUpdate,
-    PlayerGetUpdate
+    PlayerGetUpdate,
+    GetCities
 )
 
 # JWT imports
@@ -18,11 +19,14 @@ player_create_photo = PlayerGetUpdate.as_view({"put": "create_update_player_phot
 
 
 urlpatterns = [
+    # viewsets
     path('', user_actions, name="user_actions"),
     path('login_user/', login_user, name="login_user"),
     path('player/', player_actions, name="create_player"),
     path('player/photo/', player_create_photo, name="player_create_photo"),
     path('player_rating/', player_rating_actions, name='player_rating_actions'),
+    # ApiViews
+    path('cities/', GetCities.as_view(), name='get_cities'),
     # JWT
     path('refresh_token/', TokenRefreshView.as_view(), name="refresh_token"),
 ]
