@@ -48,7 +48,7 @@ GET_INFO_ABOUT_USER_RETURN_DICT = {
   }
 }.copy()
 
-GeoChoise = [
+GeoChoiсe = [
     (1, 'Dubai'),
     (2, 'Abu Dhabi'),
     (3, 'Sharjah'),

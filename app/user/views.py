@@ -32,7 +32,7 @@ from user.models import (
 
 # import constants, config data
 from main.settings import HTTP_HEADERS
-from user.constants import GeoChoise
+from user.constants import GeoChoiсe
 
 # import swagger schemas
 from user.swagger_schemas import (
@@ -245,7 +245,10 @@ class PlayerGetUpdate(ViewSet, RetrieveAPIView):
                 serializer = serializer(instance=instance, data=request.data)
 
                 if serializer.is_valid(raise_exception=True):
-                    serializer.save()
+                    serializer.update(
+                        instance=instance,
+                        validated_data=serializer.validated_data
+                    )
 
                     return Response(
                         status=HTTP_200_OK                
@@ -323,8 +326,6 @@ class PlayerGetUpdate(ViewSet, RetrieveAPIView):
                     many=True
                 )
 
-                print(serialised_queryset.data)
-
                 return Response(
                     status=HTTP_200_OK,
                     data=serialised_queryset.data
@@ -359,7 +360,7 @@ class GetCities(APIView):
 
         try:
             return Response(
-                [{"id": item[0], "name": item[1]} for item in GeoChoise]
+                [{"id": item[0], "name": item[1]} for item in GeoChoiсe]
             )
 
         except Exception as ex:

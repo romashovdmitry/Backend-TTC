@@ -17,7 +17,7 @@ from user.constants import (
     PASSWORD_IS_REQUIRED,
     EMAIL_IS_REQUIRED,
     GenderChoise,
-    GeoChoise
+    GeoChoiсe
 )
 
 # import models
@@ -157,7 +157,7 @@ class User(AbstractUser):
         help_text="User's second name"
     )
     geo = models.CharField(
-        choices=GeoChoise,
+        choices=GeoChoiсe,
         null=True,
         max_length=128,
         verbose_name="User's geo",

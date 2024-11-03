@@ -24,7 +24,8 @@ from user.models import (
 # import constants
 from user.constants import (
     GET_INFO_ABOUT_USER_RETURN_DICT,
-    GenderChoise
+    GenderChoise,
+    GeoChoiсe
 )
 
 # import custom foos
@@ -207,11 +208,21 @@ class UpdatePlayerSerializer(serializers.ModelSerializer):
     """ Serializer for creating player instance """
     # https://www.django-rest-framework.org/api-guide/relations/#nested-relationships
 
+    geo = serializers.ChoiceField(choices=GeoChoiсe, write_only=True)
+
     class Meta:
         model = Player
-        exclude = ["photo"]
+        exclude = ["photo", "user"]
 
-#    photo = serializers.ImageField(required=False)
+    def update(self, instance, validated_data):
+        geo = validated_data.pop("geo", None)
+        instance = super().update(instance, validated_data)
+
+        if geo is not None:
+            instance.user.geo = geo
+            instance.user.save()
+
+        return instance
 
 
 # FIXME: это можно сделать, уверен, через два сериалайзера
