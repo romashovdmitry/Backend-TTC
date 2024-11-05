@@ -16,6 +16,7 @@ class TournamentType(models.IntegerChoices):
     # it would more in future
     GROUP_KNOCK_OFF = 0, "GROUP_KNOCK_OFF"
 
+
 DEFAULT_MAX_RATING_LIMIT = 10000
 DEFAULT_MIN_RATING_LIMIT = 0
 DEFAULT_GROUP_QUALIFIRES_NUMBER = 1

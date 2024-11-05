@@ -1,5 +1,6 @@
 # Python imports
 import base64
+import re
 from PIL import Image
 
 # DRF imports
@@ -103,4 +104,23 @@ class ClubGetSerializer(serializers.ModelSerializer):
         model = Club
         fields = "__all__"
 
+    def to_representation(self, instance: Club):
+        """
+        FIXME: in Enlish
+        переопределяем для разделения строки на массивы
+        по требованию фронта.
+        """
+        return_representation = super().to_representation(instance)
 
+        about = return_representation.get("about", "")
+        about = re.split(r'(\n|\s+)', about)
+        about = [
+            elem.replace('\n\n', '\n').replace(' ', '')
+            for elem
+            in about
+            if elem != ' '
+        ]
+        
+        return_representation["about"] = about
+
+        return return_representation

@@ -211,7 +211,7 @@ DEVELOPMENT_CLUB = {
     "city": "Saint-AbuDabi",
     "address": "Chkalova 37",
     "phone_number": "+79992370953",
-    "about": "We love Penis! We hate Tennis!",
+    "about": "We love Penis! \n\nWe hate Tennis!",
     "social_link": "https://instagram.com/table_pennis",
     "link": "https://welovechildrens.com/",
     "opening_hours": {
