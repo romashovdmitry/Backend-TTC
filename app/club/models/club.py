@@ -130,7 +130,7 @@ class Club(BaseModel):
         redefine method for removing image,
         if it's updating.
         """
-        if self.logo and self.pk:
+        if self.pk and Club.objects.filter(pk=self.pk).first().logo:
             club = Club.objects.get(pk=self.pk)
             current_image_path = MEDIA_ROOT + '/' + str(club.logo)
             os.remove(current_image_path)
