@@ -53,7 +53,8 @@ class ClubPhoto(BaseModel):
     )
     club = models.ForeignKey(
         "club.club",
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name="club_photoes"
     )
 
     def delete(self) -> tuple[int, dict[str, int]]:

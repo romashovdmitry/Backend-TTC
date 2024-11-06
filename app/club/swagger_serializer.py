@@ -19,7 +19,7 @@ def define_swagger_fields_helper() -> list:
     """
     CUSTOM_FIELDS_LIST = [f.name for f in Club._meta.get_fields()]
     CUSTOM_FIELDS_LIST.append("photo")
-    CUSTOM_FIELDS_LIST.remove('clubphoto')
+#    CUSTOM_FIELDS_LIST.remove('club_photo')
     CUSTOM_FIELDS_LIST.remove('tournament_club')
     CUSTOM_FIELDS_LIST.remove('admin_club')
     CUSTOM_FIELDS_LIST.remove('is_active')

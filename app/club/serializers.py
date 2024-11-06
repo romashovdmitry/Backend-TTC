@@ -3,8 +3,12 @@ import base64
 import re
 from PIL import Image
 
+# asyncio imports
+import asyncio
+
 # DRF imports
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 # import models
 from club.models.club import Club
@@ -14,6 +18,10 @@ from club.models.club_photoes import ClubPhoto
 
 # import constants, config data
 from club.constants import ALLOWED_IMAGE_FORMATS
+
+# import custom foos, classes
+from telegram_bot.send_error import telegram_log_errors
+from main.utils import class_and_foo_name, foo_name
 
 
 class ClubPhotoSerializer(serializers.ModelSerializer):
@@ -110,17 +118,40 @@ class ClubGetSerializer(serializers.ModelSerializer):
         переопределяем для разделения строки на массивы
         по требованию фронта.
         """
-        return_representation = super().to_representation(instance)
+        try:
+            return_representation = super().to_representation(instance)
 
-        about = return_representation.get("about", "")
-        about = re.split(r'(\n|\s+)', about)
-        about = [
-            elem.replace('\n\n', '\n').replace(' ', '')
-            for elem
-            in about
-            if elem != ' '
-        ]
-        
-        return_representation["about"] = about
+            about = return_representation.get("about", "")
+            about = re.split(r'(\n|\s+)', about)
+            about = [
+                elem.replace('\n\n', '\n').replace(' ', '')
+                for elem
+                in about
+                if elem != ' '
+            ]
+            
+            return_representation["about"] = about
 
-        return return_representation
+            if hasattr(instance, 'club_photoes') and instance.club_photoes.exists():
+                return_representation["photoes"] = [
+                    photo_object.photo.url
+                    for photo_object
+                    in instance.club_photoes.all()
+                ]
+
+            else:
+                return_representation["photoes"] = None
+
+            return return_representation
+
+        except Exception as ex:
+            asyncio.run(
+                telegram_log_errors(
+                    f"[{class_and_foo_name()}][{foo_name()}] {str(ex)}"
+                )
+            )
+
+            raise ValidationError(
+                detail="There is an error. ",
+                code="not_validated_data"
+            )
