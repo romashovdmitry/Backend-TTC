@@ -17,4 +17,3 @@ def define_club_of_user(
             or None, if not exists Club.
     """
     return Club.objects.filter(admin_club__user=user_object).first()
-

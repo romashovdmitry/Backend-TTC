@@ -3,6 +3,8 @@
 import logging
 from PIL import Image
 import inspect
+import os
+import hashlib
 
 # Django imports
 from django.db.models import Model  # because of circular imports
@@ -89,3 +91,18 @@ def image_file_extension_validator(object):
 foo_name = lambda: inspect.stack()[1][3]
 # https://stackoverflow.com/a/50095096
 class_and_foo_name = lambda: str(inspect.stack()[1][4]).split()[0][2:].replace("()\\n'", "")
+
+
+def get_image_hash(image_path):
+    """
+    #FIXME: хороший docstring
+    Используется для определенияи униикальности изоображения. 
+    """
+    if not os.path.exists(image_path):
+        return None
+
+    hash_md5 = hashlib.md5()
+    with open(image_path, "rb") as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            hash_md5.update(chunk)
+    return hash_md5.hexdigest()

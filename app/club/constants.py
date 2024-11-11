@@ -35,3 +35,9 @@ OPENING_HOURS_SWAGGER_EXAMPLE = {
         "FINISH": "21:00"
     }
 }
+
+
+# FIXME: костыль
+CLUB_FEATURES_HELP_TEXT = (
+    '{"1": "первая фича", "2": "вторая фича"}'
+)

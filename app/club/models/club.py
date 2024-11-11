@@ -3,12 +3,15 @@ import re
 import os
 from PIL import Image
 from django.core.exceptions import ValidationError
+import hashlib
 
 # import basemodel and django.db.models
 from main.base_model import models, BaseModel
-
 # FIXME: не сработала ссылка вида "user.club_admin"
 from user.models.club_admin import ClubAdmin
+
+# import constants
+from club.constants import CLUB_FEATURES_HELP_TEXT
 
 # import custom foos, classes
 from main.utils import image_file_extension_validator
@@ -17,7 +20,10 @@ from main.utils import image_file_extension_validator
 from main.settings import MEDIA_ROOT
 
 # import custom foos, classes
-from main.utils import define_image_file_path
+from main.utils import (
+    define_image_file_path,
+    get_image_hash
+)
 
 
 # FIXME: улучшить аннотирование
@@ -118,6 +124,16 @@ class Club(BaseModel):
         help_text="Link to club site, any info in Ethernet"
     )
 
+    features = models.JSONField(
+        null=True,
+        verbose_name="Club Features",
+        help_text=(
+            'Данное поле следует заполнять '
+            'строго в таком порядке: '
+            f'{CLUB_FEATURES_HELP_TEXT}'
+        )
+    )
+
     admin_club = models.ForeignKey(
         ClubAdmin,
         null=True,
@@ -130,13 +146,10 @@ class Club(BaseModel):
         redefine method for removing image,
         if it's updating.
         """
-        if self.pk and Club.objects.filter(pk=self.pk).first().logo:
-            club = Club.objects.get(pk=self.pk)
-            current_image_path = MEDIA_ROOT + '/' + str(club.logo)
-            os.remove(current_image_path)
-        
+        # FIXME: тут было удалениие файла фото,
+        # которое больше не используется.
         super(Club, self).save(*args, **kwargs)
-        
+
     def __str__(self):
 
         return self.name
