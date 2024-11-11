@@ -15,6 +15,7 @@ from club.models.club import Club
 from user.models.club_admin import ClubAdmin
 from user.models.user import User # for annotation
 from club.models.club_photoes import ClubPhoto
+from tournament.models import Tournament
 
 # import constants, config data
 from club.constants import ALLOWED_IMAGE_FORMATS
@@ -141,6 +142,19 @@ class ClubGetSerializer(serializers.ModelSerializer):
 
             else:
                 return_representation["photoes"] = None
+
+            print(instance.club_tournaments.all())
+            return_representation["upcoming"] = [
+                    {
+                        "name": club_tournament.name,
+#                        "date": "29 May",
+#                        "time": '11:00',
+#                        "url": "/"
+                    }
+                    for club_tournament
+                    in instance.club_tournaments.all()
+                    if int(club_tournament.status) in [0,1]
+            ]
 
             return return_representation
 

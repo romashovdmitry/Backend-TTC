@@ -79,7 +79,7 @@ class Tournament(BaseModel):
         on_delete=models.SET_NULL,
         verbose_name="Club where tournament run",
         help_text="Club where tournament run",
-        related_name="tournament_club"
+        related_name="club_tournaments"
     )
 
     tournament_admin = models.ForeignKey(
