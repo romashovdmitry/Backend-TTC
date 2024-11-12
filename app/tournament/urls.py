@@ -15,6 +15,12 @@ tournament_create___list_all_tournaments = TournamentActions.as_view(
     }
 )
 
+tournament_get_info_about_tournament_by_pk = TournamentActions.as_view(
+    {
+        "get": "get_info_about_tournament_by_pk"
+    }
+)
+
 tournament_admin_actions = TournamentActions.as_view(
     {
         "get": "list_my_tournaments"
@@ -54,6 +60,11 @@ urlpatterns = [
         'admin_my/<int:club_pk>',
         tournament_admin_actions,
         name="list_club_tournaments"
+    ),
+    path(
+        'get_info_about/<int:tournament_pk>',
+        tournament_get_info_about_tournament_by_pk,
+        name="get_info_about_tournament_by_pk"
     ),
     path(
         'admin_my/add_player/',

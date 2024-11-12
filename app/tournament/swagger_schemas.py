@@ -63,6 +63,14 @@ swagger_schema_admin_my_tournament_list = extend_schema(
         operation_id="Get admin's Tournaments"
 )
 
+swagger_schema_get_info_about_tournament_by_pk = extend_schema(
+        tags=["Tournament"],
+        methods=["GET"],
+        summary="Get info about tournament by PK",
+        description="GET request to get info about tournament",
+        operation_id="Get Tournament's info by PK"
+)
+
 swagger_schema_add_player_to_tournament = extend_schema(
         tags=["Tournament"],
         methods=["PUT"],

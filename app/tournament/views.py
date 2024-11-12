@@ -35,7 +35,8 @@ from tournament.swagger_schemas import (
     swagger_schema_add_player_to_tournament,
     swagger_schema_game_start,
     swagger_schema_game_result,
-    swagger_schema_create_groups
+    swagger_schema_create_groups,
+    swagger_schema_get_info_about_tournament_by_pk
 )
 
 # import models
@@ -67,14 +68,17 @@ class TournamentActions(ViewSet):
         "list_tournament": TournamentListSerializer,
         "list_my_tournaments": TournamentListSerializer,
         "add_player_to_tournament": TournamentPlayerAddSerializer,
-        "create_groups": TournamentCreateGroupsSerializer
+        "create_groups": TournamentCreateGroupsSerializer,
+        # NOTE: сюда тоже подойдёт, хоть и pk
+        "get_info_about_tournament_by_pk": TournamentListSerializer
     }
 
     permission_map = {
         "create_tournament": [IsClubAdmin],
         "create_groups": [IsClubAdmin],
         "list_my_tournaments": [IsClubAdmin],
-        "list_tournament": [IsAuthenticated]
+        "list_tournament": [IsAuthenticated],
+        "get_info_about_tournament_by_pk": [IsAuthenticated]
     }
 
     def get_permissions(self):
@@ -114,7 +118,41 @@ class TournamentActions(ViewSet):
             return Tournament.objects.filter(
                 pk=kwargs["tournament_pk"]
             ).first()
+
+        elif self.action == "get_info_about_tournament_by_pk":
+            print(f'kwargs -> {kwargs}')
+            return Tournament.objects.filter(
+                pk=kwargs["tournament_pk"]
+            ).first()
+
+    @swagger_schema_get_info_about_tournament_by_pk
+    def get_info_about_tournament_by_pk(
+            self,
+            request,
+            tournament_pk=None
+    ) -> Response:
+
+        try:
+            queryset = self.get_queryset(tournament_pk=tournament_pk)
+            serializer_class = self.get_serializer_class()
+            serializer = serializer_class(queryset, many=False)
+            serializer_data = serializer.data
+
+            return Response(status=200, data=serializer_data)
+
+        except Exception as ex:
+
+            asyncio.run(
+                telegram_log_errors(
+                    f"[{class_and_foo_name()}] {str(ex)}"
+                )
+            )
             
+            return Response(
+                data=str(ex),
+                status=HTTP_400_BAD_REQUEST,
+            )
+
     @swagger_schema_tournament_create
     @action(
         detail=False,
