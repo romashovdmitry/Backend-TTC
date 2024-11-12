@@ -96,7 +96,7 @@ class_and_foo_name = lambda: str(inspect.stack()[1][4]).split()[0][2:].replace("
 def get_image_hash(image_path):
     """
     #FIXME: хороший docstring
-    Используется для определенияи униикальности изоображения. 
+    Используется для определенияи униикальности изоображения.
     """
     if not os.path.exists(image_path):
         return None

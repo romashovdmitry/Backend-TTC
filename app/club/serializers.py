@@ -23,6 +23,10 @@ from club.constants import ALLOWED_IMAGE_FORMATS
 # import custom foos, classes
 from telegram_bot.send_error import telegram_log_errors
 from main.utils import class_and_foo_name, foo_name
+from club.utils import (
+    create_tournament_date_for_json_to_frontend,
+    create_tournament_time_for_json_to_frontend
+)
 
 
 class ClubPhotoSerializer(serializers.ModelSerializer):
@@ -143,12 +147,23 @@ class ClubGetSerializer(serializers.ModelSerializer):
             else:
                 return_representation["photoes"] = None
 
-            print(instance.club_tournaments.all())
+            for x in instance.club_tournaments.all():
+                create_tournament_date_for_json_to_frontend(
+                    x.date_time
+                )
+                create_tournament_time_for_json_to_frontend(
+                    x.date_time
+                )
+
             return_representation["upcoming"] = [
                     {
                         "name": club_tournament.name,
-#                        "date": "29 May",
-#                        "time": '11:00',
+                        "date": create_tournament_date_for_json_to_frontend(
+                            club_tournament.date_time
+                        ),
+                        "time": create_tournament_time_for_json_to_frontend(
+                            club_tournament.date_time
+                        ),
 #                        "url": "/"
                     }
                     for club_tournament
