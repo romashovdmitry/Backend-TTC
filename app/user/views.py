@@ -161,7 +161,7 @@ class PlayerGetUpdate(ViewSet, RetrieveAPIView):
     http_method_names = ['post', 'put', 'get']
     lookup_field = 'id'
     permission_classes = [IsAuthenticated]
-    parser_classes = (MultiPartParser, )
+    parser_classes = (MultiPartParser, JSONParser,)
     queryset = Player.objects.all()
 
     serializer_map = {
@@ -230,9 +230,7 @@ class PlayerGetUpdate(ViewSet, RetrieveAPIView):
         methods=['put'],
         url_path="update_player",
         parser_classes=(
-            MultiPartParser,
             JSONParser,
-            FormParser
         )
     )
     def update_player(self, request) -> Response:
