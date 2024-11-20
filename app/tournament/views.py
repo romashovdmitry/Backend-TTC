@@ -36,7 +36,8 @@ from tournament.swagger_schemas import (
     swagger_schema_game_start,
     swagger_schema_game_result,
     swagger_schema_create_groups,
-    swagger_schema_get_info_about_tournament_by_pk
+    swagger_schema_get_info_about_tournament_by_pk,
+    swagger_schema_get_groups
 )
 
 # import models
@@ -53,7 +54,8 @@ from main.utils import foo_name, class_and_foo_name
 from tournament.services import (
     divide_players_to_groups,
     create_tournament_games,
-    create_tournament_grid
+    create_tournament_grid,
+    get_tournament_grid
 )
 
 
@@ -342,6 +344,51 @@ class TournamentActions(ViewSet):
                     )
 
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+        except Exception as ex:
+            asyncio.run(
+                telegram_log_errors(
+                    f"[TournamtneActions][create_tournament] {str(ex)}"
+                )
+            )
+
+            return Response(
+                data=str(ex),
+                status=HTTP_400_BAD_REQUEST
+            )
+
+    @swagger_schema_get_groups
+    @action(
+        detail=True,
+        methods=["get"],
+        url_path="get_groups"
+    )
+    def get_groups(
+            self,
+            request,
+            tournament_pk=None,
+    ) -> Response:
+        """
+        Get tournament's groups
+        """
+        try:
+            tournament_object = Tournament.objects.filter(pk=tournament_pk).first()
+
+            if tournament_object:
+
+                tournament_grid = get_tournament_grid(tournament_object)
+
+                return Response(
+                    status=HTTP_201_CREATED,
+                    data=tournament_grid
+                )
+
+            else:
+
+                return Response(
+                    status=HTTP_400_BAD_REQUEST,
+                    data="There is no tournament."
+                )
 
         except Exception as ex:
             asyncio.run(

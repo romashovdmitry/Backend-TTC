@@ -143,6 +143,12 @@ def create_tournament_games(
         dict: dict where key is number of group and
             value is list of games inside group
     """
+
+    previous_games = Game.objects.filter(tournament=tournament_pk).all()
+
+    if previous_games:
+        [previous_game.delete() for previous_game in previous_games]
+
     try:
         return_dict = {}
 
@@ -166,7 +172,8 @@ def create_tournament_games(
                             first_player=group_players_copy[0],
                             second_player=group_players_copy[group_player],
                             status=GameStatus.CREATED,
-                            tournament_id=tournament_pk
+                            tournament_id=tournament_pk,
+                            group_number=group_players_copy[0].tournament_group
                         )
                     )
                 
@@ -177,7 +184,8 @@ def create_tournament_games(
                         first_player=group_players_copy[0],
                         second_player=group_players_copy[1],
                         status=GameStatus.CREATED,
-                        tournament_id=tournament_pk
+                        tournament_id=tournament_pk,
+                        group_number=group_players_copy[0].tournament_group
                     )
                 )
             # сколько игр может происходит одновременно в
@@ -185,13 +193,15 @@ def create_tournament_games(
             one_time_tables = (len(group_players) // 2)
 
             if len(group_players) % 2 != 0:
+
                 for group_player in group_players:
                     games_stack.append(
                         Game.objects.create(
                             first_player=group_player,
                             second_player=None,
                             status=GameStatus.CREATED,
-                            tournament_id=tournament_pk
+                            tournament_id=tournament_pk,
+                            group_number=group_player.tournament_group
                         )
                     )
                 # but one would be (player VS None) Game object
@@ -298,4 +308,63 @@ def create_tournament_grid(
 
         return_dict["groups"].append(group_dict)
     
+    return return_dict
+
+
+def get_tournament_grid(
+    tournament_obj: Tournament
+):
+    """
+    documentation
+    """
+    return_dict = {"groups": []}
+    group_number = tournament_obj.group_number
+
+    for group in range(1, group_number+1):
+        group_dict = {}
+        group_players: TournamentPlayers = TournamentPlayers.objects.filter(
+            tournament_group=group
+        ).all()
+        group_dict["group_id"] = group
+        group_dict["group_alpha"] = GROUP_ALPHABBET[group]
+
+        grid_id = 0 
+        group_players_list = []
+    
+        for group_player in group_players:
+            grid_id += 1
+            group_players_list.append(
+                {
+                    "pk": group_player.player.user.pk,
+                    "grid_id": grid_id,
+                    "name": group_player.player.user.full_name
+                }
+            )
+
+        group_dict["players"] = group_players_list
+        group_dict['group_games'] = []
+
+        games = Game.objects.order_by('group_number')
+        grouped_games = {}
+
+        for game in games:
+            group_number = game.group_number
+
+            if group_number not in grouped_games:
+                grouped_games[group_number] = []
+            grouped_games[group_number].append(game)
+
+        for game in grouped_games[group]:
+            group_dict['group_games'].append(
+                {
+                    "game_pk": game.pk,
+                    "game_order": game.order,
+                    "first_player_tournament_pk": game.first_player.pk,
+                    "second_player_tournament_pk": game.second_player.pk if game.second_player else None,
+                    "first_player_score": game.first_player_score,
+                    "second_player_score": game.second_player_score
+                }
+            )
+        return_dict["groups"].append(group_dict)
+
     return return_dict

@@ -42,6 +42,12 @@ tournament_groups_admin_actions = TournamentActions.as_view(
     }
 )
 
+tournament_get_groups_admin_action = TournamentActions.as_view(
+    {
+        "get": "get_groups"
+    }
+)
+
 game_actions = GameActions.as_view(
     {
         "put": "game_start"
@@ -74,7 +80,12 @@ urlpatterns = [
     path(
         'admin_my/create_groups/<int:tournament_pk>',
         tournament_groups_admin_actions,
-        name="tournament_groups_admin_actions"
+        name="tournament_create_groups_admin_actions"
+    ),
+    path(
+        'admin_my/get_groups/<int:tournament_pk>',
+        tournament_get_groups_admin_action,
+        name="tournament_get_groups_admin_action"
     ),
     path(
         'game/game_start/<int:game_pk>',

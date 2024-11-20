@@ -68,7 +68,10 @@ class Game(models.Model):
         verbose_name="Order of game inside group stage",
         help_text="Order of game inside group stage"
     )
-
+    # NOTE: да, уже есть для игрока. но надо быстро решать проблему.
+    group_number = models.PositiveSmallIntegerField(
+        null=True
+    )
     def __return_game_winner(self):
         """ return Player instance of winner in game"""
         return self.first_player if \

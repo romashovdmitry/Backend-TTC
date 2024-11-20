@@ -108,6 +108,15 @@ swagger_schema_create_groups = extend_schema(
     )       
 
 
+swagger_schema_get_groups = extend_schema(
+        tags=["Tournament"],
+        methods=["GET"],
+        summary="Get tournament groups",
+        description="Get tournament groups",
+        operation_id="Get tournament groups",
+    )       
+
+
 swagger_schema_game_start = extend_schema(
         tags=["Tournament"],
         # NOTE: PUT, not POST
