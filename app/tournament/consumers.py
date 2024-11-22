@@ -5,6 +5,8 @@ import logging
 # ASGI Websocket imports
 from channels.generic.websocket import AsyncWebsocketConsumer
 
+# import custom foos, classes
+
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +35,12 @@ class GameResultConsumer(AsyncWebsocketConsumer):
         # }
         # import custom foos, classes, etc
         from .db_actions import add_game_result
+        from tournament.services import is_tournament_group_stage_finished
+        return_json_dict = {
+            "status": None,
+            "tournament_status": None
+        }
+
         try:
             text_data_json = json.loads(text_data)
             result_bool = await add_game_result(
@@ -41,9 +49,12 @@ class GameResultConsumer(AsyncWebsocketConsumer):
                 second_player_score=text_data_json.get("second_player_score")
             )
 
+            rrrr = await is_tournament_group_stage_finished(text_data_json.get("game_pk"))
+
             if result_bool:
                 await self.send(text_data=json.dumps({
-                    "status": 200
+                    "status": 200,
+                    "is_tournament_finished": await is_tournament_group_stage_finished(text_data_json.get("game_pk"))
                 }))
 
             else:

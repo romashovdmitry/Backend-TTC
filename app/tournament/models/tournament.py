@@ -116,6 +116,3 @@ class Tournament(BaseModel):
             "Players riched limit could not be registrated."
         )
     )
-
-#    @property
-#    def get_tournament_games_dict(self):

@@ -368,3 +368,32 @@ def get_tournament_grid(
         return_dict["groups"].append(group_dict)
 
     return return_dict
+
+
+def sync_get_all_games_finished_or_not(tournament__):
+
+    ttt: list[Tournament] = tournament__.games_of_tournament.all()
+
+    for t in ttt:
+
+        if t.status == GameStatus.STARTED or t.status == GameStatus.CREATED:
+
+            return False
+
+    return True
+
+
+async def is_tournament_group_stage_finished(
+        game_pk: Game.pk
+):
+    """
+    проверяем закончился ли турнир
+    """
+    game: Game = await Game.objects.aget(pk=game_pk)
+    # https://stackoverflow.com/a/74866708
+    x = lambda: game.tournament
+    af = sync_to_async(x)
+    x = await af()
+    return await sync_to_async(
+        sync_get_all_games_finished_or_not
+    )(x)
