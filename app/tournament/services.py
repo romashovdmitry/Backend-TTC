@@ -6,6 +6,7 @@ from typing import Tuple
 from asgiref.sync import sync_to_async
 
 # Django imports
+from django.db.models import Q
 # DRF imports
 # Serializers imports
 # Swagger Schemas imports
@@ -397,3 +398,115 @@ async def is_tournament_group_stage_finished(
     return await sync_to_async(
         sync_get_all_games_finished_or_not
     )(x)
+
+
+def get_players_with_max_points(
+        group_qualifiers_number,
+        tournament_results,
+        group_best_players=[]
+):
+    """
+    Функция находит указанное количество лучших игроков с максимальным
+    количеством очков.
+    Если игроков больше, чем group_qualifiers_number, возвращает None.
+
+    Args:
+        group_qualifiers_number (int): Количество игроков, которое нужно
+            отобрать.
+        tournament_results (dict): Словарь с результатами турнира,
+            где ключи - игроки, значения - очки.
+
+    Returns:
+        list: Список объектов игроков с максимальным количеством очков.
+    """
+    group_qualifiers_number = 2
+
+    if group_qualifiers_number > 2:
+        
+        return None
+
+    for _ in range(0, group_qualifiers_number):
+
+        max_points = max(tournament_results.values())
+        best_players = [
+            player
+            for player, points
+            in tournament_results.items()
+            if points == max_points
+        ]
+
+        if len(best_players) == 1:
+            group_best_players.append(
+                best_players
+            ) 
+
+        elif len(best_players) > 1 and len(best_players) == 2:
+
+            game_of_best_group_player = Game.objects.filter(
+                Q(first_player=best_players[0], second_player=best_players[1]) |
+                Q(first_player=best_players[1], second_player=best_players[0])
+            ).first()
+            group_best_players.append(
+                game_of_best_group_player.return_game_winner
+            )
+            tournament_results.pop(game_of_best_group_player.return_game_winner)
+
+    return group_best_players
+
+
+def create_knockout_games(
+        tournament: Tournament
+):
+    """
+    FIXME: documentation
+    create knockout you know (:
+    """
+    game_results_dict = {}
+    all_tournament_players: list[TournamentPlayers] = tournament.tournament_players.all()
+    all_tournament_games: list[Game] = tournament.games_of_tournament.all()
+    [   
+        game_results_dict.update(
+            {
+                t_group_number: {}
+            }
+        )
+        for t_group_number
+        in range(
+            1, tournament.group_number + 1
+        )
+    ]
+    for tournament_player in all_tournament_players:
+        game_results_dict[tournament_player.tournament_group].update({tournament_player: None})
+
+    for tournament_group in game_results_dict:
+        
+        for tournament_player in game_results_dict[tournament_group]:
+            player_games = (
+                tournament_player.games_first_player.all()
+            ).union(
+                tournament_player.games_second_player.all()
+            )
+
+            points = 0
+
+            for game in player_games:
+
+                if game.return_game_winner == tournament_player:
+                    points += 1
+            game_results_dict[tournament_group][tournament_player] = points
+
+    # {1: {TournamentPlayers object: 3, ...}, 2: {}}
+    # первыи ключ - это номер группы. значением словарь, где идет игрок и его кол-во побед.
+    for games_group in game_results_dict:
+
+        best_player = get_players_with_max_points(
+            group_qualifiers_number=tournament.group_qualifiers_number,
+            tournament_results=game_results_dict[
+                games_group
+            ]
+        )
+        game_results_dict[games_group] = best_player
+
+    print(f'game_results_dict[2] -> {game_results_dict[2]}')
+
+    return "хуии"

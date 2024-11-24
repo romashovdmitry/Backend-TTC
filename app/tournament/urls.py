@@ -54,6 +54,12 @@ game_actions = GameActions.as_view(
     }
 )
 
+tournament_knockout_actions = TournamentActions.as_view(
+    {
+        "post": "create_knockout"
+    }
+)
+
 # admin_my - requests that admin is doing to change something
 # in his clubs, tournaments, etc
 urlpatterns = [
@@ -86,6 +92,11 @@ urlpatterns = [
         'admin_my/get_groups/<int:tournament_pk>',
         tournament_get_groups_admin_action,
         name="tournament_get_groups_admin_action"
+    ),
+    path(
+        'admin_my/create_knockout/<int:tournament_pk>',
+        tournament_knockout_actions,
+        name="tournament_create_knockout_admin_actions"
     ),
     path(
         'game/game_start/<int:game_pk>',

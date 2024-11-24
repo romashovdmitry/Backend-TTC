@@ -25,6 +25,7 @@ class TournamentPlayers(BaseModel):
     tournament = models.ForeignKey(
         Tournament,
         on_delete=models.CASCADE,
+        related_name="tournament_players",
         verbose_name="Проводимый клубом туринр.",
         help_text="Проводимый клубом туринр."
     )

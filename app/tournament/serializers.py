@@ -85,6 +85,7 @@ class TournamentCreateGroupsSerializer(serializers.ModelSerializer):
                     code="missing_fields"
                 )
 
+            # FIXME: на этом этапе разводить игроков по реитингу. 
             tournament_players = TournamentPlayers.objects.filter(
                 tournament=Tournament.objects.get(
                     pk=tournament_pk

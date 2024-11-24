@@ -107,6 +107,13 @@ swagger_schema_create_groups = extend_schema(
         },
     )       
 
+swagger_schema_create_knockout = extend_schema(
+        tags=["Tournament"],
+        methods=["POST"],
+        summary="Create tournament knockout",
+        description="Create tournament knockout",
+        operation_id="Create tournament knockout"
+    )       
 
 swagger_schema_get_groups = extend_schema(
         tags=["Tournament"],
