@@ -426,7 +426,6 @@ def get_players_with_max_points(
         return None
 
     for _ in range(0, group_qualifiers_number):
-
         max_points = max(tournament_results.values())
         best_players = [
             player
@@ -438,7 +437,8 @@ def get_players_with_max_points(
         if len(best_players) == 1:
             group_best_players.append(
                 best_players
-            ) 
+            )
+            tournament_results.pop(best_players[0])
 
         elif len(best_players) > 1 and len(best_players) == 2:
 
@@ -450,6 +450,10 @@ def get_players_with_max_points(
                 game_of_best_group_player.return_game_winner
             )
             tournament_results.pop(game_of_best_group_player.return_game_winner)
+
+        else:
+
+            return None
 
     return group_best_players
 
