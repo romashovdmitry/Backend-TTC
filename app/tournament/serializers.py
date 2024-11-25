@@ -5,6 +5,9 @@ import asyncio
 from rest_framework import serializers, exceptions
 from rest_framework.exceptions import ValidationError
 
+# Django imports
+from django.db.models import F
+
 # import models
 from tournament.models import (
     Tournament,
@@ -91,6 +94,27 @@ class TournamentCreateGroupsSerializer(serializers.ModelSerializer):
                     pk=tournament_pk
                 )
             ).all()
+
+            tournament_players = TournamentPlayers.objects.filter(
+                tournament=Tournament.objects.get(pk=tournament_pk)
+            ).annotate(
+                player_rating=F('player__rating')  # Добавляем рейтинг игрока как аннотированное поле
+            ).order_by('-player_rating')  # Сортируем по рейтингу
+
+            empty_list = [None] * len(tournament_players)
+
+            start = 0
+            end = len(empty_list) - 1
+
+            for idx, tp in enumerate(tournament_players):
+
+                if idx % 2 == 0:
+                    empty_list[start] = tp
+                    start += 1
+
+                else:
+                    empty_list[end] = tp
+                    end -= 1
 
             attrs['tournament_players'] = tournament_players
             attrs['tournament_pk'] = tournament_pk
