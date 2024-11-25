@@ -15,7 +15,8 @@ from django.db.models import Q
 from tournament.models import (
     TournamentPlayers,
     Tournament,
-    Game
+    Game,
+    KnockoutGame
 )
 
 # import constants
@@ -402,8 +403,7 @@ async def is_tournament_group_stage_finished(
 
 def get_players_with_max_points(
         group_qualifiers_number,
-        tournament_results,
-        group_best_players=[]
+        tournament_results
 ):
     """
     Функция находит указанное количество лучших игроков с максимальным
@@ -419,7 +419,7 @@ def get_players_with_max_points(
     Returns:
         list: Список объектов игроков с максимальным количеством очков.
     """
-    group_qualifiers_number = 2
+    group_best_players = []
 
     if group_qualifiers_number > 2:
         
@@ -436,7 +436,7 @@ def get_players_with_max_points(
 
         if len(best_players) == 1:
             group_best_players.append(
-                best_players
+                best_players[0]
             )
             tournament_results.pop(best_players[0])
 
@@ -458,6 +458,48 @@ def get_players_with_max_points(
     return group_best_players
 
 
+def create_knockout_games_objects(
+        knockout_players: list[TournamentPlayers],
+        pairs_number,
+        group_qualifiers_number
+):
+    x = []
+    y = 0
+    while knockout_players:
+
+        if (
+            y + group_qualifiers_number
+        ) < len(knockout_players):
+            print(f'knockout_players -> {knockout_players}\n')     
+            x.append(
+                {
+                    "first player": knockout_players.pop(y),
+                    "second player": knockout_players.pop(
+                        y + group_qualifiers_number
+                    )
+                }
+            )
+            print(f'knockout_players -> {knockout_players}\n')     
+            y += group_qualifiers_number
+
+        elif (
+            group_qualifiers_number
+        ) == len(knockout_players):
+            print(f"second condition -> {knockout_players}")
+            x.append(
+                {
+                    "first player": knockout_players.pop(0),
+                    "second player": knockout_players.pop(1)
+                }
+            )
+
+        else:
+            y = 0
+
+    print(f'GGGGGOOOO -> {knockout_players}\n')
+    return
+
+
 def create_knockout_games(
         tournament: Tournament
 ):
@@ -465,6 +507,7 @@ def create_knockout_games(
     FIXME: documentation
     create knockout you know (:
     """
+    knockout_players = []
     game_results_dict = {}
     all_tournament_players: list[TournamentPlayers] = tournament.tournament_players.all()
     all_tournament_games: list[Game] = tournament.games_of_tournament.all()
@@ -509,8 +552,42 @@ def create_knockout_games(
                 games_group
             ]
         )
-        game_results_dict[games_group] = best_player
 
-    print(f'game_results_dict[2] -> {game_results_dict[2]}')
+        if best_player:
+            knockout_players.extend(best_player)
 
-    return "хуии"
+        else:
+            knockout_players.extend(
+                {
+                   games_group: None
+                }
+            )
+
+    # если есть словарь, значит для однои группы не проставились пары
+    if not any(isinstance(item, dict) for item in knockout_players):
+        create_knockout_games_objects(
+            knockout_players,
+            len(game_results_dict),
+            tournament.group_qualifiers_number
+        )
+
+        return 'pizda'
+
+    return "huy"
+
+'''
+        game_results_dict[games_group] = [
+            KnockoutGame.objects.create(
+                tournament=tournament,
+                first_player=pair[0],
+                second_player=pair[1],
+                order=1
+            ) if pair is not None else None
+            for pair in best_player[0] # список списка
+        ]
+
+'''
+
+
+
+
