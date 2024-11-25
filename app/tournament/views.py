@@ -392,11 +392,6 @@ class TournamentActions(ViewSet):
                 data=created_knockout_games
             )
 
-            return Response(
-                status=HTTP_400_BAD_REQUEST,
-                data="There is and unexpected error"
-            )
-
         except Exception as ex:
             asyncio.run(
                 telegram_log_errors(

@@ -470,34 +470,47 @@ def create_knockout_games_objects(
         if (
             y + group_qualifiers_number
         ) < len(knockout_players):
-            print(f'knockout_players -> {knockout_players}\n')     
+            first_player: TournamentPlayers = knockout_players.pop(y)
+            second_player: TournamentPlayers = knockout_players.pop(
+                y + group_qualifiers_number - 1
+            )
+            # NOTE: это лучше перепроверить. из-за работы метода pop. 
             x.append(
                 {
-                    "first player": knockout_players.pop(y),
-                    "second player": knockout_players.pop(
-                        y + group_qualifiers_number
-                    )
+                    "first player": {
+                        'pk': first_player.pk,
+                        "full_name": first_player.player.user.return_full_name()
+                    },
+                    "second player": {
+                        "pk": second_player.pk,
+                        "full_name": second_player.player.user.return_full_name()
+                    }
                 }
             )
-            print(f'knockout_players -> {knockout_players}\n')     
             y += group_qualifiers_number
 
         elif (
             group_qualifiers_number
         ) == len(knockout_players):
-            print(f"second condition -> {knockout_players}")
+            first_player = knockout_players.pop(0)
+            second_player = knockout_players.pop(0)
             x.append(
                 {
-                    "first player": knockout_players.pop(0),
-                    "second player": knockout_players.pop(1)
+                    "first player": {
+                        "pk": first_player.pk,
+                        "full_name": first_player.player.user.return_full_name()
+                    },
+                    "second player": {
+                        "pk": second_player.pk,
+                        "full_name": second_player.player.user.return_full_name()
+                    }
                 }
             )
 
         else:
             y = 0
 
-    print(f'GGGGGOOOO -> {knockout_players}\n')
-    return
+    return x
 
 
 def create_knockout_games(
@@ -545,7 +558,6 @@ def create_knockout_games(
     # {1: {TournamentPlayers object: 3, ...}, 2: {}}
     # первыи ключ - это номер группы. значением словарь, где идет игрок и его кол-во побед.
     for games_group in game_results_dict:
-
         best_player = get_players_with_max_points(
             group_qualifiers_number=tournament.group_qualifiers_number,
             tournament_results=game_results_dict[
@@ -565,15 +577,16 @@ def create_knockout_games(
 
     # если есть словарь, значит для однои группы не проставились пары
     if not any(isinstance(item, dict) for item in knockout_players):
-        create_knockout_games_objects(
+        knockout_games = create_knockout_games_objects(
             knockout_players,
             len(game_results_dict),
             tournament.group_qualifiers_number
         )
+        print(f'knockout_games ->> {knockout_games}')
+        print(f'type(knockout_games) ->> {type(knockout_games)}')
+        return knockout_games
 
-        return 'pizda'
-
-    return "huy"
+    return None
 
 '''
         game_results_dict[games_group] = [
