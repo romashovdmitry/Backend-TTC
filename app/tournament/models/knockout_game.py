@@ -9,28 +9,27 @@ from tournament.models import Tournament, TournamentPlayers
 from tournament.constants import GameStatus
 
 
-class Game(models.Model):
+class KnockoutGame(models.Model):
     """
-    Class for saving tournament's Games.
-    NOTE: игры группового этапа. 
+    NOTE: игры на вылет
     """
     class Meta:
-        db_table = "games"
-        verbose_name = "Game"
-        verbose_name_plural = "Games"
+        db_table = "knockout_games"
+        verbose_name = "Knockout Game"
+        verbose_name_plural = "Knockout Games"
 
     tournament = models.ForeignKey(
         Tournament,
         on_delete=models.CASCADE,
         null=True,
-        related_name="games_of_tournament",
+        related_name="knockout_games_of_tournament",
         verbose_name="Tournament",
         help_text="Tournament"
     )
     first_player = models.ForeignKey(
         TournamentPlayers,
         on_delete=models.CASCADE,
-        related_name="games_first_player",
+        related_name="knockout_games_first_player",
         verbose_name="One of two players of game",
         help_text="One of two players of game"
     )
@@ -41,7 +40,7 @@ class Game(models.Model):
         # player is waiting for next game (do nothing). 
         # e.g. in 5 players group it's usual scenario.
         null=True,
-        related_name="games_second_player",
+        related_name="knockout_games_second_player",
         verbose_name="One of two players of game",
         help_text="One of two players of game"
     )
@@ -69,13 +68,8 @@ class Game(models.Model):
         verbose_name="Order of game inside group stage",
         help_text="Order of game inside group stage"
     )
-    # NOTE: да, уже есть для игрока. но надо быстро решать проблему.
-    group_number = models.PositiveSmallIntegerField(
-        null=True
-    )
 
-    @property
-    def return_game_winner(self):
+    def __return_game_winner(self):
         """ return Player instance of winner in game"""
         return self.first_player if \
             self.first_player_score > self.second_player_score else \

@@ -37,7 +37,8 @@ from tournament.swagger_schemas import (
     swagger_schema_game_result,
     swagger_schema_create_groups,
     swagger_schema_get_info_about_tournament_by_pk,
-    swagger_schema_get_groups
+    swagger_schema_get_groups,
+    swagger_schema_create_knockout
 )
 
 # import models
@@ -55,7 +56,8 @@ from tournament.services import (
     divide_players_to_groups,
     create_tournament_games,
     create_tournament_grid,
-    get_tournament_grid
+    get_tournament_grid,
+    create_knockout_games
 )
 
 
@@ -121,8 +123,11 @@ class TournamentActions(ViewSet):
                 pk=kwargs["tournament_pk"]
             ).first()
 
-        elif self.action == "get_info_about_tournament_by_pk":
-            print(f'kwargs -> {kwargs}')
+        elif self.action in [
+            "get_info_about_tournament_by_pk",
+            "create_knockout"
+        ] :
+
             return Tournament.objects.filter(
                 pk=kwargs["tournament_pk"]
             ).first()
@@ -357,6 +362,49 @@ class TournamentActions(ViewSet):
                 status=HTTP_400_BAD_REQUEST
             )
 
+    @swagger_schema_create_knockout
+    @action(
+        detail=True,
+        methods=["post"],
+        url_path="create_knockout"
+    )
+    def create_knockout(
+            self,
+            request,
+            tournament_pk=None,
+    ) -> Response:
+        """
+        create knockout-stage games
+        # выбираем наиебольшего по победам.
+        # если есть более одного, то смотрим кто из двух кого разъебал
+        """
+        try:
+            request.data["tournament_pk"] = tournament_pk
+
+            created_knockout_games = create_knockout_games(
+                self.get_queryset(
+                    tournament_pk=tournament_pk
+                )
+            )
+
+            return Response(
+                status=HTTP_200_OK,
+                data=created_knockout_games
+            )
+
+        except Exception as ex:
+            asyncio.run(
+                telegram_log_errors(
+                    f"[TournamtneActions][create_tournament] {str(ex)}"
+                )
+            )
+
+            return Response(
+                data=str(ex),
+                status=HTTP_400_BAD_REQUEST
+            )
+
+
     @swagger_schema_get_groups
     @action(
         detail=True,
@@ -379,7 +427,7 @@ class TournamentActions(ViewSet):
                 tournament_grid = get_tournament_grid(tournament_object)
 
                 return Response(
-                    status=HTTP_201_CREATED,
+                    status=HTTP_200_OK,
                     data=tournament_grid
                 )
 

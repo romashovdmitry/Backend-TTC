@@ -180,7 +180,13 @@ class User(AbstractUser):
 
     def __str__(self):
         second_name = self.second_name if self.second_name else "No Last Name"
+
         return f"Email: {self.email}, Last Name: {second_name}"
+
+    def return_full_name(self):
+        second_name = self.second_name if self.second_name else ""
+
+        return f"{second_name} {self.first_name}"
 
     def __repr__(self):
         return f"email: {self.email}"

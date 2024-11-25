@@ -6,6 +6,7 @@ from typing import Tuple
 from asgiref.sync import sync_to_async
 
 # Django imports
+from django.db.models import Q
 # DRF imports
 # Serializers imports
 # Swagger Schemas imports
@@ -14,7 +15,8 @@ from asgiref.sync import sync_to_async
 from tournament.models import (
     TournamentPlayers,
     Tournament,
-    Game
+    Game,
+    KnockoutGame
 )
 
 # import constants
@@ -397,3 +399,208 @@ async def is_tournament_group_stage_finished(
     return await sync_to_async(
         sync_get_all_games_finished_or_not
     )(x)
+
+
+def get_players_with_max_points(
+        group_qualifiers_number,
+        tournament_results
+):
+    """
+    Функция находит указанное количество лучших игроков с максимальным
+    количеством очков.
+    Если игроков больше, чем group_qualifiers_number, возвращает None.
+
+    Args:
+        group_qualifiers_number (int): Количество игроков, которое нужно
+            отобрать.
+        tournament_results (dict): Словарь с результатами турнира,
+            где ключи - игроки, значения - очки.
+
+    Returns:
+        list: Список объектов игроков с максимальным количеством очков.
+    """
+    group_best_players = []
+
+    if group_qualifiers_number > 2:
+        
+        return None
+
+    for _ in range(0, group_qualifiers_number):
+        max_points = max(tournament_results.values())
+        best_players = [
+            player
+            for player, points
+            in tournament_results.items()
+            if points == max_points
+        ]
+
+        if len(best_players) == 1:
+            group_best_players.append(
+                best_players[0]
+            )
+            tournament_results.pop(best_players[0])
+
+        elif len(best_players) > 1 and len(best_players) == 2:
+
+            game_of_best_group_player = Game.objects.filter(
+                Q(first_player=best_players[0], second_player=best_players[1]) |
+                Q(first_player=best_players[1], second_player=best_players[0])
+            ).first()
+            group_best_players.append(
+                game_of_best_group_player.return_game_winner
+            )
+            tournament_results.pop(game_of_best_group_player.return_game_winner)
+
+        else:
+
+            return None
+
+    return group_best_players
+
+
+def create_knockout_games_objects(
+        knockout_players: list[TournamentPlayers],
+        pairs_number,
+        group_qualifiers_number
+):
+    x = []
+    y = 0
+    while knockout_players:
+
+        if (
+            y + group_qualifiers_number
+        ) < len(knockout_players):
+            first_player: TournamentPlayers = knockout_players.pop(y)
+            second_player: TournamentPlayers = knockout_players.pop(
+                y + group_qualifiers_number - 1
+            )
+            # NOTE: это лучше перепроверить. из-за работы метода pop. 
+            x.append(
+                {
+                    "first player": {
+                        'pk': first_player.pk,
+                        "full_name": first_player.player.user.return_full_name()
+                    },
+                    "second player": {
+                        "pk": second_player.pk,
+                        "full_name": second_player.player.user.return_full_name()
+                    }
+                }
+            )
+            y += group_qualifiers_number
+
+        elif (
+            group_qualifiers_number
+        ) == len(knockout_players):
+            first_player = knockout_players.pop(0)
+            second_player = knockout_players.pop(0)
+            x.append(
+                {
+                    "first player": {
+                        "pk": first_player.pk,
+                        "full_name": first_player.player.user.return_full_name()
+                    },
+                    "second player": {
+                        "pk": second_player.pk,
+                        "full_name": second_player.player.user.return_full_name()
+                    }
+                }
+            )
+
+        else:
+            y = 0
+
+    return x
+
+
+def create_knockout_games(
+        tournament: Tournament
+):
+    """
+    FIXME: documentation
+    create knockout you know (:
+    """
+    knockout_players = []
+    game_results_dict = {}
+    all_tournament_players: list[TournamentPlayers] = tournament.tournament_players.all()
+    all_tournament_games: list[Game] = tournament.games_of_tournament.all()
+    [   
+        game_results_dict.update(
+            {
+                t_group_number: {}
+            }
+        )
+        for t_group_number
+        in range(
+            1, tournament.group_number + 1
+        )
+    ]
+    for tournament_player in all_tournament_players:
+        game_results_dict[tournament_player.tournament_group].update({tournament_player: None})
+
+    for tournament_group in game_results_dict:
+        
+        for tournament_player in game_results_dict[tournament_group]:
+            player_games = (
+                tournament_player.games_first_player.all()
+            ).union(
+                tournament_player.games_second_player.all()
+            )
+
+            points = 0
+
+            for game in player_games:
+
+                if game.return_game_winner == tournament_player:
+                    points += 1
+            game_results_dict[tournament_group][tournament_player] = points
+
+    # {1: {TournamentPlayers object: 3, ...}, 2: {}}
+    # первыи ключ - это номер группы. значением словарь, где идет игрок и его кол-во побед.
+    for games_group in game_results_dict:
+        best_player = get_players_with_max_points(
+            group_qualifiers_number=tournament.group_qualifiers_number,
+            tournament_results=game_results_dict[
+                games_group
+            ]
+        )
+
+        if best_player:
+            knockout_players.extend(best_player)
+
+        else:
+            knockout_players.extend(
+                {
+                   games_group: None
+                }
+            )
+
+    # если есть словарь, значит для однои группы не проставились пары
+    if not any(isinstance(item, dict) for item in knockout_players):
+        knockout_games = create_knockout_games_objects(
+            knockout_players,
+            len(game_results_dict),
+            tournament.group_qualifiers_number
+        )
+        print(f'knockout_games ->> {knockout_games}')
+        print(f'type(knockout_games) ->> {type(knockout_games)}')
+        return knockout_games
+
+    return None
+
+'''
+        game_results_dict[games_group] = [
+            KnockoutGame.objects.create(
+                tournament=tournament,
+                first_player=pair[0],
+                second_player=pair[1],
+                order=1
+            ) if pair is not None else None
+            for pair in best_player[0] # список списка
+        ]
+
+'''
+
+
+
+
