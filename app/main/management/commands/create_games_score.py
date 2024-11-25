@@ -20,6 +20,9 @@ class Command(BaseCommand):
 
             if first_score != 3:
                 second_score = random.randint(0, 3)
+            
+            else:
+                second_score = 3
 
             game.first_player_score = first_score
             game.second_player_score = second_score
