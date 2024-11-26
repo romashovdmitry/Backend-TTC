@@ -12,7 +12,7 @@ from tournament.models import Game
 class Command(BaseCommand):
     """ autocreate admin user """
     def handle(self, *args, **options):
-
+        second_score = None
         all_games = Game.objects.all()
         
         for game in all_games:
@@ -22,12 +22,13 @@ class Command(BaseCommand):
                 second_score = random.randint(0, 8)
 
             else:
-                second_score = random.randint(first_score, 9)
+                while (second_score == first_score and second_score is None):
+                    second_score = random.randint(first_score, 9)
 
             game.first_player_score = first_score
             game.second_player_score = second_score
             game.save()
             self.stdout.write(
-                f"Для игры #{game.pk} выставлен счет "
+                f"Для игры #{game.pk} выставлен счет -> {first_score}:{second_score} "
             )
 
