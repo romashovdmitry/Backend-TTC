@@ -380,7 +380,7 @@ class TournamentActions(ViewSet):
         """
         try:
             request.data["tournament_pk"] = tournament_pk
-
+            print('come to view, call create_knockout_games')
             created_knockout_games = create_knockout_games(
                 self.get_queryset(
                     tournament_pk=tournament_pk

@@ -5,10 +5,17 @@ import logging
 # ASGI Websocket imports
 from channels.generic.websocket import AsyncWebsocketConsumer
 
-# import custom foos, classes
-
-
 logger = logging.getLogger(__name__)
+
+
+def token_get_user(validated_token):
+    from rest_framework_simplejwt.authentication import JWTAuthentication
+    from user.models import ClubAdmin
+    print('come h')
+    jwt_auth = JWTAuthentication()
+    user = jwt_auth.get_user(validated_token)
+    print(f'come h, user -> {user}')
+    return ClubAdmin.objects.filter(user=user).exists()
 
 
 class GameResultConsumer(AsyncWebsocketConsumer):
@@ -33,23 +40,37 @@ class GameResultConsumer(AsyncWebsocketConsumer):
         #     "first_player_score": 2,
         #     "second_player_score": 0
         # }
+        # DRF imports
+        from rest_framework_simplejwt.tokens import Token
+        from rest_framework_simplejwt.authentication import JWTAuthentication
+        # ASGI imports
+        from asgiref.sync import sync_to_async
         # import custom foos, classes, etc
         from .db_actions import add_game_result
         from tournament.services import is_tournament_group_stage_finished
+
         return_json_dict = {
             "status": None,
             "tournament_status": None
         }
 
         try:
+            jwt_auth = JWTAuthentication()
+            access_token = json.loads(text_data).get("access_token")
+            validated_token = jwt_auth.get_validated_token(access_token)
+            user = await sync_to_async(token_get_user)(validated_token)
+
+            if not user:
+                await self.send(text_data=json.dumps({
+                    "error": "user is not valid"
+                }))
+
             text_data_json = json.loads(text_data)
             result_bool = await add_game_result(
                 game_pk=text_data_json.get("game_pk"),
                 first_player_score=text_data_json.get("first_player_score"),
                 second_player_score=text_data_json.get("second_player_score")
             )
-
-            rrrr = await is_tournament_group_stage_finished(text_data_json.get("game_pk"))
 
             if result_bool:
                 await self.send(text_data=json.dumps({
@@ -63,12 +84,22 @@ class GameResultConsumer(AsyncWebsocketConsumer):
                 }))
 
         except Exception as ex:
+
             logger.error(
                 f'GameResultConsumer.receive: {str(ex)}'
             )
-            await self.send(text_data=json.dumps({
-                "status": 400
-            }))
+
+            if "token_not_valid" in str(ex):
+                await self.send(text_data=json.dumps({
+                    "status": 401,
+
+                }))
+
+            else:
+
+                await self.send(text_data=json.dumps({
+                    "status": 400
+                }))
 
     async def send_message(self, event):
         """

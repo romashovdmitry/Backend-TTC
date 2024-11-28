@@ -465,6 +465,8 @@ def create_knockout_games_objects(
 ):
     x = []
     y = 0
+    print('create_knockout_games_objects .')
+    print(f'knockout_players -> {knockout_players}')
     while knockout_players:
 
         if (
@@ -475,6 +477,8 @@ def create_knockout_games_objects(
                 y + group_qualifiers_number - 1
             )
             # NOTE: это лучше перепроверить. из-за работы метода pop. 
+            print('create_knockout_games_objects 2')
+            
             x.append(
                 {
                     "first player": {
@@ -520,6 +524,7 @@ def create_knockout_games(
     FIXME: documentation
     create knockout you know (:
     """
+    print('create_knockout_games .')
     knockout_players = []
     game_results_dict = {}
     all_tournament_players: list[TournamentPlayers] = tournament.tournament_players.all()
@@ -554,7 +559,7 @@ def create_knockout_games(
                 if game.return_game_winner == tournament_player:
                     points += 1
             game_results_dict[tournament_group][tournament_player] = points
-
+    print('create_knockout_games 2')
     # {1: {TournamentPlayers object: 3, ...}, 2: {}}
     # первыи ключ - это номер группы. значением словарь, где идет игрок и его кол-во побед.
     for games_group in game_results_dict:
@@ -567,16 +572,19 @@ def create_knockout_games(
 
         if best_player:
             knockout_players.extend(best_player)
-
+    
         else:
-            knockout_players.extend(
+
+            knockout_players.append(
                 {
                    games_group: None
                 }
             )
-
+    print('create_knockout_games 3')
     # если есть словарь, значит для однои группы не проставились пары
+    print(f'knockout_players -> {knockout_players}')
     if not any(isinstance(item, dict) for item in knockout_players):
+        print('прошло условие')
         knockout_games = create_knockout_games_objects(
             knockout_players,
             len(game_results_dict),
