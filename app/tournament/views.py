@@ -38,7 +38,8 @@ from tournament.swagger_schemas import (
     swagger_schema_create_groups,
     swagger_schema_get_info_about_tournament_by_pk,
     swagger_schema_get_groups,
-    swagger_schema_create_groups_game_rating
+    swagger_schema_create_groups_game_rating,
+    swagger_schema_tournament_create_knockout
 )
 
 # import models
@@ -125,7 +126,8 @@ class TournamentActions(ViewSet):
 
         elif self.action in [
             "get_info_about_tournament_by_pk",
-            "create_groups_game_rating"
+            "create_groups_game_rating",
+            "tournament_create_knockout"
         ] :
 
             return Tournament.objects.filter(
@@ -283,7 +285,7 @@ class TournamentActions(ViewSet):
         except Exception as ex:
             asyncio.run(
                 telegram_log_errors(
-                    f"[TournamtneActions][create_tournament] {str(ex)}"
+                    f"[TournamtneActions][add_player_to_tournament] {str(ex)}"
                 )
             )
 
@@ -353,7 +355,7 @@ class TournamentActions(ViewSet):
         except Exception as ex:
             asyncio.run(
                 telegram_log_errors(
-                    f"[TournamtneActions][create_tournament] {str(ex)}"
+                    f"[TournamtneActions][create_groups] {str(ex)}"
                 )
             )
 
@@ -393,7 +395,7 @@ class TournamentActions(ViewSet):
         except Exception as ex:
             asyncio.run(
                 telegram_log_errors(
-                    f"[TournamtneActions][create_tournament] {str(ex)}"
+                    f"[TournamtneActions][create_groups_game_rating] {str(ex)}"
                 )
             )
 
@@ -439,7 +441,35 @@ class TournamentActions(ViewSet):
         except Exception as ex:
             asyncio.run(
                 telegram_log_errors(
-                    f"[TournamtneActions][create_tournament] {str(ex)}"
+                    f"[TournamtneActions][get_groups] {str(ex)}"
+                )
+            )
+
+            return Response(
+                data=str(ex),
+                status=HTTP_400_BAD_REQUEST
+            )
+    @swagger_schema_tournament_create_knockout
+    @action(
+        detail=True,
+        methods=['post'],
+        url_path="tournament_create_knockout"
+    )
+    def tournament_create_knockout(
+        self,
+        request,
+        tournament_pk=None
+    ):
+        """ To save game result """
+        try:
+            queryset = self.get_queryset(tournament_pk=tournament_pk)
+
+            return Response(status=HTTP_200_OK)
+
+        except Exception as ex:
+            asyncio.run(
+                telegram_log_errors(
+                    f"[TournamtneActions][tournament_create_knockout] {str(ex)}"
                 )
             )
 

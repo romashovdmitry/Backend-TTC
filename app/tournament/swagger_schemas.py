@@ -153,3 +153,27 @@ swagger_schema_game_result = extend_schema(
    
         }
     )       
+
+
+# не доработана
+swagger_schema_tournament_create_knockout = extend_schema(
+        tags=["Tournament"],
+        # NOTE: PUT, not POST
+        # because we updatin existing tournament
+        methods=["POST"],
+        summary="To create knockout",
+        description="POST request to create knockout",
+        operation_id="To create knockout",
+        request={
+            "application/json": {
+                "example": {
+                    "group": 2,
+                    "places": {
+                        27: 1,
+                        29: 2,
+                        32: 3
+                    }
+                }
+            }
+        }
+)

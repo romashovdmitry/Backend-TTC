@@ -42,7 +42,7 @@ class TournamentPlayers(BaseModel):
         verbose_name="Группа игрока на турнире",
         help_text="Группа игрока на турнире"
     )
-    stage = models.PositiveSmallIntegerField(
+    stage = models.IntegerField(
         choices=TournamentStage,
         null=True,
         verbose_name="Этап, на котором находится игрок в рамках турнира. ",

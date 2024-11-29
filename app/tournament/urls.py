@@ -60,6 +60,13 @@ tournament_knockout_actions = TournamentActions.as_view(
     }
 )
 
+# нет времени на нормальны неиминг и прочее 
+tournament_create_knockout = TournamentActions.as_view(
+    {
+        "post": "tournament_create_knockout"
+    }
+)
+
 # admin_my - requests that admin is doing to change something
 # in his clubs, tournaments, etc
 urlpatterns = [
@@ -102,5 +109,10 @@ urlpatterns = [
         'game/game_start/<int:game_pk>',
         game_actions,
         name="game_actions"
+    ),
+    path(
+        'tournament_create_knockout/<int:tournament_pk>',
+        tournament_create_knockout,
+        name="tournament_create_knockout"
     )
 ]
