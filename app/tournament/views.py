@@ -58,7 +58,8 @@ from tournament.services import (
     create_tournament_games,
     create_tournament_grid,
     get_tournament_grid,
-    create_groups_game_rating
+    create_groups_game_rating,
+    create_knockout
 )
 
 
@@ -462,9 +463,21 @@ class TournamentActions(ViewSet):
     ):
         """ To save game result """
         try:
-            queryset = self.get_queryset(tournament_pk=tournament_pk)
+#            queryset = self.get_queryset(tournament_pk=tournament_pk)
+#            bool, return_ = create_knockout(queryset)
+    
+            bool = True
+            if bool:
 
-            return Response(status=HTTP_200_OK)
+                return Response(
+#                    data=return_,
+                    status=HTTP_200_OK
+                )
+
+            return Response(
+                status=HTTP_400_BAD_REQUEST,
+                data="There is and unexpected error"
+            )
 
         except Exception as ex:
             asyncio.run(

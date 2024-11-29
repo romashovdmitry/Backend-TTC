@@ -617,6 +617,14 @@ def create_groups_game_rating(
 
     return knockout_players
 
+
+def create_knockout(
+        tournament: Tournament,
+        json_dict: dict
+):
+    pass
+    print('come here')
+
 '''
         game_results_dict[games_group] = [
             KnockoutGame.objects.create(
