@@ -47,23 +47,26 @@ class Tournament(BaseModel):
 
     group_number = models.PositiveSmallIntegerField(
         null=True,
+        blank=True,
         verbose_name="Number of groups in tournament",
         help_text="Number of groups in tournament"
     )
 
     group_players_number = models.PositiveSmallIntegerField(
         null=True,
+        blank=True,
         verbose_name="Number of players in one group",
         help_text="Number of players in one group",
     )
 
     group_qualifiers_number = models.PositiveSmallIntegerField(
+        null=True,
         default=DEFAULT_GROUP_QUALIFIRES_NUMBER,
         verbose_name="Number of players who successfully left the group",
         help_text="Number of players who successfully left the group",
     )
 
-    status = models.CharField(
+    status = models.IntegerField(
         choices=TournamentStatus,
         max_length=16,
         default=0,
@@ -85,6 +88,7 @@ class Tournament(BaseModel):
     tournament_admin = models.ForeignKey(
         "user.TournamentAdmin",
         null=True,
+        blank=True,
         on_delete=models.SET_NULL,
         verbose_name="Tournament Admin",
         help_text="Tournament Admin",

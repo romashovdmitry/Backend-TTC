@@ -7,6 +7,9 @@ from club.models import (
     Club,
     ClubPhoto
 )
+from user.models import (
+    ClubAdmin as ClubAdmin_Model
+)
 
 
 class ClubPhotoAdmin(admin.ModelAdmin):
@@ -44,6 +47,11 @@ class ClubAdmin(admin.ModelAdmin):
         else:
             return "-"
 
+# FIXME: сменить название класса
+class ClubAdminAdmin(admin.ModelAdmin):
+    pass
 
+
+admin.site.register(ClubAdmin_Model, ClubAdminAdmin)
 admin.site.register(Club, ClubAdmin)
 admin.site.register(ClubPhoto, ClubPhotoAdmin)

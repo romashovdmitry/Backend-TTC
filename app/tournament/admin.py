@@ -15,5 +15,4 @@ class TournamentAdmin(admin.ModelAdmin):
         "tournament_admin"
     ]
 
-
 admin.site.register(Tournament, TournamentAdmin)

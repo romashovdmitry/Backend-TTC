@@ -32,7 +32,7 @@ class Player(BaseModel):
         db_table = "players"
         ordering = ['-rating']
 
-    playing_hand = models.CharField(
+    playing_hand = models.IntegerField(
         choices=HandChoise,
         max_length=16,
         null=True,

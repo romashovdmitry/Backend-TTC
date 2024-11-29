@@ -11,7 +11,7 @@ from main.base_model import models, BaseModel
 from user.models.club_admin import ClubAdmin
 
 # import constants
-from club.constants import CLUB_FEATURES_HELP_TEXT
+from club.constants import CLUB_FEATURES_HELP_TEXT, OPENING_HOURS_SWAGGER_EXAMPLE_2
 
 # import custom foos, classes
 from main.utils import image_file_extension_validator
@@ -103,7 +103,7 @@ class Club(BaseModel):
     opening_hours = models.JSONField(
         null=True,
         verbose_name="Opening hours",
-        help_text="Days and hours when club is working"
+        help_text=OPENING_HOURS_SWAGGER_EXAMPLE_2
     )
 
     about = models.TextField(

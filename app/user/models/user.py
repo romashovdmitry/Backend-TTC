@@ -142,7 +142,7 @@ class User(AbstractUser):
         help_text="User's birth date"
     )
 
-    sex = models.CharField(
+    sex = models.IntegerField(
         choices=GenderChoise,
         max_length=16,
         null=False,
@@ -156,7 +156,7 @@ class User(AbstractUser):
         verbose_name="User's second name",
         help_text="User's second name"
     )
-    geo = models.CharField(
+    geo = models.IntegerField(
         choices=GeoChoiсe,
         null=True,
         max_length=128,
