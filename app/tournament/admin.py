@@ -2,7 +2,7 @@
 from django.contrib import admin
 
 # import models
-from tournament.models.tournament import Tournament
+from tournament.models import Tournament, TournamentPlayers
 
 
 class TournamentAdmin(admin.ModelAdmin):
@@ -15,4 +15,8 @@ class TournamentAdmin(admin.ModelAdmin):
         "tournament_admin"
     ]
 
+class TournamentPlayersAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(TournamentPlayers, TournamentPlayersAdmin)
 admin.site.register(Tournament, TournamentAdmin)
