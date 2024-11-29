@@ -157,6 +157,7 @@ class ClubGetSerializer(serializers.ModelSerializer):
 
             return_representation["upcoming"] = [
                     {
+                        "id": club_tournament.pk,
                         "name": club_tournament.name,
                         "date": create_tournament_date_for_json_to_frontend(
                             club_tournament.date_time
