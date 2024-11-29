@@ -38,6 +38,7 @@ class TournamentPlayers(BaseModel):
     )
     tournament_group = models.PositiveSmallIntegerField(
         null=True,
+        blank=True,
         verbose_name="Группа игрока на турнире",
         help_text="Группа игрока на турнире"
     )
@@ -53,3 +54,9 @@ class TournamentPlayers(BaseModel):
         verbose_name="Очки игрока в рамках текущего этапа турнира",
         help_text="Очки игрока в рамках текущего этапа турнира"
     )
+
+    def __str__(self):
+        return self.player.user.return_full_name()
+        print(x)
+        print(type(x))
+        print(x.return_full_name())

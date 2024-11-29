@@ -34,7 +34,6 @@ class Player(BaseModel):
 
     playing_hand = models.IntegerField(
         choices=HandChoise,
-        max_length=16,
         null=True,
         help_text="By which hand player prefer to play, or both"
     )

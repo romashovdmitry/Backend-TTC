@@ -184,8 +184,9 @@ class User(AbstractUser):
         return f"Email: {self.email}, Last Name: {second_name}"
 
     def return_full_name(self):
-        second_name = self.second_name if self.second_name else ""
-
+        print(f'return_full_name come here')
+        second_name = self.second_name if self.second_name else " "
+        print(f'return_full_name -> {second_name} {self.first_name}')
         return f"{second_name} {self.first_name}"
 
     def __repr__(self):

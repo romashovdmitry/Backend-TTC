@@ -68,7 +68,6 @@ class Tournament(BaseModel):
 
     status = models.IntegerField(
         choices=TournamentStatus,
-        max_length=16,
         default=0,
         null=True,
         verbose_name="Tournament Status",
