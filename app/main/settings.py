@@ -285,11 +285,8 @@ CSRF_COOKIE_SAMESITE = 'None'
 SESSION_COOKIE_SAMESITE = 'None'
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000/",
     "http://localhost:3000",
-    "http://localhost/",
     "http://localhost",
-    "http://127.0.0.1/",
     "http://127.0.0.1",
 ]
 
