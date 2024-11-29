@@ -56,7 +56,7 @@ game_actions = GameActions.as_view(
 
 tournament_knockout_actions = TournamentActions.as_view(
     {
-        "post": "create_knockout"
+        "post": "create_groups_game_rating"
     }
 )
 
@@ -94,9 +94,9 @@ urlpatterns = [
         name="tournament_get_groups_admin_action"
     ),
     path(
-        'admin_my/create_knockout/<int:tournament_pk>',
+        'admin_my/create_groups_game_rating/<int:tournament_pk>',
         tournament_knockout_actions,
-        name="tournament_create_knockout_admin_actions"
+        name="tournament_create_groups_game_rating_admin_actions"
     ),
     path(
         'game/game_start/<int:game_pk>',

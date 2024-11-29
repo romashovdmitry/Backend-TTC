@@ -38,7 +38,7 @@ from tournament.swagger_schemas import (
     swagger_schema_create_groups,
     swagger_schema_get_info_about_tournament_by_pk,
     swagger_schema_get_groups,
-    swagger_schema_create_knockout
+    swagger_schema_create_groups_game_rating
 )
 
 # import models
@@ -57,7 +57,7 @@ from tournament.services import (
     create_tournament_games,
     create_tournament_grid,
     get_tournament_grid,
-    create_knockout_games
+    create_groups_game_rating
 )
 
 
@@ -125,7 +125,7 @@ class TournamentActions(ViewSet):
 
         elif self.action in [
             "get_info_about_tournament_by_pk",
-            "create_knockout"
+            "create_groups_game_rating"
         ] :
 
             return Tournament.objects.filter(
@@ -362,31 +362,29 @@ class TournamentActions(ViewSet):
                 status=HTTP_400_BAD_REQUEST
             )
 
-    @swagger_schema_create_knockout
+    @swagger_schema_create_groups_game_rating
     @action(
         detail=True,
         methods=["post"],
-        url_path="create_knockout"
+        url_path="create_groups_game_rating"
     )
-    def create_knockout(
+    def create_groups_game_rating(
             self,
             request,
             tournament_pk=None,
     ) -> Response:
         """
-        create knockout-stage games
-        # выбираем наиебольшего по победам.
-        # если есть более одного, то смотрим кто из двух кого разъебал
+        похую сеичас
         """
         try:
             request.data["tournament_pk"] = tournament_pk
-            print('come to view, call create_knockout_games')
-            created_knockout_games = create_knockout_games(
+            print('come to view, go to create jnockout games')
+            created_knockout_games = create_groups_game_rating(
                 self.get_queryset(
                     tournament_pk=tournament_pk
                 )
             )
-
+            print(f'created_knockout_games -> {created_knockout_games}')
             return Response(
                 status=HTTP_200_OK,
                 data=created_knockout_games
