@@ -56,7 +56,5 @@ class TournamentPlayers(BaseModel):
     )
 
     def __str__(self):
+
         return self.player.user.return_full_name()
-        print(x)
-        print(type(x))
-        print(x.return_full_name())

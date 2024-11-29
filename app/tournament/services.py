@@ -477,65 +477,6 @@ def get_players_with_max_points(
     ]
 
 
-def create_knockout_games_objects(
-        knockout_players: list[TournamentPlayers],
-        pairs_number,
-        group_qualifiers_number
-):
-    x = []
-    y = 0
-    print('create_knockout_games_objects .')
-    print(f'knockout_players -> {knockout_players}')
-    while knockout_players:
-
-        if (
-            y + group_qualifiers_number
-        ) < len(knockout_players):
-            first_player: TournamentPlayers = knockout_players.pop(y)
-            second_player: TournamentPlayers = knockout_players.pop(
-                y + group_qualifiers_number - 1
-            )
-            # NOTE: это лучше перепроверить. из-за работы метода pop. 
-            print('create_knockout_games_objects 2')
-            
-            x.append(
-                {
-                    "first player": {
-                        'pk': first_player.pk,
-                        "full_name": first_player.player.user.return_full_name()
-                    },
-                    "second player": {
-                        "pk": second_player.pk,
-                        "full_name": second_player.player.user.return_full_name()
-                    }
-                }
-            )
-            y += group_qualifiers_number
-
-        elif (
-            group_qualifiers_number
-        ) == len(knockout_players):
-            first_player = knockout_players.pop(0)
-            second_player = knockout_players.pop(0)
-            x.append(
-                {
-                    "first player": {
-                        "pk": first_player.pk,
-                        "full_name": first_player.player.user.return_full_name()
-                    },
-                    "second player": {
-                        "pk": second_player.pk,
-                        "full_name": second_player.player.user.return_full_name()
-                    }
-                }
-            )
-
-        else:
-            y = 0
-
-    return x
-
-
 def create_groups_game_rating(
         tournament: Tournament
 ):
@@ -618,26 +559,116 @@ def create_groups_game_rating(
     return knockout_players
 
 
+def create_knockout_games_objects(
+        knockout_players: list[TournamentPlayers],
+        group_qualifiers_number
+):
+    x = []
+    y = 0
+
+    while knockout_players:
+
+        if (
+            y + group_qualifiers_number
+        ) < len(knockout_players):
+            first_player: TournamentPlayers = knockout_players.pop(y)
+            second_player: TournamentPlayers = knockout_players.pop(
+                y + group_qualifiers_number - 1
+            )
+            # NOTE: это лучше перепроверить. из-за работы метода pop.
+            
+            x.append(
+                {
+                    "first player": {
+                        'pk': first_player.pk,
+                        "full_name": first_player.player.user.return_full_name()
+                    },
+                    "second player": {
+                        "pk": second_player.pk,
+                        "full_name": second_player.player.user.return_full_name()
+                    }
+                }
+            )
+            y += group_qualifiers_number
+
+        elif len(knockout_players) == 2:
+            first_player = knockout_players.pop(0)
+            second_player = knockout_players.pop(0)
+            x.append(
+                {
+                    "first player": {
+                        "pk": first_player.pk,
+                        "full_name": first_player.player.user.return_full_name()
+                    },
+                    "second player": {
+                        "pk": second_player.pk,
+                        "full_name": second_player.player.user.return_full_name()
+                    }
+                }
+            )
+
+        elif len(knockout_players) == 1:
+            first_player = knockout_players.pop(0)
+            x.append(
+                {
+                    "first player": {
+                        "pk": first_player.pk,
+                        "full_name": first_player.player.user.return_full_name()
+                    },
+                    "second player": None
+                }
+            )
+        else:
+            y = 0
+
+    return x
+
+
 def create_knockout(
         tournament: Tournament,
-        json_dict: dict
+        data: dict
 ):
-    pass
-    print('come here')
+
+    try:
+        tournament_player = []
+        for element in data:
+            for element__ in element["games_rating"]:
+        
+                tournament_player.append(
+                    TournamentPlayers.objects.get(
+                        pk=element__.get("player_pk")
+                    )
+                )
+        
+
+        knockout_games = create_knockout_games_objects(
+            knockout_players=tournament_player,
+            group_qualifiers_number=tournament.group_qualifiers_number
+        )
+        # pair - это TournamentPlayers объект
+        for pair in knockout_games:
+            KnockoutGame.objects.update_or_create(
+                defaults={
+                    "first_player": TournamentPlayers.objects.get(pk=pair["first player"]["pk"]),
+                    "second_player": TournamentPlayers.objects.get(pk=pair["second player"]["pk"]),
+                    "order": 1
+                },
+                first_player=TournamentPlayers.objects.get(pk=pair["first player"]["pk"]),
+                second_player=TournamentPlayers.objects.get(pk=pair["second player"]["pk"])
+            )
+
+        return True, knockout_games
+
+    except Exception as ex:
+        asyncio.run(
+            telegram_log_errors(
+                f"[create_knockout] {str(ex)}"
+            )
+        )
+
+        return False, []
 
 '''
-        game_results_dict[games_group] = [
-            KnockoutGame.objects.create(
-                tournament=tournament,
-                first_player=pair[0],
-                second_player=pair[1],
-                order=1
-            ) if pair is not None else None
-            for pair in best_player[0] # список списка
-        ]
+[{'first player': {'pk': 11, 'full_name': 'Lopez Isabella'}, 'second player': {'pk': 9, 'full_name': 'Davis Ava'}}, {'first player': {'pk': 5, 'full_name': 'Brown Olivia'}, 'second player': {'pk': 2, 'full_name': 'Smith Alex'}}, {'first player': {'pk': 8, 'full_name': 'Martinez David'}, 'second player': {'pk': 7, 'full_name': 'Garcia Sophia'}}, {'first player': {'pk': 1, 'full_name': 'Pizdalov Ivan'}, 'second player': {'pk': 6, 'full_name': 'Jones Daniel'}}, {'first player': {'pk': 3, 'full_name': 'Johnson Emma'}, 'second player': {'pk': 4, 'full_name': 'Williams Michael'}}]
 
 '''
-
-
-
-

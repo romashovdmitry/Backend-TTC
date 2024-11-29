@@ -7,6 +7,7 @@ from django.core.management.base import BaseCommand
 
 # import models
 from tournament.models import Game
+from tournament.constants import GameStatus
 
 
 class Command(BaseCommand):
@@ -25,6 +26,7 @@ class Command(BaseCommand):
 
             game.first_player_score = first_score
             game.second_player_score = second_score
+            game.status = GameStatus.FINISHED
             game.save()
             self.stdout.write(
                 f"Для игры #{game.pk} выставлен счет -> {first_score}:{second_score} "

@@ -166,14 +166,64 @@ swagger_schema_tournament_create_knockout = extend_schema(
         operation_id="To create knockout",
         request={
             "application/json": {
-                "example": {
-                    "group": 2,
-                    "places": {
-                        27: 1,
-                        29: 2,
-                        32: 3
-                    }
-                }
+                "example": 
+                    [
+                        {
+                            "group_number": 1,
+                            "games_rating": [
+                            {
+                                "place": 1,
+                                "player_pk": 11
+                            },
+                            {
+                                "place": 2,
+                                "player_pk": 9
+                            },
+                            {
+                                "place": 3,
+                                "player_pk": 1
+                            },
+                            {
+                                "place": 4,
+                                "player_pk": 5
+                            }
+                            ]
+                        },
+                        {
+                            "group_number": 2,
+                            "games_rating": [
+                                {
+                                    "place": 1,
+                                    "player_pk": 2
+                                },
+                                {
+                                    "place": 2,
+                                    "player_pk": 6
+                                },
+                                {
+                                    "place": 3,
+                                    "player_pk": 8
+                                },
+                            ]
+                        },
+                        {
+                            "group_number": 3,
+                            "games_rating": [
+                            {
+                                "place": 1,
+                                "player_pk": 7
+                            },
+                            {
+                                "place": 2,
+                                "player_pk": 3
+                            },
+                            {
+                                "place": 3,
+                                "player_pk": 4
+                            }
+                            ]
+                        }
+                    ]
             }
         }
 )

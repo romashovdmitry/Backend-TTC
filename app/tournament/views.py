@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404
 
 # DRF imports
 from rest_framework.viewsets import ViewSet
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
@@ -84,7 +84,10 @@ class TournamentActions(ViewSet):
         "create_groups": [IsClubAdmin],
         "list_my_tournaments": [IsClubAdmin],
         "list_tournament": [IsAuthenticated],
-        "get_info_about_tournament_by_pk": [IsAuthenticated]
+        "get_info_about_tournament_by_pk": [IsAuthenticated],
+        # FIXME
+        "tournament_create_knockout": [AllowAny],
+        "create_groups_game_rating": [IsClubAdmin]
     }
 
     def get_permissions(self):
@@ -365,46 +368,6 @@ class TournamentActions(ViewSet):
                 status=HTTP_400_BAD_REQUEST
             )
 
-    @swagger_schema_create_groups_game_rating
-    @action(
-        detail=True,
-        methods=["post"],
-        url_path="create_groups_game_rating"
-    )
-    def create_groups_game_rating(
-            self,
-            request,
-            tournament_pk=None,
-    ) -> Response:
-        """
-        похую сеичас
-        """
-        try:
-            request.data["tournament_pk"] = tournament_pk
-            print('come to view, go to create jnockout games')
-            created_knockout_games = create_groups_game_rating(
-                self.get_queryset(
-                    tournament_pk=tournament_pk
-                )
-            )
-            print(f'created_knockout_games -> {created_knockout_games}')
-            return Response(
-                status=HTTP_200_OK,
-                data=created_knockout_games
-            )
-
-        except Exception as ex:
-            asyncio.run(
-                telegram_log_errors(
-                    f"[TournamtneActions][create_groups_game_rating] {str(ex)}"
-                )
-            )
-
-            return Response(
-                data=str(ex),
-                status=HTTP_400_BAD_REQUEST
-            )
-
 
     @swagger_schema_get_groups
     @action(
@@ -450,11 +413,51 @@ class TournamentActions(ViewSet):
                 data=str(ex),
                 status=HTTP_400_BAD_REQUEST
             )
+
+    @swagger_schema_create_groups_game_rating
+    @action(
+        detail=True,
+        methods=["post"],
+        url_path="create_groups_game_rating"
+    )
+    def create_groups_game_rating(
+            self,
+            request,
+            tournament_pk=None,
+    ) -> Response:
+        """
+        похую сеичас
+        """
+        try:
+            request.data["tournament_pk"] = tournament_pk
+            created_knockout_games = create_groups_game_rating(
+                self.get_queryset(
+                    tournament_pk=tournament_pk
+                )
+            )
+
+            return Response(
+                status=HTTP_200_OK,
+                data=created_knockout_games
+            )
+
+        except Exception as ex:
+            asyncio.run(
+                telegram_log_errors(
+                    f"[TournamtneActions][create_groups_game_rating] {str(ex)}"
+                )
+            )
+
+            return Response(
+                data=str(ex),
+                status=HTTP_400_BAD_REQUEST
+            )
+
     @swagger_schema_tournament_create_knockout
     @action(
         detail=True,
         methods=['post'],
-        url_path="tournament_create_knockout"
+        url_path="tournament_create_knockout___"
     )
     def tournament_create_knockout(
         self,
@@ -463,14 +466,18 @@ class TournamentActions(ViewSet):
     ):
         """ To save game result """
         try:
-#            queryset = self.get_queryset(tournament_pk=tournament_pk)
-#            bool, return_ = create_knockout(queryset)
-    
-            bool = True
+            print('\n\nlol kek\n\n')
+            queryset = self.get_queryset(tournament_pk=tournament_pk)
+
+            bool, return_ = create_knockout(
+                tournament=queryset,
+                data=request.data
+            )
+
             if bool:
 
                 return Response(
-#                    data=return_,
+                    data=return_,
                     status=HTTP_200_OK
                 )
 
