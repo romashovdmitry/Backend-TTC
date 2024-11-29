@@ -35,36 +35,42 @@ class Player(BaseModel):
     playing_hand = models.IntegerField(
         choices=HandChoise,
         null=True,
+        blank=True,
         help_text="By which hand player prefer to play, or both"
     )
 
     rating = models.PositiveBigIntegerField(
         default=100,
         null=False,
+        blank=True,
         help_text="Rating of player in club rating system"
     )
 
     blade = models.CharField(
         max_length=256,
         null=True,
+        blank=True,
         help_text="Player's Blade"
     )
 
     rubber_forehand = models.CharField(
         max_length=256,
         null=True,
+        blank=True,
         help_text="Player's Ruber Forehand"
     )
 
     rubber_backhand = models.CharField(
         max_length=256,
         null=True,
+        blank=True,
         help_text="Player's Ruber Backhand"
     )
 
     user = models.ForeignKey(
         "user.user",
         null=True,
+        blank=True,
         on_delete=models.CASCADE,
         related_name="player_user"
     )
@@ -72,6 +78,7 @@ class Player(BaseModel):
     photo = models.ImageField(
         upload_to=define_user_photo_path,
         null=True,
+        blank=True,
         verbose_name="User Photo",
         help_text="User Photo",
         validators=[image_file_extension_validator]
