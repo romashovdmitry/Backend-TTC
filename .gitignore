@@ -26,3 +26,4 @@ db.sqlite3
 hours.txt
 .vscode
 launch.json
+ttc_venv
