@@ -120,3 +120,6 @@ class Tournament(BaseModel):
             "Players riched limit could not be registrated."
         )
     )
+
+    def __str__(self):
+        return self.name
