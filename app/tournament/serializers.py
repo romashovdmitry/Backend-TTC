@@ -187,35 +187,78 @@ class TournamentGetKnockout(serializers.ModelSerializer):
             return_representation = super().to_representation(instance)
             knockout_games = instance.knockout_games_of_tournament.all()
             vertical = 1
-
             return_representation["grid"] = []
 
-            while knockout_games:
+            while knockout_games.filter(
+                    vertical_order=vertical
+                ):
                 horizontal = 1
-                filtered_knockout_games = knockout_games.filter(vertical_order=horizontal)
-                for game in filtered_knockout_games:
+                filtered_knockout_games = knockout_games.filter(
+                    vertical_order=vertical
+                )
+
+                filtered_knockout_games = list(filtered_knockout_games)
+
+                while filtered_knockout_games and len(filtered_knockout_games) > 1:
+                    first_game = filtered_knockout_games[0]
+                    second_game = filtered_knockout_games[1]
                     return_representation["grid"].append(
                         {
                             "vertical": vertical,
+                            "horizontal": horizontal,
                             "games": [
                                 {
-                                    "horizontal": horizontal,
-                                    "game": {
-                                        "game_pk": game.pk,
-                                        "first_player_pk": game.first_player.pk if game.first_player else None,
-                                        "second_player_pk": game.second_player.pk if game.second_player else None,
-                                        "first_player_score": game.first_player_score,
-                                        "second_player_score": game.second_player_score,
-                                        "horizontal_order": game.horizontal_order
+                                    "first_game": {
+                                        "game_pk": first_game.pk,
+                                        "first_player_pk": first_game.first_player.pk if first_game.first_player else None,
+                                        "second_player_pk": first_game.second_player.pk if first_game.second_player else None,
+                                        "first_player_score": first_game.first_player_score,
+                                        "second_player_score": first_game.second_player_score,
+                                        "horizontal_order": first_game.horizontal_order
+                                    }
+                                },
+                                {
+                                    "second_game": {
+                                        "game_pk": second_game.pk,
+                                        "second_gameplayer_pk": second_game.second_player.pk if second_game.second_player else None,
+                                        "second_player_pk": second_game.second_player.pk if second_game.second_player else None,
+                                        "second_gameplayer_score": second_game.second_player_score,
+                                        "second_player_score": second_game.second_player_score,
+                                        "horizontal_order": second_game.horizontal_order
                                     }
                                 }
                             ]
                         }
                     )
+                    filtered_knockout_games.remove(second_game)
+                    filtered_knockout_games.remove(first_game)
                     horizontal += 1
-                knockout_games = list(
-                    set(knockout_games) - set(filtered_knockout_games)
-                )
+
+
+                if len(filtered_knockout_games) == 1:
+                    return_representation["grid"].append(
+                        {
+                            "vertical": vertical,
+                            "horizontal": horizontal,
+                            "games": [
+                                {
+                                    "first_game": {
+                                        "game_pk": filtered_knockout_games[0].pk,
+                                        "first_player_pk": filtered_knockout_games[0].first_player.pk if filtered_knockout_games[0].first_player else None,
+                                        "second_player_pk": filtered_knockout_games[0].second_player.pk if filtered_knockout_games[0].second_player else None,
+                                        "first_player_score": filtered_knockout_games[0].first_player_score,
+                                        "second_player_score": filtered_knockout_games[0].second_player_score,
+                                        "horizontal_order": filtered_knockout_games[0].horizontal_order
+                                    }
+                                },
+                                {
+                                    "second_game": None
+                                }
+                            ]
+                        }
+                    )
+                    horizontal += 1
+                vertical += 1
 
             return return_representation
 
