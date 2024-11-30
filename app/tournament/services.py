@@ -579,11 +579,11 @@ def create_knockout_games_objects(
             
             x.append(
                 {
-                    "first player": {
+                    "first_player": {
                         'pk': first_player.pk,
                         "full_name": first_player.player.user.return_full_name()
                     },
-                    "second player": {
+                    "second_player": {
                         "pk": second_player.pk,
                         "full_name": second_player.player.user.return_full_name()
                     }
@@ -596,11 +596,11 @@ def create_knockout_games_objects(
             second_player = knockout_players.pop(0)
             x.append(
                 {
-                    "first player": {
+                    "first_player": {
                         "pk": first_player.pk,
                         "full_name": first_player.player.user.return_full_name()
                     },
-                    "second player": {
+                    "second_player": {
                         "pk": second_player.pk,
                         "full_name": second_player.player.user.return_full_name()
                     }
@@ -611,11 +611,11 @@ def create_knockout_games_objects(
             first_player = knockout_players.pop(0)
             x.append(
                 {
-                    "first player": {
+                    "first_player": {
                         "pk": first_player.pk,
                         "full_name": first_player.player.user.return_full_name()
                     },
-                    "second player": None
+                    "second_player": None
                 }
             )
         else:
@@ -649,12 +649,12 @@ def create_knockout(
         for pair in knockout_games:
             KnockoutGame.objects.update_or_create(
                 defaults={
-                    "first_player": TournamentPlayers.objects.get(pk=pair["first player"]["pk"]),
-                    "second_player": TournamentPlayers.objects.get(pk=pair["second player"]["pk"]),
+                    "first_player": TournamentPlayers.objects.get(pk=pair["first_player"]["pk"]),
+                    "second_player": TournamentPlayers.objects.get(pk=pair["second_player"]["pk"]),
                     "order": 1
                 },
-                first_player=TournamentPlayers.objects.get(pk=pair["first player"]["pk"]),
-                second_player=TournamentPlayers.objects.get(pk=pair["second player"]["pk"])
+                first_player=TournamentPlayers.objects.get(pk=pair["first_player"]["pk"]),
+                second_player=TournamentPlayers.objects.get(pk=pair["second_player"]["pk"])
             )
 
         return True, knockout_games
@@ -667,8 +667,3 @@ def create_knockout(
         )
 
         return False, []
-
-'''
-[{'first player': {'pk': 11, 'full_name': 'Lopez Isabella'}, 'second player': {'pk': 9, 'full_name': 'Davis Ava'}}, {'first player': {'pk': 5, 'full_name': 'Brown Olivia'}, 'second player': {'pk': 2, 'full_name': 'Smith Alex'}}, {'first player': {'pk': 8, 'full_name': 'Martinez David'}, 'second player': {'pk': 7, 'full_name': 'Garcia Sophia'}}, {'first player': {'pk': 1, 'full_name': 'Pizdalov Ivan'}, 'second player': {'pk': 6, 'full_name': 'Jones Daniel'}}, {'first player': {'pk': 3, 'full_name': 'Johnson Emma'}, 'second player': {'pk': 4, 'full_name': 'Williams Michael'}}]
-
-'''
