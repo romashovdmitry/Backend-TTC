@@ -195,7 +195,10 @@ class KnockoutResultConsumer(AsyncWebsocketConsumer):
                     await self.channel_layer.group_send(
                         self.room_group_name,
                         {
-                            "status": 200,
+                            "type": "providerToStore",
+                            "data": {
+                                "status": 200,
+                            }
                         }
                     )
 

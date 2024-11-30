@@ -57,17 +57,16 @@ async def add_knock_game_result(
         return True
 
     except Exception as ex:
-        print("\n\nexception\n\n")
         print(str(ex))
-        print("\n\nexception\n\n")
 #        logger.error(
 #            "tournament.db_actions.add_player | "
 #            f"Exception text: {str(ex)}"
 #        )
         return False
 
-
-async def create_knock_game_result(
+from asgiref.sync import sync_to_async
+@sync_to_async
+def create_knock_game_result(
     tournament_pk,
     first_player_pk,
     second_player_pk,
@@ -79,16 +78,15 @@ async def create_knock_game_result(
     from tournament.models import Tournament, TournamentPlayers
     # import constants
     from .constants import GameStatus
-
     try:
-        await KnockoutGame.objects.create(
+        KnockoutGame.objects.create(
             tournament=Tournament.objects.get(pk=tournament_pk),
             first_player=TournamentPlayers.objects.get(pk=first_player_pk),
             second_player=TournamentPlayers.objects.get(pk=second_player_pk),
             vertical_order=vertical_order,
             horizontal_order=horizontal_order,
         )
-
+        print('come here 2')
         return True
 
     except Exception as ex:
