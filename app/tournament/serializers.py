@@ -202,8 +202,8 @@ class TournamentGetKnockout(serializers.ModelSerializer):
                                     "horizontal": horizontal,
                                     "game": {
                                         "game_pk": game.pk,
-                                        "first_player_pk": game.first_player.pk,
-                                        "second_player_pk": game.second_player.pk,
+                                        "first_player_pk": game.first_player.pk if game.first_player else None,
+                                        "second_player_pk": game.second_player.pk if game.second_player else None,
                                         "first_player_score": game.first_player_score,
                                         "second_player_score": game.second_player_score,
                                         "horizontal_order": game.horizontal_order
