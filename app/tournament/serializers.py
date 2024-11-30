@@ -173,3 +173,59 @@ class GameResultSerializer(GameStartSerializer):
             "first_player",
             "second_player"
         ]
+
+
+class TournamentGetKnockout(serializers.ModelSerializer):
+
+    class Meta:
+        model = Tournament
+        fields = ['name']
+
+    def to_representation(self, instance: Tournament):
+
+        try:
+            return_representation = super().to_representation(instance)
+            knockout_games = instance.knockout_games_of_tournament.all()
+            vertical = 1
+
+            return_representation["grid"] = []
+
+            while knockout_games:
+                horizontal = 1
+                filtered_knockout_games = knockout_games.filter(vertical_order=horizontal)
+                for game in filtered_knockout_games:
+                    return_representation["grid"].append(
+                        {
+                            "vertical": vertical,
+                            "games": [
+                                {
+                                    "horizontal": horizontal,
+                                    "game": {
+                                        "first_player_pk": game.first_player.pk,
+                                        "second_player_pk": game.second_player.pk,
+                                        "first_player_score": game.first_player_score,
+                                        "second_player_score": game.second_player_score,
+                                        "horizontal_order": game.horizontal_order
+                                    }
+                                }
+                            ]
+                        }
+                    )
+                    horizontal += 1
+                knockout_games = list(
+                    set(knockout_games) - set(filtered_knockout_games)
+                )
+
+            return return_representation
+
+        except Exception as ex:
+            asyncio.run(
+                telegram_log_errors(
+                    f"[{class_and_foo_name()}][{foo_name()}] {str(ex)}"
+                )
+            )
+
+            raise ValidationError(
+                detail="There is an error. ",
+                code="not_validated_data"
+            )

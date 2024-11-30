@@ -639,24 +639,27 @@ def create_knockout(
                         pk=element__.get("player_pk")
                     )
                 )
-        
 
         knockout_games = create_knockout_games_objects(
             knockout_players=tournament_player,
             group_qualifiers_number=tournament.group_qualifiers_number
         )
         # pair - это TournamentPlayers объект
+        hor_order = 1
         for pair in knockout_games:
             knockout_game, created = KnockoutGame.objects.update_or_create(
                 defaults={
+                    "tournament": tournament,
                     "first_player": TournamentPlayers.objects.get(pk=pair["first_player"]["pk"]),
                     "second_player": TournamentPlayers.objects.get(pk=pair["second_player"]["pk"]),
-                    "order": 1
+                    "vertical_order": 1,
+                    "horizontal_order": hor_order
                 },
                 first_player=TournamentPlayers.objects.get(pk=pair["first_player"]["pk"]),
                 second_player=TournamentPlayers.objects.get(pk=pair["second_player"]["pk"])
             )
-            pair['pk'] = knockout_game.pk
+            pair['game_pk'] = knockout_game.pk
+            hor_order += 1
 
         return True, knockout_games
 

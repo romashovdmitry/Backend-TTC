@@ -13,12 +13,16 @@ from channels.auth import AuthMiddlewareStack
 from django.core.asgi import get_asgi_application
 
 # import cusomt views, classes, consumers
-from tournament.consumers import GameResultConsumer
+from tournament.consumers import (
+    GameResultConsumer,
+    KnockoutResultConsumer,
+)
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'main.settings')
 
 websocket_urlpatterns = [
-    path('ws/', GameResultConsumer.as_asgi()),
+    path('ws/group_stage/', GameResultConsumer.as_asgi()),
+    path('ws/knockout_stage/', KnockoutResultConsumer.as_asgi()),
 ]
 
 

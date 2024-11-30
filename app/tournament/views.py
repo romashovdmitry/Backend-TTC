@@ -23,7 +23,8 @@ from tournament.serializers import (
     TournamentPlayerAddSerializer,
     TournamentCreateGroupsSerializer,
     GameStartSerializer,
-    GameResultSerializer
+    GameResultSerializer,
+    TournamentGetKnockout
 )
 
 # Swagger Schemas imports
@@ -39,7 +40,8 @@ from tournament.swagger_schemas import (
     swagger_schema_get_info_about_tournament_by_pk,
     swagger_schema_get_groups,
     swagger_schema_create_groups_game_rating,
-    swagger_schema_tournament_create_knockout
+    swagger_schema_tournament_create_knockout,
+    swagger_schema_tournament_get_knockout
 )
 
 # import models
@@ -76,7 +78,8 @@ class TournamentActions(ViewSet):
         "add_player_to_tournament": TournamentPlayerAddSerializer,
         "create_groups": TournamentCreateGroupsSerializer,
         # NOTE: сюда тоже подойдёт, хоть и pk
-        "get_info_about_tournament_by_pk": TournamentListSerializer
+        "get_info_about_tournament_by_pk": TournamentListSerializer,
+        "tournament_get_knockout": TournamentGetKnockout
     }
 
     permission_map = {
@@ -131,7 +134,8 @@ class TournamentActions(ViewSet):
         elif self.action in [
             "get_info_about_tournament_by_pk",
             "create_groups_game_rating",
-            "tournament_create_knockout"
+            "tournament_create_knockout",
+            "tournament_get_knockout"
         ] :
 
             return Tournament.objects.filter(
@@ -466,7 +470,6 @@ class TournamentActions(ViewSet):
     ):
         """ To save game result """
         try:
-            print('\n\nlol kek\n\n')
             queryset = self.get_queryset(tournament_pk=tournament_pk)
 
             bool, return_ = create_knockout(
@@ -490,6 +493,37 @@ class TournamentActions(ViewSet):
             asyncio.run(
                 telegram_log_errors(
                     f"[TournamtneActions][tournament_create_knockout] {str(ex)}"
+                )
+            )
+
+            return Response(
+                data=str(ex),
+                status=HTTP_400_BAD_REQUEST
+            )
+
+    @swagger_schema_tournament_get_knockout
+    @action(
+        detail=True,
+        methods=['get'],
+        url_path="tournament_get_knockout"
+    )
+    def tournament_get_knockout(
+        self,
+        request,
+        tournament_pk=None
+    ):
+        """ To save game result """
+        try:
+            queryset = self.get_queryset(tournament_pk=tournament_pk)
+            serializer = self.get_serializer_class()
+            serializer = serializer(queryset)
+
+            return Response(serializer.data)
+
+        except Exception as ex:
+            asyncio.run(
+                telegram_log_errors(
+                    f"[TournamtneActions][tournament_get_knockout] {str(ex)}"
                 )
             )
 

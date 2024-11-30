@@ -63,11 +63,16 @@ class KnockoutGame(models.Model):
         verbose_name="Game's status: created, started or finished",
         help_text="Game's status: created, started or finished"        
     )
-    order = models.PositiveSmallIntegerField(
+    vertical_order = models.PositiveSmallIntegerField(
         null=True,
         verbose_name="Order of game inside group stage",
-        help_text="Order of game inside group stage"
+        help_text="Это в какои верткали находится"
     )
+    horizontal_order = models.PositiveSmallIntegerField(
+        null=True,
+        verbose_name="Order of game inside group stage",
+        help_text="Это по горизонтали. Нет времени объяснять. "
+    )    
 
     def __return_game_winner(self):
         """ return Player instance of winner in game"""

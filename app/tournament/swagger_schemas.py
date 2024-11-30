@@ -227,3 +227,12 @@ swagger_schema_tournament_create_knockout = extend_schema(
             }
         }
 )
+
+
+swagger_schema_tournament_get_knockout = extend_schema(
+        tags=["Tournament"],
+        methods=["GET"],
+        summary="Get tournament knockout",
+        description="Get tournament knockout",
+        operation_id="Get tournament knockout"
+    ) 
