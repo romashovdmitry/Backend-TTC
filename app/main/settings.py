@@ -289,5 +289,21 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost",
     "http://127.0.0.1",
 ]
-
 CORS_ALLOW_HEADERS = ["*"]
+
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:3000",  # Замените на ваш домен фронта
+]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',   
+
+]
