@@ -632,14 +632,14 @@ def create_knockout(
     try:
         tournament_player = []
         for element in data:
+
             for element__ in element["games_rating"]:
-        
+
                 tournament_player.append(
                     TournamentPlayers.objects.get(
                         pk=element__.get("player_pk")
                     )
                 )
-
         knockout_games = create_knockout_games_objects(
             knockout_players=tournament_player,
             group_qualifiers_number=tournament.group_qualifiers_number
@@ -651,12 +651,12 @@ def create_knockout(
                 defaults={
                     "tournament": tournament,
                     "first_player": TournamentPlayers.objects.get(pk=pair["first_player"]["pk"]),
-                    "second_player": TournamentPlayers.objects.get(pk=pair["second_player"]["pk"]),
+                    "second_player": TournamentPlayers.objects.get(pk=pair["second_player"]["pk"]) if pair["second_player"] else None,
                     "vertical_order": 1,
                     "horizontal_order": hor_order
                 },
                 first_player=TournamentPlayers.objects.get(pk=pair["first_player"]["pk"]),
-                second_player=TournamentPlayers.objects.get(pk=pair["second_player"]["pk"])
+                second_player=TournamentPlayers.objects.get(pk=pair["second_player"]["pk"]) if pair["second_player"] else None
             )
             pair['game_pk'] = knockout_game.pk
             hor_order += 1
