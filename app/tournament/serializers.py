@@ -201,6 +201,7 @@ class TournamentGetKnockout(serializers.ModelSerializer):
                                 {
                                     "horizontal": horizontal,
                                     "game": {
+                                        "game_pk": game.pk,
                                         "first_player_pk": game.first_player.pk,
                                         "second_player_pk": game.second_player.pk,
                                         "first_player_score": game.first_player_score,
