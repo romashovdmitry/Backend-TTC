@@ -47,15 +47,19 @@ async def add_knock_game_result(
     from .constants import GameStatus
 
     try:
+
         await KnockoutGame.objects.filter(pk=game_pk).aupdate(
             first_player_score=first_player_score,
             second_player_score=second_player_score,
             status=GameStatus.FINISHED
         )
+ 
         return True
 
     except Exception as ex:
+        print("\n\nexception\n\n")
         print(str(ex))
+        print("\n\nexception\n\n")
 #        logger.error(
 #            "tournament.db_actions.add_player | "
 #            f"Exception text: {str(ex)}"

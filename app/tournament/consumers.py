@@ -11,10 +11,9 @@ logger = logging.getLogger(__name__)
 def token_get_user(validated_token):
     from rest_framework_simplejwt.authentication import JWTAuthentication
     from user.models import ClubAdmin
-    print('come h')
     jwt_auth = JWTAuthentication()
     user = jwt_auth.get_user(validated_token)
-    print(f'come h, user -> {user}')
+
     return ClubAdmin.objects.filter(user=user).exists()
 
 
@@ -158,14 +157,38 @@ class KnockoutResultConsumer(AsyncWebsocketConsumer):
                 }))
 
             text_data_json = json.loads(text_data)
-            message_type = text_data.get('type')
+            message_type = text_data_json.get('type')
 
             if message_type == "send_score":
-
                 result_bool = await add_knock_game_result(
                     game_pk=text_data_json.get("game_pk"),
                     first_player_score=text_data_json.get("first_player_score"),
                     second_player_score=text_data_json.get("second_player_score")
+                )
+                if result_bool:
+
+                    await self.channel_layer.group_send(
+                        self.room_group_name,
+                        {
+                            "type": "providerToStore",
+                            "data": {
+                                "status": 200,
+                            }
+                        }
+                    )
+
+                else:
+                    await self.send(text_data=json.dumps({
+                        "status": 400
+                    }))
+
+            else:
+                result_bool = await create_knock_game_result(
+                    tournament_pk=text_data_json.get("tournament_pk"),
+                    first_player_pk=text_data_json.get("first_player_pk"),
+                    second_player_pk=text_data_json.get("second_player_pk"),
+                    horizontal_order=text_data_json.get("horizontal_order"),
+                    vertical_order=text_data_json.get('vertical_order'),
                 )
 
                 if result_bool:
@@ -180,28 +203,6 @@ class KnockoutResultConsumer(AsyncWebsocketConsumer):
                     await self.send(text_data=json.dumps({
                         "status": 400
                     }))
-
-            # if type == "send_game"
-            result_bool = await create_knock_game_result(
-                tournament_pk=text_data_json.get("tournament_pk"),
-                first_player_pk=text_data_json.get("first_player_pk"),
-                second_player_pk=text_data_json.get("second_player_pk"),
-                horizontal_order=text_data_json.get("horizontal_order"),
-                vertical_order=text_data_json.get('vertical_order'),
-            )
-
-            if result_bool:
-                await self.channel_layer.group_send(
-                    self.room_group_name,
-                    {
-                        "status": 200,
-                    }
-                )
-
-            else:
-                await self.send(text_data=json.dumps({
-                    "status": 400
-                }))
 
         except Exception as ex:
 
@@ -220,6 +221,14 @@ class KnockoutResultConsumer(AsyncWebsocketConsumer):
                 await self.send(text_data=json.dumps({
                     "status": 400
                 }))
+
+    async def providerToStore(self, event):
+        """
+        Обработка сообщений типа 'providerToStore'.
+        """
+        # Отправка данных обратно клиенту
+        await self.send(text_data=json.dumps(event["data"]))
+
 
     async def disconnect(self, close_code):
         """ Disconnect from websocket-connection """
