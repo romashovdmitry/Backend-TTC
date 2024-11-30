@@ -566,6 +566,13 @@ def create_knockout_games_objects(
     x = []
     y = 0
 
+    knockout_players = [
+        player["player_obj"]
+        for player
+        in knockout_players
+        if player.get('place') <= group_qualifiers_number
+    ]
+
     while knockout_players:
 
         if (
@@ -636,9 +643,10 @@ def create_knockout(
             for element__ in element["games_rating"]:
 
                 tournament_player.append(
-                    TournamentPlayers.objects.get(
-                        pk=element__.get("player_pk")
-                    )
+                    {
+                        'player_obj': TournamentPlayers.objects.get(pk=element__.get("player_pk")),
+                        "place": element__.get("place")
+                    }
                 )
         knockout_games = create_knockout_games_objects(
             knockout_players=tournament_player,
