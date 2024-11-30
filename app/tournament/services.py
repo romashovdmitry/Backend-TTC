@@ -647,7 +647,7 @@ def create_knockout(
         )
         # pair - это TournamentPlayers объект
         for pair in knockout_games:
-            KnockoutGame.objects.update_or_create(
+            knockout_game, created = KnockoutGame.objects.update_or_create(
                 defaults={
                     "first_player": TournamentPlayers.objects.get(pk=pair["first_player"]["pk"]),
                     "second_player": TournamentPlayers.objects.get(pk=pair["second_player"]["pk"]),
@@ -656,6 +656,7 @@ def create_knockout(
                 first_player=TournamentPlayers.objects.get(pk=pair["first_player"]["pk"]),
                 second_player=TournamentPlayers.objects.get(pk=pair["second_player"]["pk"])
             )
+            pair['pk'] = knockout_game.pk
 
         return True, knockout_games
 
