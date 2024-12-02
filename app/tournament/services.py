@@ -247,7 +247,6 @@ def create_tournament_games(
 
         return True, return_dict
 
-
     except Exception as ex:
         asyncio.run(
             telegram_log_errors(

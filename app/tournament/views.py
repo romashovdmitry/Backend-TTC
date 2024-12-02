@@ -471,7 +471,6 @@ class TournamentActions(ViewSet):
         """ To save game result """
         try:
             queryset = self.get_queryset(tournament_pk=tournament_pk)
-
             bool, return_ = create_knockout(
                 tournament=queryset,
                 data=request.data

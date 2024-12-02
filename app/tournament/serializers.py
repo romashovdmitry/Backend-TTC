@@ -210,21 +210,29 @@ class TournamentGetKnockout(serializers.ModelSerializer):
                                 {
                                     "first_game": {
                                         "game_pk": first_game.pk,
+                                        "horizontal_order": first_game.horizontal_order,
+                                        # first_player fields
                                         "first_player_pk": first_game.first_player.pk if first_game.first_player else None,
-                                        "second_player_pk": first_game.second_player.pk if first_game.second_player else None,
+                                        "first_player_full_name": first_game.first_player.__str__() if first_game.first_player else None,  # __str__
                                         "first_player_score": first_game.first_player_score,
+                                        # second_player fields
+                                        "second_player_pk": first_game.second_player.pk if first_game.second_player else None,
+                                        "second_player_full_name": first_game.second_player.__str__() if first_game.second_player else None,  # __str__
                                         "second_player_score": first_game.second_player_score,
-                                        "horizontal_order": first_game.horizontal_order
                                     }
                                 },
                                 {
                                     "second_game": {
                                         "game_pk": second_game.pk,
-                                        "second_gameplayer_pk": second_game.second_player.pk if second_game.second_player else None,
+                                        "horizontal_order": second_game.horizontal_order,
+                                        # first_player fields
+                                        "first_player_pk": second_game.first_player.pk if second_game.first_player else None,
+                                        "first_player_full_name": second_game.first_player.__str__() if second_game.first_player else None,  # __str__
+                                        "first_player_score": second_game.first_player_score,
+                                        # second player fields
                                         "second_player_pk": second_game.second_player.pk if second_game.second_player else None,
-                                        "second_gameplayer_score": second_game.second_player_score,
+                                        "second_player_full_name": second_game.second_player.__str__() if second_game.second_player else None,  # __str__
                                         "second_player_score": second_game.second_player_score,
-                                        "horizontal_order": second_game.horizontal_order
                                     }
                                 }
                             ]
