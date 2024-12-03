@@ -88,21 +88,21 @@ class JWTActions:
                 "cookie_key": "access_token",
                 "cookie_value": str(refresh_token.access_token),
                 "max_age": int(os.getenv("ACCESS_TOKEN_LIFETIME_IN_SECONDS")),
-                "secure_and_httponly": True,
+                # "secure_and_httponly": True,
                 "path": "/"
             },
             {
                 "cookie_key": "refresh_token",
                 "cookie_value": str(refresh_token),
                 "max_age": int(os.getenv("REFRESH_TOKEN_LIFETIME_IN_SECONDS")),
-                "secure_and_httponly": True,
+                # "secure_and_httponly": True,
                 "path": "api/v1/user/"
             },
             {
                 "cookie_key": "signed_in",
                 "cookie_value": True,
                 "max_age": int(os.getenv("REFRESH_TOKEN_LIFETIME_IN_SECONDS")),
-                "secure_and_httponly": True,
+                # "secure_and_httponly": True,
                 "path": "/"
             }
         ]
@@ -111,9 +111,9 @@ class JWTActions:
                 obj["cookie_key"],
                 obj["cookie_value"],
                 max_age=obj["max_age"],
-                secure=obj["secure_and_httponly"],
-                httponly=obj["secure_and_httponly"],
-                samesite="None",
+                # secure=obj["secure_and_httponly"],
+                # httponly=obj["secure_and_httponly"],
+                # samesite="None",
                 path=obj["path"]
             )
         # for work with Swagger on machine or local
