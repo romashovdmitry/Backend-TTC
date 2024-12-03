@@ -77,8 +77,13 @@ class GameResultConsumer(AsyncWebsocketConsumer):
                 await self.channel_layer.group_send(
                     self.room_group_name,
                     {
-                        "status": 200,
-                        "is_tournament_finished": await is_tournament_group_stage_finished(text_data_json.get("game_pk"))
+                        # HOTFIX
+                        # FIXME
+                        "type": "providerToStore",
+                        "data": {
+                            "status": 200,
+                            "is_tournament_finished": await is_tournament_group_stage_finished(text_data_json.get("game_pk"))
+                        }
                     }
                 )
 
@@ -111,6 +116,13 @@ class GameResultConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
+
+    async def providerToStore(self, event):
+        """
+        Обработка сообщений типа 'providerToStore'.
+        """
+        # Отправка данных обратно клиенту
+        await self.send(text_data=json.dumps(event["data"]))
 
 
 class KnockoutResultConsumer(AsyncWebsocketConsumer):
