@@ -23,7 +23,9 @@ from tournament.models import (
 from tournament.constants import (
     TournamentStage,
     GameStatus,
-    GROUP_ALPHABBET
+    GROUP_ALPHABBET,
+    return_rcp_coeff,
+    D_COEFFS
 )
 
 # import custom foos, classes
@@ -678,3 +680,36 @@ def create_knockout(
         )
 
         return False, []
+
+# call from websocket, that's why async
+def update_player_rating(
+    game_pk: Game.pk
+):
+    print('come here 1')
+    game_object = Game.objects.get(pk=game_pk)
+    tournament = game_object.tournament
+    print('come here 2')
+    winner_rating = game_object.return_game_winner.player.rating
+    print(f'winner_rating -> {winner_rating}')
+    loser_rating = game_object.return_game_loser.player.rating
+    print(f'loser_rating -> {loser_rating}')
+
+    if winner_rating - 200 > loser_rating:
+
+        return True
+    tournament_players: list[TournamentPlayers] = tournament.tournament_players
+    all_players_rating = [
+        tournament_player.player.rating
+        for tournament_player
+        in tournament_players
+    ]
+    # Rcp - средне арфиметическое рейтинга всех участников турнира.
+    Rcp = round(sum(all_players_rating) / len(all_players_rating))
+
+    
+
+    R_COEF = return_rcp_coeff(Rcp)
+    D_COEF = D_COEFFS[
+        game_object.return_game_winner_score - game_object.return_game_loser_score
+    ]
+    result = abs(200 - (winner_rating - loser_rating) / 20) * R_COEF * D_COEFFS

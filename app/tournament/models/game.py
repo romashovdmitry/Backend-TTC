@@ -75,8 +75,30 @@ class Game(models.Model):
     )
 
     @property
-    def return_game_winner(self):
+    def return_game_winner(self) -> TournamentPlayers:
         """ return Player instance of winner in game"""
         return self.first_player if \
             self.first_player_score > self.second_player_score else \
             self.second_player
+
+    @property
+    def return_game_loser(self) -> TournamentPlayers:
+        """ return Player instance of loser in game"""
+        return self.first_player if \
+            self.first_player_score < self.second_player_score else \
+            self.second_player
+
+
+    @property
+    def return_game_winner_score(self) -> TournamentPlayers:
+
+        return self.first_player_score if \
+            self.first_player_score > self.second_player_score else \
+            self.second_player_score
+
+    @property
+    def return_game_loser_score(self) -> TournamentPlayers:
+
+        return self.first_player_score if \
+            self.first_player_score < self.second_player_score else \
+            self.second_player_score
