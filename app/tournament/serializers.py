@@ -17,7 +17,10 @@ from tournament.models import (
 from club.models.club import Club
 
 # import constants
-from tournament.constants import GameStatus
+from tournament.constants import (
+    GameStatus,
+    STAGE_NAMES
+)
 
 # import custom foos, classes
 from telegram_bot.send_error import telegram_log_errors
@@ -188,6 +191,24 @@ class TournamentGetKnockout(serializers.ModelSerializer):
             knockout_games = instance.knockout_games_of_tournament.all()
             vertical = 1
             return_representation["grid"] = []
+            return_representation["stages"] = []
+
+            pairs = len(knockout_games) // 2
+            there_is_pair_with_null = len(knockout_games) % 2
+
+            if there_is_pair_with_null:
+                pairs += 1
+            stages = 0
+
+            while pairs // 2 > 4:
+                stages += 1
+                pairs = pairs // 2
+
+                if pairs % 2 == 1:
+                    pairs += 1
+            print(f'return_representation -> {return_representation}')
+            return_representation["stages"] = STAGE_NAMES[:stages]
+            print(f'return_representation -> {return_representation}')
 
             while knockout_games.filter(
                     vertical_order=vertical
@@ -200,6 +221,7 @@ class TournamentGetKnockout(serializers.ModelSerializer):
                 filtered_knockout_games = list(filtered_knockout_games)
 
                 while filtered_knockout_games and len(filtered_knockout_games) > 1:
+
                     first_game = filtered_knockout_games[0]
                     second_game = filtered_knockout_games[1]
                     return_representation["grid"].append(

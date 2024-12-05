@@ -19,14 +19,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
-CORS_ALLOW_ALL_ORIGINS = True
-CSRF_TRUSTED_ORIGINS = [
-    "http://tabletennis.ae",
-    "http://127.0.0.1",
-    "http://localhost",
-]
-
 # Application definition    
 
 INSTALLED_APPS = [
@@ -185,7 +177,6 @@ SIMPLE_JWT = {
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
 }
 
-CORS_ORIGIN_ALLOW_ALL = True
 
 #CORS_ALLOWED_ORIGINS = ["http://127.0.0.1:8000",]
 #CORS_ALLOW_CREDENTIALS = True
@@ -283,23 +274,46 @@ CHANNEL_LAYERS = {
     },
 }
 
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+ALLOWED_HOSTS = ["*"]
 
+"""
+
+CORS_ALLOW_ALL_ORIGINS = True
+CSRF_TRUSTED_ORIGINS = [
+    "http://tabletennis.ae",
+    "http://127.0.0.1",
+    "http://localhost",
+]
+
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost',
+    'http://localhost:3000',
+    'http://127.0.0.1',
+    ''
+]
+
+
+CORS_ORIGIN_ALLOW_ALL = True
 SESSION_COOKIE_HTTPONLY = True
 #SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SAMESITE = 'None'
-SESSION_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SAMESITE = 'Lax'
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost",
-    "http://127.0.0.1",
-]
+#CORS_ALLOWED_ORIGINS = [
+#    "http://localhost:3000",
+#    "http://localhost",
+#    "http://127.0.0.1",
+#]
 CORS_ALLOW_HEADERS = ["*"]
 
-CORS_ORIGIN_WHITELIST = [
-    "http://localhost:3000",  # Замените на ваш домен фронта
-]
-
+#CORS_ORIGIN_WHITELIST = [
+#    "http://localhost:3000",  # Замените на ваш домен фронта
+#]
+"""
 CORS_ALLOW_HEADERS = [
     'accept',
     'accept-encoding',
