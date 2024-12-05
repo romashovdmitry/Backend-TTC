@@ -72,7 +72,19 @@ class KnockoutGame(models.Model):
         null=True,
         verbose_name="Order of game inside group stage",
         help_text="Это по горизонтали. Нет времени объяснять. "
-    )    
+    )
+
+    is_game_for_first_place = models.BooleanField(
+        default=False,
+        verbose_name="Игра за первое место или нет",
+        help_text="True, если за игра зе первое место. По умолчанию ставится False"
+    )
+
+    is_game_for_third_place = models.BooleanField(
+        default=False,
+        verbose_name="Игра за третье место или нет.",
+        help_text="True, если за игра зе третье место. По умолчанию ставится False."
+    )
 
     def __return_game_winner(self):
         """ return Player instance of winner in game"""

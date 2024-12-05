@@ -83,7 +83,7 @@ class CreateUserSerializer(serializers.ModelSerializer):
 
     def validate_password(self, password):
         ''' validate password '''
-        if not any(char.isdigit() for char in password):
+#        if not any(char.isdigit() for char in password):
 #            raise serializers.ValidationError(
 #                "Password must contain at least one digit.",
 #                code="password_no_digit"

@@ -61,7 +61,6 @@ class Command(BaseCommand):
                 fake_user_database_object = User.objects.create(
                     **fake_user["user"]
                 )
-                print(f'fake_user_database_object -> {fake_user_database_object}')
                 fake_users_list.append(fake_user_database_object)
                 player = Player.objects.filter(
                     user=fake_user_database_object

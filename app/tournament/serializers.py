@@ -191,24 +191,25 @@ class TournamentGetKnockout(serializers.ModelSerializer):
             knockout_games = instance.knockout_games_of_tournament.all()
             vertical = 1
             return_representation["grid"] = []
-            return_representation["stages"] = []
-
-            pairs = len(knockout_games) // 2
+            return_representation["titles"] = []
+            
+            len_knockout_games = len(knockout_games)
             there_is_pair_with_null = len(knockout_games) % 2
 
             if there_is_pair_with_null:
-                pairs += 1
+                len_knockout_games += 1
             stages = 0
 
-            while pairs // 2 > 4:
+            while len_knockout_games > 2:
                 stages += 1
-                pairs = pairs // 2
+                len_knockout_games = len_knockout_games // 4
 
-                if pairs % 2 == 1:
-                    pairs += 1
-            print(f'return_representation -> {return_representation}')
-            return_representation["stages"] = STAGE_NAMES[:stages]
-            print(f'return_representation -> {return_representation}')
+                if len_knockout_games % 2 == 1 and len_knockout_games != 2:
+                    len_knockout_games += 1
+            return_representation["titles"] = STAGE_NAMES[:stages]
+            return_representation["titles"] = return_representation["titles"][::-1]
+            return_representation["titles"].append("1/2")
+            return_representation["titles"].append("The final")
 
             while knockout_games.filter(
                     vertical_order=vertical
@@ -225,67 +226,57 @@ class TournamentGetKnockout(serializers.ModelSerializer):
                     first_game = filtered_knockout_games[0]
                     second_game = filtered_knockout_games[1]
                     return_representation["grid"].append(
-                        {
-                            "vertical": vertical,
-                            "horizontal": horizontal,
-                            "games": [
-                                {
-                                    "first_game": {
-                                        "game_pk": first_game.pk,
-                                        "horizontal_order": first_game.horizontal_order,
-                                        # first_player fields
-                                        "first_player_pk": first_game.first_player.pk if first_game.first_player else None,
-                                        "first_player_full_name": first_game.first_player.__str__() if first_game.first_player else None,  # __str__
-                                        "first_player_score": first_game.first_player_score,
-                                        # second_player fields
-                                        "second_player_pk": first_game.second_player.pk if first_game.second_player else None,
-                                        "second_player_full_name": first_game.second_player.__str__() if first_game.second_player else None,  # __str__
-                                        "second_player_score": first_game.second_player_score,
-                                    }
-                                },
-                                {
-                                    "second_game": {
-                                        "game_pk": second_game.pk,
-                                        "horizontal_order": second_game.horizontal_order,
-                                        # first_player fields
-                                        "first_player_pk": second_game.first_player.pk if second_game.first_player else None,
-                                        "first_player_full_name": second_game.first_player.__str__() if second_game.first_player else None,  # __str__
-                                        "first_player_score": second_game.first_player_score,
-                                        # second player fields
-                                        "second_player_pk": second_game.second_player.pk if second_game.second_player else None,
-                                        "second_player_full_name": second_game.second_player.__str__() if second_game.second_player else None,  # __str__
-                                        "second_player_score": second_game.second_player_score,
-                                    }
-                                }
-                            ]
-                        }
-                    )
+                        [
+                            {
+                                    "game_pk": first_game.pk,
+                                    "horizontal_order": first_game.horizontal_order,
+                                    "vertical_order": first_game.vertical_order,
+                                    # first_player fields
+                                    "first_player_pk": first_game.first_player.pk if first_game.first_player else None,
+                                    "first_player_full_name": first_game.first_player.__str__() if first_game.first_player else None,  # __str__
+                                    "first_player_score": first_game.first_player_score,
+                                    # second_player fields
+                                    "second_player_pk": first_game.second_player.pk if first_game.second_player else None,
+                                    "second_player_full_name": first_game.second_player.__str__() if first_game.second_player else None,  # __str__
+                                    "second_player_score": first_game.second_player_score,
+                            },
+                            {
+                                    "game_pk": second_game.pk,
+                                    "horizontal_order": second_game.horizontal_order,
+                                    "vertical_order": second_game.vertical_order,
+                                    # first_player fields
+                                    "first_player_pk": second_game.first_player.pk if second_game.first_player else None,
+                                    "first_player_full_name": second_game.first_player.__str__() if second_game.first_player else None,  # __str__
+                                    "first_player_score": second_game.first_player_score,
+                                    # second player fields
+                                    "second_player_pk": second_game.second_player.pk if second_game.second_player else None,
+                                    "second_player_full_name": second_game.second_player.__str__() if second_game.second_player else None,  # __str__
+                                    "second_player_score": second_game.second_player_score,
+                            }
+                        ]
+                )
                     filtered_knockout_games.remove(second_game)
                     filtered_knockout_games.remove(first_game)
                     horizontal += 1
 
-
                 if len(filtered_knockout_games) == 1:
                     return_representation["grid"].append(
-                        {
-                            "vertical": vertical,
-                            "horizontal": horizontal,
-                            "games": [
-                                {
-                                    "first_game": {
-                                        "game_pk": filtered_knockout_games[0].pk,
-                                        "first_player_pk": filtered_knockout_games[0].first_player.pk if filtered_knockout_games[0].first_player else None,
-                                        "second_player_pk": filtered_knockout_games[0].second_player.pk if filtered_knockout_games[0].second_player else None,
-                                        "first_player_score": filtered_knockout_games[0].first_player_score,
-                                        "second_player_score": filtered_knockout_games[0].second_player_score,
-                                        "horizontal_order": filtered_knockout_games[0].horizontal_order
-                                    }
-                                },
-                                {
-                                    "second_game": None
-                                }
-                            ]
-                        }
+                        [
+                            {
+                                "game_pk": filtered_knockout_games[0].pk,
+                                "horizontal_order": filtered_knockout_games[0].horizontal_order,
+                                "vertical_order": filtered_knockout_games[0].vertical_order,
+                                # first_player fields
+                                "first_player_pk": filtered_knockout_games[0].first_player.pk if filtered_knockout_games[0].first_player else None,
+                                "first_player_full_name": filtered_knockout_games[0].first_player.__str__() if second_game.first_player else None,  # __str__
+                                "first_player_score": filtered_knockout_games[0].first_player_score,
+                                # second player fields
+                                "second_player_pk": filtered_knockout_games[0].second_player.pk if filtered_knockout_games[0].second_player else None,
+                                "second_player_full_name": filtered_knockout_games[0].second_player.__str__() if second_game.second_player else None,  # __str__
+                                "second_player_score": filtered_knockout_games[0].second_player_score,
+                            },
+                            None
+                        ]
                     )
                     horizontal += 1
                 vertical += 1
