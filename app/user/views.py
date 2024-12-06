@@ -111,7 +111,9 @@ class UserCreateUpdate(ViewSet):
                 )
             )
             return Response(
-                str(ex),
+                data={
+                    "error": ex.detail
+                },
                 status=HTTP_400_BAD_REQUEST,
             )
 
@@ -270,7 +272,9 @@ class PlayerGetUpdate(ViewSet, RetrieveAPIView):
             )
         
             return Response(
-                data=str(ex),
+                data={
+                    "error": ex.detail
+                },
                 status=HTTP_400_BAD_REQUEST
             )
     
@@ -300,7 +304,9 @@ class PlayerGetUpdate(ViewSet, RetrieveAPIView):
             )
         
             return Response(
-                data=str(ex),
+                data={
+                    "error": ex.detail
+                },
                 status=HTTP_400_BAD_REQUEST
             )
 
@@ -343,7 +349,9 @@ class PlayerGetUpdate(ViewSet, RetrieveAPIView):
             )
         
             return Response(
-                data=str(ex),
+                data={
+                    "error": ex.detail
+                },
                 status=HTTP_400_BAD_REQUEST
             )
         
@@ -370,6 +378,8 @@ class GetCities(APIView):
             )
         
             return Response(
-                data=str(ex),
+                data={
+                    "error": ex.detail
+                },
                 status=HTTP_400_BAD_REQUEST
             )

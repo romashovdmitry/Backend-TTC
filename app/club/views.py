@@ -112,7 +112,9 @@ class ClubActions(ViewSet, RetrieveAPIView):
                 )
             )
             return Response(
-                data=str(ex),
+                data={
+                    "error": ex.detail
+                },
                 status=HTTP_400_BAD_REQUEST
             )
     @swagger_schema_update_club
@@ -146,7 +148,9 @@ class ClubActions(ViewSet, RetrieveAPIView):
             )
         
             return Response(
-                data=str(ex),
+                data={
+                    "error": ex.detail
+                },
                 status=HTTP_400_BAD_REQUEST
             )
 
@@ -171,7 +175,9 @@ class ClubActions(ViewSet, RetrieveAPIView):
             )
             
             return Response(
-                data=str(ex),
+                data={
+                    "error": ex.detail
+                },
                 status=HTTP_400_BAD_REQUEST,
             )
 
@@ -195,7 +201,9 @@ class ClubActions(ViewSet, RetrieveAPIView):
             )
             
             return Response(
-                data=str(ex),
+                data={
+                    "error": ex.detail
+                },
                 status=HTTP_400_BAD_REQUEST,
             )
         
@@ -274,6 +282,8 @@ class ClubPhotosDestroyCreateView(
                 )
             )
             return Response(
-                data=str(ex),
+                data={
+                    "error": ex.detail
+                },
                 status=HTTP_400_BAD_REQUEST
             )

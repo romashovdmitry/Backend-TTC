@@ -166,7 +166,9 @@ class TournamentActions(ViewSet):
             )
             
             return Response(
-                data=str(ex),
+                data={
+                    "error": ex.detail
+                },
                 status=HTTP_400_BAD_REQUEST,
             )
 
@@ -199,8 +201,11 @@ class TournamentActions(ViewSet):
                     f"[TournamtneActions][create_tournament] {str(ex)}"
                 )
             )
+
             return Response(
-                data=str(ex),
+                data={
+                    "error": ex.detail
+                },
                 status=HTTP_400_BAD_REQUEST
             )
 
@@ -229,7 +234,9 @@ class TournamentActions(ViewSet):
             )
             
             return Response(
-                data=str(ex),
+                data={
+                    "error": ex.detail
+                },
                 status=HTTP_400_BAD_REQUEST,
             )
 
@@ -263,7 +270,9 @@ class TournamentActions(ViewSet):
             )
             
             return Response(
-                data=str(ex),
+                data={
+                    "error": ex.detail
+                },
                 status=HTTP_400_BAD_REQUEST,
             )
         
@@ -298,7 +307,9 @@ class TournamentActions(ViewSet):
             )
 
             return Response(
-                data=str(ex),
+                data={
+                    "error": ex.detail
+                },
                 status=HTTP_400_BAD_REQUEST
             )
     @swagger_schema_create_groups
@@ -368,7 +379,9 @@ class TournamentActions(ViewSet):
             )
 
             return Response(
-                data=str(ex),
+                data={
+                    "error": ex.detail
+                },
                 status=HTTP_400_BAD_REQUEST
             )
 
@@ -414,7 +427,9 @@ class TournamentActions(ViewSet):
             )
 
             return Response(
-                data=str(ex),
+                data={
+                    "error": ex.detail
+                },
                 status=HTTP_400_BAD_REQUEST
             )
 
@@ -453,7 +468,9 @@ class TournamentActions(ViewSet):
             )
 
             return Response(
-                data=str(ex),
+                data={
+                    "error": ex.detail
+                },
                 status=HTTP_400_BAD_REQUEST
             )
 
@@ -496,7 +513,9 @@ class TournamentActions(ViewSet):
             )
 
             return Response(
-                data=str(ex),
+                data={
+                    "error": ex.detail
+                },
                 status=HTTP_400_BAD_REQUEST
             )
 
@@ -527,7 +546,9 @@ class TournamentActions(ViewSet):
             )
 
             return Response(
-                data=str(ex),
+                data={
+                    "error": ex.detail
+                },
                 status=HTTP_400_BAD_REQUEST
             )
 
@@ -595,7 +616,9 @@ class GameActions(ViewSet):
                 )
 
                 return Response(
-                    data=str(ex),
+                    data={
+                        "error": ex.detail
+                    },
                     status=HTTP_400_BAD_REQUEST
                 )
             
@@ -635,6 +658,8 @@ class GameActions(ViewSet):
             )
 
             return Response(
-                data=str(ex),
+                data={
+                    "error": ex.args[0]
+                },
                 status=HTTP_400_BAD_REQUEST
             )
