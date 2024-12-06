@@ -137,7 +137,8 @@ class User(AbstractUser):
     )
 
     birth_date = models.DateField(
-        null=False,
+        null=True,
+        blank=True,
         verbose_name="User's birth date",
         help_text="User's birth date"
     )

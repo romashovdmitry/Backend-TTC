@@ -29,6 +29,7 @@ class ClubPhotoAdmin(admin.ModelAdmin):
 class ClubAdmin(admin.ModelAdmin):
     """ Admin settings for Club objects """
     list_display = [
+        "pk",
         "name",
         "state",
         "city",

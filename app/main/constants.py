@@ -42,8 +42,8 @@ DEVELOPMENT_USER_PLAYER_LIST = [
     },
     {
         "user": {
-            "email": "user2@example.com",
-            "password": "Password2**B2",
+            "email": "user2_updated@example.com",
+            "password": "Password2**B3",
             "first_name": "Emma",
             "second_name": "Johnson",
             "birth_date": "1988-11-21",
@@ -60,8 +60,8 @@ DEVELOPMENT_USER_PLAYER_LIST = [
     },
     {
         "user": {
-            "email": "user3@example.com",
-            "password": "Password3**C3",
+            "email": "user3_updated@example.com",
+            "password": "Password3**C4",
             "first_name": "Michael",
             "second_name": "Williams",
             "birth_date": "1992-06-30",
@@ -78,8 +78,8 @@ DEVELOPMENT_USER_PLAYER_LIST = [
     },
     {
         "user": {
-            "email": "user4@example.com",
-            "password": "Password4**D4",
+            "email": "user4_updated@example.com",
+            "password": "Password4**D5",
             "first_name": "Olivia",
             "second_name": "Brown",
             "birth_date": "1995-09-10",
@@ -96,8 +96,8 @@ DEVELOPMENT_USER_PLAYER_LIST = [
     },
     {
         "user": {
-            "email": "user5@example.com",
-            "password": "Password5**E5",
+            "email": "user5_updated@example.com",
+            "password": "Password5**E6",
             "first_name": "Daniel",
             "second_name": "Jones",
             "birth_date": "1985-04-19",
@@ -114,8 +114,8 @@ DEVELOPMENT_USER_PLAYER_LIST = [
     },
     {
         "user": {
-            "email": "user6@example.com",
-            "password": "Password6**F6",
+            "email": "user6_updated@example.com",
+            "password": "Password6**F7",
             "first_name": "Sophia",
             "second_name": "Garcia",
             "birth_date": "1993-07-25",
@@ -132,8 +132,8 @@ DEVELOPMENT_USER_PLAYER_LIST = [
     },
     {
         "user": {
-            "email": "user7@example.com",
-            "password": "Password7**G7",
+            "email": "user7_updated@example.com",
+            "password": "Password7**G8",
             "first_name": "David",
             "second_name": "Martinez",
             "birth_date": "1991-12-14",
@@ -150,8 +150,8 @@ DEVELOPMENT_USER_PLAYER_LIST = [
     },
     {
         "user": {
-            "email": "user8@example.com",
-            "password": "Password8**H8",
+            "email": "user8_updated@example.com",
+            "password": "Password8**H9",
             "first_name": "Ava",
             "second_name": "Davis",
             "birth_date": "1989-03-07",
@@ -168,8 +168,8 @@ DEVELOPMENT_USER_PLAYER_LIST = [
     },
     {
         "user": {
-            "email": "user9@example.com",
-            "password": "Password9**I9",
+            "email": "user9_updated@example.com",
+            "password": "Password9**I10",
             "first_name": "James",
             "second_name": "Rodriguez",
             "birth_date": "1994-08-22",
@@ -186,8 +186,8 @@ DEVELOPMENT_USER_PLAYER_LIST = [
     },
     {
         "user": {
-            "email": "user10@example.com",
-            "password": "Password10**J10",
+            "email": "user10_updated@example.com",
+            "password": "Password10**J11",
             "first_name": "Isabella",
             "second_name": "Lopez",
             "birth_date": "1996-01-05",
@@ -201,8 +201,99 @@ DEVELOPMENT_USER_PLAYER_LIST = [
             "rubber_backhand": "opel insignia",
             "rating": 1488
         }
+    },
+    {
+        "user": {
+            "email": "user11@example.com",
+            "password": "StrongPass99**2",
+            "first_name": "John",
+            "second_name": "Doe",
+            "birth_date": "1985-07-21",
+            "sex": 1,
+            "geo": GeoChoiсe[0][0],
+        },
+        "player": {
+            "playing_hand": 1,
+            "blade": "Toyota Supra",
+            "rubber_forehand": "Mazda RX7",
+            "rubber_backhand": "Nissan Skyline",
+            "rating": 120
+        }
+    },
+    {
+        "user": {
+            "email": "user12@example.com",
+            "password": "Secure!321**3",
+            "first_name": "Emma",
+            "second_name": "Johnson",
+            "birth_date": "1995-11-03",
+            "sex": 2,
+            "geo": GeoChoiсe[3][0],
+        },
+        "player": {
+            "playing_hand": 2,
+            "blade": "Chevrolet Impala",
+            "rubber_forehand": "Ford Mustang",
+            "rubber_backhand": "Dodge Challenger",
+            "rating": 95
+        }
+    },
+    {
+        "user": {
+            "email": "user13@example.com",
+            "password": "MySecret!987**4",
+            "first_name": "Sophia",
+            "second_name": "Brown",
+            "birth_date": "1993-06-15",
+            "sex": 2,
+            "geo": GeoChoiсe[3][0],
+        },
+        "player": {
+            "playing_hand": 1,
+            "blade": "Mercedes C-Class",
+            "rubber_forehand": "Volkswagen Golf",
+            "rubber_backhand": "Porsche 911",
+            "rating": 105
+        }
+    },
+    {
+        "user": {
+            "email": "user14@example.com",
+            "password": "UltraPass99!!5",
+            "first_name": "Liam",
+            "second_name": "Taylor",
+            "birth_date": "1988-09-30",
+            "sex": 1,
+            "geo": GeoChoiсe[3][0],
+        },
+        "player": {
+            "playing_hand": 2,
+            "blade": "Ferrari 488",
+            "rubber_forehand": "Lamborghini Huracan",
+            "rubber_backhand": "Maserati GranTurismo",
+            "rating": 150
+        }
+    },
+    {
+        "user": {
+            "email": "user15@example.com",
+            "password": "Pass!Password456**6",
+            "first_name": "Mia",
+            "second_name": "Anderson",
+            "birth_date": "1992-01-10",
+            "sex": 2,
+            "geo": GeoChoiсe[3][0],
+        },
+        "player": {
+            "playing_hand": 1,
+            "blade": "Tesla Model S",
+            "rubber_forehand": "Lucid Air",
+            "rubber_backhand": "Rivian R1T",
+            "rating": 110
+        }
     }
 ]
+
 
 
 DEVELOPMENT_CLUB = {
