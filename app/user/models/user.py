@@ -160,10 +160,21 @@ class User(AbstractUser):
     geo = models.IntegerField(
         choices=GeoChoiсe,
         null=True,
-        max_length=128,
         verbose_name="User's geo",
         help_text="User can choose 1 from 4 variants"
     )
+
+    @property
+    def get_rating(self):
+
+        player_obj = Player.objects.filter(user=self).first()
+
+        if player_obj:
+            return player_obj.rating
+
+        else:
+            # значит не создана роль игрока для юзера
+            return "Не создана роль игрока"
 
     @property
     def full_name(self):
@@ -182,7 +193,7 @@ class User(AbstractUser):
     def __str__(self):
         second_name = self.second_name if self.second_name else "No Last Name"
 
-        return f"Email: {self.email}, Last Name: {second_name}"
+        return f"{self.first_name} {second_name} | Email: {self.email}"
 
     def return_full_name(self):
         second_name = self.second_name if self.second_name else " "

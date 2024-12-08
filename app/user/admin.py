@@ -9,8 +9,7 @@ from user.models.tournament_admin import TournamentAdmin
 
 # NOTE: not done
 class PlayerAdmin(admin.ModelAdmin):
-    list_display = ['user']
-#    search_fields = ['email']
+    list_display = ['user', 'rating']
 
     @admin.display()
     def view_user_email(self, obj):
@@ -18,8 +17,8 @@ class PlayerAdmin(admin.ModelAdmin):
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['email']
-    search_fields = ['email']
+    list_display = ['__str__', 'email', 'get_rating']
+    search_fields = ['__str__', 'email', 'get_rating']
 
 
 class TournamentAdmin__Admin(admin.ModelAdmin):
