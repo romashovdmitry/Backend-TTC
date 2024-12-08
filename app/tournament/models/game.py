@@ -102,3 +102,18 @@ class Game(models.Model):
         return self.first_player_score if \
             self.first_player_score < self.second_player_score else \
             self.second_player_score
+
+    def get_winner_tournaments_count(self):
+        """
+        Возвращает кол-во турниров, в которых сыграл игрок.
+        На уровне БД: кол-во записей в роли TournamentPlayer для Player.
+        """
+
+        return len(self.return_game_winner.player.player_on_tournament.all())
+    
+    def get_loser_tournaments_count(self):
+        """
+        Возвращает кол-во турниров, в которых сыграл игрок.
+        На уровне БД: кол-во записей в роли TournamentPlayer для Player.
+        """
+        return len(self.return_game_loser.player.player_on_tournament.all())

@@ -5,8 +5,11 @@ FIXME: документирование.
 """
 # Python imports
 import logging
+import asyncio
 
 logger = logging.getLogger(__name__)
+
+from tournament.services import update_player_rating
 
 
 async def add_game_result(
@@ -25,6 +28,12 @@ async def add_game_result(
             second_player_score=second_player_score,
             status=GameStatus.FINISHED
         )
+        # FIXME: 2 запроса наалогичных к БД подряд.
+        # не надо так. 
+        game_ = Game.objects.aget(pk=game_pk)
+        loop = asyncio.get_event_loop()
+        await loop.run_in_executor(None, update_player_rating, game_pk)
+
         return True
 
     except Exception as ex:
