@@ -75,8 +75,45 @@ class Game(models.Model):
     )
 
     @property
-    def return_game_winner(self):
+    def return_game_winner(self) -> TournamentPlayers:
         """ return Player instance of winner in game"""
         return self.first_player if \
             self.first_player_score > self.second_player_score else \
             self.second_player
+
+    @property
+    def return_game_loser(self) -> TournamentPlayers:
+        """ return Player instance of loser in game"""
+        return self.first_player if \
+            self.first_player_score < self.second_player_score else \
+            self.second_player
+
+
+    @property
+    def return_game_winner_score(self) -> TournamentPlayers:
+
+        return self.first_player_score if \
+            self.first_player_score > self.second_player_score else \
+            self.second_player_score
+
+    @property
+    def return_game_loser_score(self) -> TournamentPlayers:
+
+        return self.first_player_score if \
+            self.first_player_score < self.second_player_score else \
+            self.second_player_score
+
+    def get_winner_tournaments_count(self):
+        """
+        Возвращает кол-во турниров, в которых сыграл игрок.
+        На уровне БД: кол-во записей в роли TournamentPlayer для Player.
+        """
+
+        return len(self.return_game_winner.player.player_on_tournament.all())
+    
+    def get_loser_tournaments_count(self):
+        """
+        Возвращает кол-во турниров, в которых сыграл игрок.
+        На уровне БД: кол-во записей в роли TournamentPlayer для Player.
+        """
+        return len(self.return_game_loser.player.player_on_tournament.all())

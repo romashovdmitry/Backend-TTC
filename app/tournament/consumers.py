@@ -48,7 +48,9 @@ class GameResultConsumer(AsyncWebsocketConsumer):
         from asgiref.sync import sync_to_async
         # import custom foos, classes, etc
         from .db_actions import add_game_result
-        from tournament.services import is_tournament_group_stage_finished
+        from tournament.services import (
+            is_tournament_group_stage_finished
+        )
 
         return_json_dict = {
             "status": None,

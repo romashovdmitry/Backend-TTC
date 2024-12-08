@@ -97,3 +97,7 @@ class Player(BaseModel):
             f"First name: {self.user.first_name}, "
             f"Last name: {self.user.second_name}"
         )
+
+    @property
+    def is_newbie(self):
+        return len(self.player_on_tournament.all()) < 5

@@ -70,4 +70,42 @@ JSON_DICT_GROUP = {
 }
 
 
+RCP_MAX_COEFF = 400
+Rcp_COEFFICIENTS = [
+    {
+        "max_value": 100,
+        "rcp": 0.2
+    },
+    {
+        "max_value": 200,
+        "rcp": 0.25
+    },
+    {
+        "max_value": 300,
+        "rcp": 0.3
+    },
+    {
+        "max_value": RCP_MAX_COEFF,
+        "rcp":  0.35
+    }
+]
+
+D_COEFFS = {
+    1: 0.8,
+    2: 1,
+    3: 1.2
+}
+
+def return_rcp_coeff(rcp_integer):
+
+    if rcp_integer > RCP_MAX_COEFF:
+
+        return 4
+
+    for rcp_order in range(0, len(Rcp_COEFFICIENTS)):
+
+        if rcp_integer < Rcp_COEFFICIENTS[rcp_order]["max_value"]:
+
+            return Rcp_COEFFICIENTS[rcp_order]["rcp"]
+        
 STAGE_NAMES = ["1/4", "1/8", "1/16", "1/32", "1/64", "1/128"]

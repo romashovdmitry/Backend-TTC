@@ -18,12 +18,18 @@ from tournament.models import (
     Game,
     KnockoutGame
 )
+from user.models import (
+    PlayerRatingHistory,
+    Player
+)
 
 # import constants
 from tournament.constants import (
     TournamentStage,
     GameStatus,
-    GROUP_ALPHABBET
+    GROUP_ALPHABBET,
+    return_rcp_coeff,
+    D_COEFFS
 )
 
 # import custom foos, classes
@@ -678,3 +684,84 @@ def create_knockout(
         )
 
         return False, []
+
+
+# call from websocket, that's why async
+def update_player_rating(
+    game_pk: Game.pk
+):
+    try:
+        # NOTE: используем game_pk иименно, а не Game
+        # из-за ассинхронности.
+        game_object = Game.objects.get(pk=game_pk)
+        tournament = game_object.tournament
+        game_winner = game_object.return_game_winner.player
+        game_loser = game_object.return_game_loser.player
+        winner_rating = game_object.return_game_winner.player.rating
+        loser_rating = game_object.return_game_loser.player.rating
+
+        if winner_rating - 200 > loser_rating:
+
+            return True
+        tournament_players: list[TournamentPlayers] = tournament.tournament_players.all()
+        winner_tournaments_count = game_object.get_winner_tournaments_count()
+        loser_tournaments_count = game_object.get_loser_tournaments_count()
+
+        if not (winner_tournaments_count < 5 and loser_tournaments_count < 5):
+            all_players_rating = [
+                tournament_player.player.rating
+                for tournament_player
+                in tournament_players
+            ]
+            # Rcp - средне арфиметическое рейтинга всех участников турнира.
+            common_Rcp = sum(all_players_rating) / len(all_players_rating)
+
+        # FIXME: уже написан метод is_newbie в модели Player
+        if winner_tournaments_count < 5:
+
+            winner_K_COEF, winner_D_COEF = 1, 1
+
+        else:
+            winner_K_COEF = return_rcp_coeff(common_Rcp)
+            winner_D_COEF = D_COEFFS[
+                game_object.return_game_winner_score - game_object.return_game_loser_score
+            ]
+
+        if loser_tournaments_count < 5:
+            
+            loser_K_COEF, loser_D_COEF = 0.5, 1
+
+        else:
+            loser_K_COEF = return_rcp_coeff(common_Rcp)
+            print(f'loser_K_COEF -> {loser_K_COEF}')
+            loser_D_COEF = D_COEFFS[
+                game_object.return_game_winner_score - game_object.return_game_loser_score
+            ]
+
+        winner_delta = round(abs((200 - (winner_rating - loser_rating)) // 20) * winner_K_COEF * winner_D_COEF, 2)
+        loser_delta = round(abs((200 - (winner_rating - loser_rating)) // 20) * loser_K_COEF * loser_D_COEF, 2)
+
+        new_winner_rating = winner_rating + winner_delta
+        new_loser_rating = loser_rating - loser_delta
+
+        PlayerRatingHistory.objects.create(
+            player=game_winner,
+            actual_rating=new_winner_rating
+        )
+        PlayerRatingHistory.objects.create(
+                player=game_loser,
+                actual_rating=new_loser_rating
+            )
+
+        game_winner.rating = new_winner_rating
+        game_winner.save()
+
+        game_loser.rating = new_loser_rating
+        game_loser.save()
+
+    except Exception as ex:
+        asyncio.run(
+            telegram_log_errors(
+                f"[update_player_rating] {str(ex)}"
+            )
+        )
