@@ -145,7 +145,6 @@ class User(AbstractUser):
 
     sex = models.IntegerField(
         choices=GenderChoise,
-        max_length=16,
         null=False,
         help_text="Choise of player's sex"
     )

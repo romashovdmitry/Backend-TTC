@@ -14,6 +14,7 @@ services:
             - "8001"
         volumes:
             - ./app:/app
+            - ./Docker:/Docker
         depends_on:
             - club_database_container
         networks:
@@ -37,22 +38,6 @@ services:
         networks:
             - club-network
 
-#    club_telegram_bot:
-#        container_name: club_telegram_bot
-#        env_file:
-#            - .env
-#        build:
-#            context: .
-#            dockerfile: ./Docker/Django/Dockerfile
-#        command: sh -c "python manage.py bot_setup"
-#        depends_on:
-#            - club_django_wsgi
-#            - club_django_asgi
-#        volumes:
-#            - ./app:/app
-#        networks:
-#            - club-network
-
     club_database_container:
         container_name: club_database_container
         env_file:
@@ -73,7 +58,7 @@ services:
         container_name: club_nginx
         build:
             context: .
-            dockerfile: ./Docker/Nginx/Dockerfile.local
+            dockerfile: ./Docker/Nginx/Dockerfile
         ports:
           - "80:80"
         depends_on:
@@ -81,6 +66,8 @@ services:
             - club_django_asgi
         volumes:
             - .:/app
+            - ./xxx/cert.pem:/etc/nginx/certs/cert.pem:ro
+            - ./xxx/privkey.pem:/etc/nginx/certs/key.pem:ro
         networks:
           - club-network
 
