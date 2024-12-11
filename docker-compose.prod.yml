@@ -69,6 +69,7 @@ services:
             - .:/app
             - ./xxx/cert1.pem:/etc/nginx/certs/cert.pem:ro
             - ./xxx/privkey1.pem:/etc/nginx/certs/key.pem:ro
+            - ./app/static:/static
         networks:
           - club-network
 
