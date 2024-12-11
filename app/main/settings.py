@@ -129,6 +129,7 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -276,7 +277,15 @@ CHANNEL_LAYERS = {
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['https://tabletennis.ae', 'tabletennis.ae', "localhost", '127.0.0.1', '185.125.202.185']
+CSRF_TRUSTED_ORIGINS = [
+    'https://tabletennis.ae',  # Добавлен https://
+    'http://tabletennis.ae',  # Добавлен http://
+    "https://localhost",      # Добавлен https://
+    "http://localhost",       # Добавлен http://
+    'https://185.125.202.185', # Добавлен https://
+    'http://185.125.202.185'  # Добавлен http://
+]
 
 """
 

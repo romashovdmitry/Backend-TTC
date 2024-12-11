@@ -61,13 +61,14 @@ services:
             dockerfile: ./Docker/Nginx/Dockerfile
         ports:
           - "80:80"
+          - "443:443"
         depends_on:
             - club_django_wsgi
             - club_django_asgi
         volumes:
             - .:/app
-            - ./xxx/cert.pem:/etc/nginx/certs/cert.pem:ro
-            - ./xxx/privkey.pem:/etc/nginx/certs/key.pem:ro
+            - ./xxx/cert1.pem:/etc/nginx/certs/cert.pem:ro
+            - ./xxx/privkey1.pem:/etc/nginx/certs/key.pem:ro
         networks:
           - club-network
 
