@@ -330,3 +330,21 @@ class GetPeriodicalPlayerRating(serializers.ModelSerializer):
     class Meta:
         model = PlayerRatingHistory
         exclude = ("player", "id",)
+
+
+class AllPlayersRatingSerializer(serializers.ModelSerializer):
+
+    user_full_name = serializers.SerializerMethodField()
+    player_pk = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Player
+        fields = ['player_pk', 'user_full_name', 'rating']
+
+    def get_user_full_name(self, obj: Player):
+
+        return obj.user.full_name
+    
+    def get_player_pk(self, obj: Player):
+
+        return obj.pk

@@ -16,6 +16,7 @@ login_user = UserCreateUpdate.as_view({"post": "login_user"})
 player_actions = PlayerGetUpdate.as_view({"put": "update_player", "get": "get_player"})
 player_rating_actions = PlayerGetUpdate.as_view({"get": "get_periodical_player_rating"})
 player_create_photo = PlayerGetUpdate.as_view({"put": "create_update_player_photo"})
+all_players_rating_action = PlayerGetUpdate.as_view({"get": "get_all_players_rating"})
 
 
 urlpatterns = [
@@ -25,6 +26,7 @@ urlpatterns = [
     path('player/', player_actions, name="create_player"),
     path('player/photo/', player_create_photo, name="player_create_photo"),
     path('player_rating/', player_rating_actions, name='player_rating_actions'),
+    path('players/rating/', all_players_rating_action, name="all_players_rating_action"),
     # ApiViews
     path('cities/', GetCities.as_view(), name='get_cities'),
     # JWT

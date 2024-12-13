@@ -20,7 +20,8 @@ from user.serializers import (
     LoginUserSerializer,
     GetPlayerInfoSerializer,
     UpdateCreatePlayerPhotoSerializer,
-    GetPeriodicalPlayerRating
+    GetPeriodicalPlayerRating,
+    AllPlayersRatingSerializer
 )
 
 # import models
@@ -42,7 +43,8 @@ from user.swagger_schemas import (
     swagger_schema_get_player,
     swagger_schema_create_update_player_photo,
     swagger_schema_get_periodical_player_rating,
-    swagger_schema_get_cities
+    swagger_schema_get_cities,
+    swagger_schema_get_all_players_rating
 )
 
 # import custom foos, classes
@@ -59,7 +61,9 @@ class UserCreateUpdate(ViewSet):
     def get_serializer_class(self):
         """ define serializer for class """
         if self.action == 'create_user':
+
             return CreateUserSerializer
+
         return LoginUserSerializer
 
     @swagger_schema_create_user
@@ -170,7 +174,8 @@ class PlayerGetUpdate(ViewSet, RetrieveAPIView):
         'update_player': UpdatePlayerSerializer,
         'get_player': GetPlayerInfoSerializer,
         "create_update_player_photo": UpdateCreatePlayerPhotoSerializer,
-        "get_periodical_player_rating": GetPeriodicalPlayerRating
+        "get_periodical_player_rating": GetPeriodicalPlayerRating,
+        "get_all_players_rating": AllPlayersRatingSerializer,
     }
 
     def get_queryset(self):
@@ -180,6 +185,10 @@ class PlayerGetUpdate(ViewSet, RetrieveAPIView):
             return PlayerRatingHistory.objects.filter(
                 player__user=self.request.user
             ).all()
+
+        elif self.action == "get_all_players_rating":
+
+            return Player.objects.all()
 
     def get_serializer_class(self):
         """ define serializer for class """
@@ -216,7 +225,7 @@ class PlayerGetUpdate(ViewSet, RetrieveAPIView):
         except Exception as ex:
             asyncio.run(
                 telegram_log_errors(
-                    f'[UserCreateUpdate][create_player] {ex}'
+                    f'[PlayerGetUpdate][create_update_player_photo] {ex}'
                 )
             )
             return Response(
@@ -267,7 +276,7 @@ class PlayerGetUpdate(ViewSet, RetrieveAPIView):
         except Exception as ex:
             asyncio.run(
                 telegram_log_errors(
-                    f"[ClubActions][update_club] {str(ex)}"
+                    f"[PlayerGetUpdate][update_player] {str(ex)}"
                 )
             )
         
@@ -299,7 +308,7 @@ class PlayerGetUpdate(ViewSet, RetrieveAPIView):
         except Exception as ex:
             asyncio.run(
                 telegram_log_errors(
-                    f"[ClubActions][get_player] {str(ex)}"
+                    f"[PlayerGetUpdate][get_player] {str(ex)}"
                 )
             )
         
@@ -343,7 +352,7 @@ class PlayerGetUpdate(ViewSet, RetrieveAPIView):
         except Exception as ex:
             asyncio.run(
                 telegram_log_errors(
-                    "[ClubActions][get_periodical_player_rating] "
+                    "[PlayerGetUpdate][get_periodical_player_rating] "
                     f"{str(ex)}"
                 )
             )
@@ -354,7 +363,53 @@ class PlayerGetUpdate(ViewSet, RetrieveAPIView):
                 },
                 status=HTTP_400_BAD_REQUEST
             )
-        
+
+    @swagger_schema_get_all_players_rating
+    @action(
+        detail=False,
+        methods=['get'],
+        url_path="get_all_players_rating",
+        parser_classes=(MultiPartParser,)
+    )
+    def get_all_players_rating(self, request) -> Response:
+        """ return info about player's rating """
+
+        try:
+            queryset = self.get_queryset()
+
+            if queryset:
+                serialiser = self.get_serializer_class()
+                serialised_queryset = serialiser(
+                    queryset,
+                    many=True
+                )
+
+                return Response(
+                    status=HTTP_200_OK,
+                    data=serialised_queryset.data
+                )
+
+            return Response(
+                status=HTTP_200_OK,
+                data=None
+            )
+
+        except Exception as ex:
+
+            asyncio.run(
+                telegram_log_errors(
+                    "[PlayerGetUpdate][get_all_players_rating] "
+                    f"{str(ex)}"
+                )
+            )
+
+            return Response(
+                data={
+                    "error": str(ex)
+                },
+                status=HTTP_400_BAD_REQUEST
+            )
+
 
 class GetCities(APIView):
     """

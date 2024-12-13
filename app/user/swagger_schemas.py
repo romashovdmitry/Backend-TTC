@@ -153,3 +153,14 @@ swagger_schema_get_cities = extend_schema(
         200: None,
     },
 )
+
+swagger_schema_get_all_players_rating = extend_schema(
+    tags=["Player"],
+    summary="Get ordered list of all player's rating",
+    description="GET request to retrieve list of ordered player's rating",
+    operation_id="Get ordered list of all player's rating",
+    request=None,
+    responses={
+        200: None,
+    },
+)
