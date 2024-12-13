@@ -1,0 +1,35 @@
+server {
+    listen 80 default_server;
+    server_name localhost;
+
+    return 301 https://$host$request_uri;
+
+    # Указываем пути к сертификатам
+    ssl_certificate /etc/nginx/ssl/fullchain.pem;
+    ssl_certificate_key /etc/nginx/ssl/privkey.pem;
+
+    location / {
+        proxy_pass http://185.125.202.185:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+       alias /app;
+    }
+
+    location /ws/ {
+        proxy_pass http://club_django_asgi:8002;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    # max size of one file that could be sent to server
+    client_max_body_size 20M;
+}
+
+
+# / - это отправляется на фронт
+# / 

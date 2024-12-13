@@ -126,6 +126,7 @@ class UserCreateUpdate(ViewSet):
     def login_user(self, request) -> Response:
         ''' login user '''
         try:
+            print('come to log in')
             serializer = self.get_serializer_class()
             serializer = serializer(data=request.data)
 
